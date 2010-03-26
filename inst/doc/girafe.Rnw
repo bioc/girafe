@@ -1,0 +1,470 @@
+%\VignetteIndexEntry{Genome intervals and read alignments for functional exploration}
+%\VignetteDepends{girafe, RColorBrewer}
+%\VignetteKeywords{next-generation sequencing, read alignment}
+%\VignettePackage{girafe} % name of package
+
+%%%% HEAD SECTION: START EDITING BELOW %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[11pt, a4paper, fleqn]{article}
+\usepackage{geometry}\usepackage{color}
+\definecolor{darkblue}{rgb}{0.0,0.0,0.75}
+\usepackage[%
+baseurl={http://www.bioconductor.org},%
+pdftitle={Introduction to package girafe},%
+pdfauthor={Joern Toedling},%
+pdfsubject={girafe Vignette},%
+pdfkeywords={Bioconductor},%
+pagebackref,bookmarks,colorlinks,linkcolor=darkblue,citecolor=darkblue,%
+filecolor=darkblue,urlcolor=darkblue,pagecolor=darkblue,%
+raiselinks,plainpages,pdftex]{hyperref}
+
+\usepackage{verbatim} % for multi-line comments
+\usepackage{amsmath,a4,t1enc, graphicx}
+\usepackage{natbib}
+\bibpunct{(}{)}{;}{a}{,}{,}
+
+\parindent0mm
+\parskip2ex plus0.5ex minus0.3ex
+
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Rmethod}[1]{{\textit{#1}}}
+\newcommand{\Rfunarg}[1]{{\texttt{#1}}}
+\newcommand{\phead}[1]{{\flushleft \sf \small \textbf{#1} \quad}}
+
+\newcommand{\myincfig}[3]{%
+  \begin{figure}[h!tb]
+    \begin{center}
+      \includegraphics[width=#2]{#1}
+      \caption{\label{#1}\textit{#3}}
+    \end{center}
+  \end{figure}
+}
+
+\addtolength{\textwidth}{2cm}
+\addtolength{\oddsidemargin}{-1cm}
+\addtolength{\evensidemargin}{-1cm}
+\addtolength{\textheight}{2cm}
+\addtolength{\topmargin}{-1cm}
+\addtolength{\skip\footins}{1cm}
+
+%%%%%%% START EDITING HERE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\SweaveOpts{eps=false, keep.source=TRUE} % produce no 'eps' figures
+
+\title{An overview of package \Rpackage{girafe}}
+\author{Joern Toedling}
+\maketitle
+
+<<prepare, echo=FALSE>>=
+options(length=60, stringsAsFactors=FALSE)
+set.seed(123)
+options(SweaveHooks=list(
+   along=function() par(mar=c(2.5,4.2,4,1.5), font.lab=2),
+   pie=function() par(mar=c(0, 0, 0, 3.7), font=2)))
+@
+
+\section{Introduction}
+
+The intent of package \Rpackage{girafe} is to facilitate
+the functional exploration of the alignments of multiple
+reads\footnote{
+  The package has been developed for 
+  analysing single-end reads (fragment libraries) and 
+  does not support mate-pair reads yet.}
+from next-generation sequencing data to a genome.
+
+It extends the functionality of the
+Bioconductor~\citep{Gentleman2004}
+packages \Rpackage{ShortRead}~\citep{Morgan2009}
+and \Rpackage{genomeIntervals}.
+%
+<<loadpackage, results=hide>>=
+library("girafe")
+library("RColorBrewer")
+@
+
+\section{Workflow}
+
+We present the functionality of the package \Rpackage{girafe}
+using example data that was downloaded from the Gene Expression
+Omnibus database~\citep[GSE10364]{Edgar2002}.
+The example data are Solexa reads of 26~nt length derived from
+small RNA profiling of mouse oocytes.
+The data has previously been described in \citet{Tam2008}.
+
+<<setUp>>=
+exDir <- system.file("extdata", package="girafe")
+load(file.path(exDir, "anno_mm_genint.RData"))
+@
+
+\subsection{Adapter trimming}
+
+We load reads that include parts of the  adapter sequence.
+%
+<<loadReads>>=
+ra23.wa  <- readFastq(dirPath=exDir, pattern=
+                      "aravinSRNA_23_plus_adapter_excerpt.fastq")
+@ 
+\clearpage % for nicer layout only
+<<showReads>>=
+show(ra23.wa)
+@
+
+For removing the adapter sequence, we are using
+the function \Rfunction{trimAdapter}, which relies
+on the function \Rfunction{pairwiseAlignment}
+from package \Rpackage{Biostrings}.
+The adapter sequence was obtained from the GEO page
+of the data.
+%
+<<trimAdapter>>=
+adapter <- "CTGTAGGCACCATCAAT"
+ra23.na  <- trimAdapter(ra23.wa, adapter)
+show(ra23.na)
+@
+
+\subsection{Importing aligned reads}
+
+The reads have been mapped to the mouse genome
+(assembly \textit{mm9}) using the alignment tool
+\textit{Bowtie}~\citep{Langmead2009}.
+
+The resulting tab-delimited map file can be read into
+an object of class \Rclass{AlignedRead}
+using the function \Rfunction{readAligned}.
+Both, this class and this function, are defined in the
+Bioconductor package \Rpackage{ShortRead}.
+
+<<readAligned>>=
+exA   <- readAligned(dirPath=exDir, type="Bowtie", 
+   pattern="aravinSRNA_23_no_adapter_excerpt_mm9_unmasked.bwtmap")
+show(exA)
+@
+
+The object of class \Rclass{AlignedRead} can be converted
+into an object of class \Rclass{AlignedGenomeIntervals},
+which is the main class of package \Rpackage{girafe}.
+%
+<<convertAligned, results=hide>>=
+exAI <- as(exA, "AlignedGenomeIntervals")
+organism(exAI) <- "Mm"
+@ 
+
+\subsection{Exploring the aligned reads}
+
+<<showExAI>>=
+show(exAI)
+@
+
+Which chromosomes are the intervals located on?
+<<tabChromosomes>>=
+table(seq_name(exAI))
+@
+
+A subset of the intervals on a specific chromosome
+can be obtained using subsetting via \verb='['=.
+<<showSubset>>=
+detail(exAI[seq_name(exAI)=="chrMT"])
+@
+
+\subsection{Processing the aligned intervals}
+
+Sometimes,
+users may wish to combine certain aligned intervals.
+One intention could be to combine aligned reads at
+exactly the same position, which only differ in their
+sequence due to sequencing errors.
+Another objective could be to combine overlapping
+short reads that may be (degradation) products
+of the same primary transcript.
+The function \Rfunction{reduce} combines a set of
+aligned intervals into a single aligned interval if
+the intervals
+\begin{itemize}
+  \item are on the same strand,
+  \item are overlapping (or contained in each other)
+    or directly adjacent to each other AND
+  \item have the same \emph{read match specificity} (see below)
+\end{itemize}
+
+\phead{Read match specificity}
+By the \emph{read match specificity}~$r(I_i)$
+of an interval~$I_i$, we refer to the total number of
+valid alignments of reads that have been aligned to $I_i$,
+\textsl{i.e.} the total numbers of intervals with the same
+reads aligned in the whole genome
+(or other set of reference sequences).
+If $r(I_i)=1$, the reads that were aligned to the
+interval~$I_i$ have no other valid alignments in the whole
+genome, i.e. the interval~$I_i$ is the unique match
+position of these reads.
+If $r(I_i)=2$, the reads that were aligned to the
+interval~$I_i$ have exactly one other valid alignment
+to another interval~\mbox{$I_j,~j \neq i$}.
+The match specificity is stored in the \Robject{matches}
+slot of objects of the
+class \Rclass{AlignedGenomeIntervals}.
+
+We first demonstrate the \Rfunction{reduce}
+using a toy example data object.
+<<setupToy>>=
+D <- AlignedGenomeIntervals(
+     start=c(1,3,4,5,8,10,11), end=c(5,5,6,8,9,11,13),
+     chromosome=rep(c("chr1","chr2","chr3"), c(2,2,3)),
+     strand=c("-","-","+","+","+","+","+"),
+     sequence=c("ACATT","ACA","CGT","GTAA","AG","CT","TTT"),
+     reads=rep(1,7), matches=c(rep(1,6),3))
+
+detail(D)
+@
+Calling the \Rfunction{reduce} method on these example
+data results in the following:
+<<showReduceToy>>=
+detail(reduce(D))
+@
+Note that the two last intervals still show overlap.
+However, the last interval is a non-unique match position
+of the respective reads (\mbox{\Robject{matches}$=3$}),
+in contrast to the other intervals.
+
+Here is another example using the data introduced above.
+<<showReduceData>>=
+S <- exAI[seq_name(exAI)=="chrX" & exAI@matches==1 & exAI[,1]>1e8]
+detail(S)
+@
+
+Calling the \Rfunction{reduce} method on these
+data leads to the following result.
+%
+<<showReduceData2>>=
+detail(reduce(S))
+@ 
+
+Notice that the reads that match the same segment of the
+X~chromosome differ in their last base. This ambiguity
+is represented in the combined aligned interval having
+%an 'R', the IUPAC code for 'A' or 'G',
+an 'N'
+as the last letter.
+
+The additional argument~\Rfunarg{exact=TRUE}
+can be specified if you want to solely combine intervals
+that have exactly the same start and stop position (but may
+have reads of slightly different sequence aligned to them).
+Consider the following example:
+<<reduceExample3>>=
+S2 <- exAI[seq_name(exAI)=="chr11" & exAI@matches==1 & exAI[,1]>8e7]
+detail(S2)
+detail(reduce(S2, exact=TRUE))
+@
+Notice that the 6th aligned interval in~\Robject{S2} is
+only shifted by 1~nt from the 5th one. 
+By default, the function \Rfunction{reduce}
+would merge them into one aligned genome interval.
+However, when \Rfunarg{exact=TRUE} is specified,
+these two intervals are not merged
+since they are not at exactly the same position.
+
+
+\subsection{Visualizing the aligned genome intervals}
+
+The package~\Rpackage{girafe} contains functions for
+visualising genome regions with aligned reads.
+%
+<<plotAI, fig=TRUE, include=FALSE, width=7, height=5>>=
+plot(exAI, mm.gi, chr="chrX", start=50400000, end=50410000)
+@
+See the result in Figure~\ref{girafe-plotAI}.
+
+\myincfig{girafe-plotAI}{0.8\textwidth}{A 10-kb region on
+  mouse chromosome X. Reads aligned to the Watson strand
+  in this region would be shown above the chromosome coordinate
+  axis with the annotation of genome elements in this region,
+  while reads aligned to the Crick strand are shown below.
+  In the shown region, there only are intervals with aligned
+  reads on the Crick strand, and these four intervals overlap
+  with annotated micro-RNA positions.}
+
+Note that the annotation of genome elements (as shown
+in Figure~\ref{girafe-plotAI}) has to be supplied to the
+function.
+Here the object \Robject{mm.gi} contains most annotated
+genes and ncRNAs for the mouse genome (assembly: \textit{mm9}).
+This object has been created beforehand\footnote{See the
+script \texttt{prepareAnnotation.R} in the package scripts
+directory for an example of how to create such an object.}
+and it is of class \Rclass{Genome\_intervals\_stranded},
+a class defined in package \Rpackage{genomeIntervals}.
+
+
+\subsection{Summarising the data using sliding windows}
+ 
+The data can be searched for regions of defined interest
+using a sliding-window approach implemented in the
+function~\Rfunction{perWindow}.
+For each window, the number of intervals with
+aligned reads, the total number of reads aligned,
+the number of unique reads aligned, the fraction
+of intervals on the Plus-strand, and the higher number
+of aligned reads at a single interval within the window
+are reported.
+
+<<examplePerWindow>>=
+exPX  <- perWindow(exAI, chr="chrX", winsize=1e5, step=0.5e5)
+head(exPX[order(exPX$n.overlap, decreasing=TRUE),])
+@
+
+
+\subsection{Exporting the data}
+
+The package \Rpackage{girafe} also contains methods for
+exporting the data into tab-delimited text files, which
+can be uploaded to the UCSC genome
+browser\footnote{\url{http://genome.ucsc.edu}}
+as 'custom tracks'.
+
+Currently, there are methods for exporting the data
+in 'bed' format and 'bedGraph' format, either writing
+intervals from both strands into one file or into
+two separate files.
+Details about these track formats can be found
+at the UCSC genome browser web pages.
+
+<<exportBed, eval=TRUE, results=hide>>=
+export(exAI, con=file.path(tempdir(), "export.bed"),
+       format="bed", name="example_reads",
+       description="Example reads",
+       color="100,100,255", visibility="pack")
+@
+
+Additional arguments to the export function,
+besides \Rfunarg{object}, \Rfunarg{con},
+and \Rfunarg{format}, are treated
+as attributes for the track definition line, which
+specifies details about how the data should be visualised
+in the genome browser.
+%
+<<showExport>>=
+readLines(file.path(tempdir(), "export.bed"), n=4)
+@
+
+Users may also want to have a look at the Bioconductor
+package~\Rpackage{rtracklayer} for data transfer and
+direct interaction between R and the UCSC genome
+browser.
+
+\subsection{Overlap with annotated genome features}
+
+Next, we determine the overlap of the aligned reads
+with annotated genome elements.
+In this example, the annotated genome elements are provided
+as an object of class
+\Rclass{Genome\_intervals\_stranded}\footnote{%
+Objects of class \Rclass{Genome\_intervals} and
+\Rclass{AlignedGenomeIntervals} are also allowed.}.
+This objects needs to be created beforehand. See the
+script \texttt{prepareAnnotation.R} in the package scripts
+directory\footnote{\texttt{system.file('scripts', package='girafe')}}
+for an example of how to create such an object.
+%
+<<getIntervalOverlap>>=
+exOv <- interval_overlap(exAI, mm.gi)
+@ 
+
+How many elements do read match positions generally overlap?
+%
+<<tableOverlap>>=
+table(listLen(exOv))
+@ 
+
+What are the 12 elements overlapped by a single match position?
+%
+<<show12Elements>>=
+getGffAttribute(mm.gi[exOv[[which(listLen(exOv)==12)]]],"Alias")[,1]
+@ 
+
+And in general,
+what kinds of annotated genome elements are overlapped by reads?
+%
+<<computeTabOv>>=
+(tabOv <- table(as.character(mm.gi$type)[unlist(exOv)]))
+@
+
+We display these overlap classes using a pie chart.
+%
+<<displayPie, fig=TRUE, include=FALSE, width=7, height=7, pie=TRUE>>=
+my.cols <- brewer.pal(length(tabOv), "Set3")
+pie(tabOv, col=my.cols, radius=0.95)
+@
+See the result in Figure~\ref{girafe-displayPie}.
+
+\myincfig{girafe-displayPie}{0.6\textwidth}{Pie chart
+  showing what kinds of genome elements are overlapped
+  by aligned reads. Note that the proportions of the pie
+  chart are given by the proportions among all annotated
+  genome elements that \mbox{have $geq 1$ reads} mapped
+  to them and not by the total numbers of reads mapped
+  to elements of that class, in which case the proportion
+  of the miRNA class would be significantly larger.}
+
+Note that function \Rfunction{interval.overlap} only
+determines whether two intervals are overlapping by
+at least one base. For restricting the result to
+intervals overlapping by at least a certain number
+of bases or by a fraction of the interval's
+length, see the function \Rfunction{fracOverlap}.
+
+\section{A word about speed}
+
+For improving the run time on machines with multiple
+processors, some of the functions in package \Rpackage{girafe}
+have been implemented to make use of the functionality in
+package \Rpackage{multicore}.
+If the package \Rpackage{multicore} has been attached
+and initialised before calling these functions, the
+functions will make use of \Rfunction{mclapply} instead of
+the normal \Rfunction{lapply}.
+
+For example, if \Rpackage{multicore} works on your machine,
+there should be an obvious speed improvement
+in the following code example.
+
+<<multicoreShow, eval=FALSE>>=
+library("multicore")
+options("cores"=4) # adjust for your machine
+covAI <- coverage(exAI, byStrand=TRUE)
+@
+
+\small
+\section*{Package versions}
+This vignette was generated using the following package versions:
+%
+<<sessionInfo, echo=FALSE, results=tex>>=
+toLatex(sessionInfo(), locale=FALSE)
+@
+
+\section*{Acknowledgements}
+
+Many thanks to Nicolas Servant, Emmanuel Barillot,
+Constance Ciaudo, Edith Heard, Val\'erie Cognat,
+Nicolas Delhomme, and especially Patrick Aboyoun
+for suggestions and feedback on the package.
+Special thanks to Julien Gagneur and Richard Bourgon for
+writing \Rpackage{genomeIntervals} and for rapidly answering
+all my questions regarding the package.\\
+The plotting functions in package \Rpackage{girafe} are
+largely based on the function \Rfunction{plotAlongChrom}
+and its auxiliary functions from package \Rpackage{tilingArray},
+most of which were written by Wolfgang Huber.
+
+
+\small
+%%% BIBLIOGRAPHY STARTS HERE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bibliographystyle{abbrvnat}
+\bibliography{ngs.bib}
+
+\end{document}

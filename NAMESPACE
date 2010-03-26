@@ -1,0 +1,61 @@
+
+useDynLib(girafe, girafeCoverage=girafe_coverage)
+
+import("methods")
+
+importFrom("graphics", "barplot", "legend", "plot")
+
+importFrom("grDevices", "rainbow")
+
+importFrom("grid", "arrow", "convertWidth", "dataViewport", "gpar",
+          "grid.layout", "grid.lines", "grid.polygon", "grid.rect",
+          "grid.segments", "grid.text", "grid.yaxis", "popViewport",
+          "pushViewport", "stringWidth", "unit", "viewport")
+
+importFrom("utils", "write.table")
+
+importFrom("stats", "p.adjust", "p.adjust.methods", "pnbinom", "rnbinom")
+
+importFrom("BSgenome", "organism")
+
+importMethodsFrom("Biobase", "annotation")
+importFrom("Biobase", "addVigs2WinMenu", "listLen")
+
+importFrom("Biostrings", "consensusString","pairwiseAlignment","pattern","quality")
+importFrom("Biostrings", "DNAString","DNAStringSet","nucleotideSubstitutionMatrix")
+
+importClassesFrom("IRanges", "IRanges", "Ranges", "RangedData", "CompressedIRangesList", "RangesList", "Rle", "SimpleRleList")
+importMethodsFrom("IRanges", "score", "score<-", "width", "rdapply", "[", "endoapply", "Rle", "coverage", "split")
+importFrom("IRanges", "IRanges", "RangedData", "RleList")
+
+importClassesFrom("ShortRead", "AlignedRead")
+importMethodsFrom("ShortRead", "chromosome", "detail", "position", "id")
+importFrom("ShortRead", "sread")
+
+importClassesFrom("intervals", "Intervals_virtual",
+                     "Intervals_virtual_or_numeric", "Intervals_full")
+importMethodsFrom("intervals", "clusters", "interval_included", "interval_overlap", "which_nearest", "reduce")
+
+importClassesFrom("genomeIntervals", "Genome_intervals",
+                  "Genome_intervals_stranded")
+importMethodsFrom("genomeIntervals", "strand", "strand<-",
+                  "seq_name", "seq_name<-")
+importFrom("genomeIntervals", "getGffAttribute")
+
+export("AlignedGenomeIntervals", "plotAligned", "trimAdapter",
+       "perWindow", "fracOverlap", "intPhred", "coverageOneStrand",
+       "addNBSignificance", "plotNegBinomFit",
+       "clusters", "coerce", "organism", "plot") # generics
+
+exportClasses("AlignedGenomeIntervals")
+
+exportMethods("plot", "[", "interval_overlap", "interval_included",
+              "chromosome", "coerce", "coverage", "clusters", "detail",
+              "export", "extend",
+              "matches", "matches<-", #"id", "id<-",
+              "organism", "organism<-", "reads", "reads<-", "reduce", 
+              "score", "score<-", "seq_name", "show",
+              "strand", "strand<-", "subset",
+              "width", "which_nearest")
+
+S3method("c", "AlignedGenomeIntervals")
