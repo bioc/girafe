@@ -334,8 +334,8 @@ two separate files.
 Details about these track formats can be found
 at the UCSC genome browser web pages.
 
-<<exportBed, eval=TRUE, results=hide>>=
-export(exAI, con=file.path(tempdir(), "export.bed"),
+<<exportBed, eval=FALSE, results=hide>>=
+export(exAI, con="export.bed",
        format="bed", name="example_reads",
        description="Example reads",
        color="100,100,255", visibility="pack")
@@ -347,10 +347,6 @@ and \Rfunarg{format}, are treated
 as attributes for the track definition line, which
 specifies details about how the data should be visualised
 in the genome browser.
-%
-<<showExport>>=
-readLines(file.path(tempdir(), "export.bed"), n=4)
-@
 
 Users may also want to have a look at the Bioconductor
 package~\Rpackage{rtracklayer} for data transfer and
@@ -460,7 +456,6 @@ The plotting functions in package \Rpackage{girafe} are
 largely based on the function \Rfunction{plotAlongChrom}
 and its auxiliary functions from package \Rpackage{tilingArray},
 most of which were written by Wolfgang Huber.
-
 
 \small
 %%% BIBLIOGRAPHY STARTS HERE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
