@@ -10,5 +10,6 @@ pdf:	girafe.tex
 clean:
 	rm -f *.out *.bbl *.aux *.log *.blg *.brf *.toc  *~ *.eps
 	rm -f *.nfs*
-	rm -f girafe-*.png girafe-*.pdf Rplots.ps Rplots.pdf
+	rm -f girafe-*.png girafe-*.pdf
+#	rm -f Rplots.ps Rplots.pdf   # problem on build machine gewurz
 #	rm -f *.dvi *.ps girafe.tex

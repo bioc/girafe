@@ -460,6 +460,6 @@ most of which were written by Wolfgang Huber.
 \small
 %%% BIBLIOGRAPHY STARTS HERE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{abbrvnat}
-\bibliography{ngs.bib}
+\bibliography{ngs}
 
 \end{document}
