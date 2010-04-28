@@ -4,8 +4,10 @@ plotAligned <- function(x, y, chr, start, end,
                         gff, featureLegend=FALSE, gffChrColumn="seq_id",
                         gffNameColumn="name",
                         featureExclude=c("chromosome", "nucleotide_match",
-                          "insertion"), ylim, highlight, main,...){
+                          "insertion"), show="both",
+                        ylim, highlight, main,...){
   ### evaluate arguments:
+  show <- match.arg(show, c("both", "plus", "minus"))
   xlim <- c(start, end)
   if (!missing(ylim))
     stopifnot(is.numeric(ylim), length(ylim)==2)
@@ -29,12 +31,16 @@ plotAligned <- function(x, y, chr, start, end,
   ## set up the viewports of the plot layout.
   VP <- c("title"=0.4, "readsplus"=5, "gff+"=1,
           "coord"=1, "gff-"=1, "readsminus"=5, "legend"=1)
-  
+
+  ## if desired show only one of the two strands
+  if (show=="minus") VP <- VP[-match(c("readsplus", "gff+"), names(VP))]
+  if (show=="plus")  VP <- VP[-match(c("readsminus", "gff-"), names(VP))]
+
   if(!featureLegend)
-    VP = VP[-which(names(VP)=="legend")]
+    VP <- VP[-which(names(VP)=="legend")]
   
   if(missing(gff))
-    VP = VP[-which(names(VP)=="gff+" | names(VP)=="gff-")]
+    VP <- VP[-which(names(VP)=="gff+" | names(VP)=="gff-")]
 
   ## set default colours
   defaultColors <- c("plus"=plus.col, "minus"=minus.col,
@@ -43,9 +49,14 @@ plotAligned <- function(x, y, chr, start, end,
   ## plot margin
   pushViewport(viewport(width=0.85, height=0.95)) ## plot margin
   pushViewport(viewport(layout=grid.layout(length(VP), 1, height=VP)))
-  
-  for (strand in c("plus","minus")){
-    names.strand <- c("plus"="Watson", "minus"="Crick")
+
+  names.strand <- c("plus"="Watson", "minus"="Crick")
+  if (show!="both")
+    show.strands <- show
+  else
+    show.strands <- c("plus", "minus")
+
+  for (strand in show.strands){
     ylab <- paste("Reads on",names.strand[strand],"strand")
     x.strand <- get(paste("x", strand, sep="."))
     dat <- list(x.start = x.strand[,1],
@@ -101,7 +112,7 @@ plotAligned <- function(x, y, chr, start, end,
   ### plot annotated genome features (supplied in the gff) 
   ########################################################
   if(!missing(gff))
-    for (strand in c("+","-"))
+    for (strand in c("plus"="+","minus"="-")[show.strands])
       plotFeatures(gff=gff, chr=chr, xlim=c(start, end),
                    strand=strand,
                    featureExclude=featureExclude,

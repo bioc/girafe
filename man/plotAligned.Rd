@@ -10,7 +10,7 @@ plotAligned(x, y, chr, start, end, plus.col = "#00441b",
    minus.col = "#283d78", gff, featureLegend = FALSE,
    gffChrColumn = "seq_id", gffNameColumn="name",
    featureExclude = c("chromosome", "nucleotide_match", "insertion"),
-   ylim, highlight, main, ...)
+   show="bot", ylim, highlight, main, ...)
 }
 \arguments{
   \item{x}{Object of class \code{AlignedGenomeIntervals}}
@@ -37,6 +37,9 @@ plotAligned(x, y, chr, start, end, plus.col = "#00441b",
     the plot; default: \dQuote{name}}
   \item{featureExclude}{character; which kinds of annotated genome
     features specified in the \code{gff} are to be ignored for the plot}
+  \item{show}{string; which strands to show in the plot; defaults to
+    \dQuote{both}, but users can specify to show only the reads on
+    \dQuote{plus} or \dQuote{minus} strand}
   \item{ylim}{range of read numbers to plot (y-axis limits); if not
     specified they are computed from the data in the specified region}
   \item{highlight}{currently unused}
