@@ -19,6 +19,7 @@
 %\alias{id,AlignedGenomeIntervals-method}
 %\alias{id<-}
 %\alias{id<-,AlignedGenomeIntervals-method}
+\alias{hist,AlignedGenomeIntervals-method}
 \alias{interval_included,AlignedGenomeIntervals,Genome_intervals_stranded-method}
 \alias{interval_included,Genome_intervals_stranded,AlignedGenomeIntervals-method}
 \alias{interval_included,AlignedGenomeIntervals,AlignedGenomeIntervals-method}
@@ -165,11 +166,8 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
       \sQuote{bedGraphStrand}, respectively).
       Details about these track formats can be found
       at the UCSC genome browser web pages.}
-    \item{interval_overlap}{determine the overlap between the intervals
-      in an object of class \code{AlignedGenomeIntervals} and other
-      intervals that may be supplied as an object of one of the classes
-      \code{Genome_intervals}, \code{Genome_intervals_stranded}, or
-      \code{AlignedGenomeIntervals}.}
+    \item{hist}{\code{signature("AlignedGenomeIntervals")}: creates
+      a histogram of the lengths of the reads aligned to the intervals}
     \item{organism}{Get or set the organism that the genome intervals in
       the object correspond to. Should be a predefined code, such as
       'Mm' for mouse and 'Hs' for human. The reason for this code, that,

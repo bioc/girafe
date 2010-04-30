@@ -2,7 +2,7 @@
 ## 1: combining intervals which are completely included in each other
 ## 2: combining overlapping intervals
 setMethod("reduce", signature("AlignedGenomeIntervals"),
-          function(x, exact=FALSE, ...){
+          function(x, exact=FALSE, min.frac=0.0, ...){
             stopifnot(is.logical(exact))
 
             ## which function to use for each iteration:
@@ -13,13 +13,13 @@ setMethod("reduce", signature("AlignedGenomeIntervals"),
             }
             ## separate method for reducing only intervals
             ###  at exactly the same position?
-            if (exact) {
+            if (exact) min.frac <- 1.0
+            if (exact || min.frac > 0.0) {
               ## check: use of new 'interval_included' method may
               ##  be faster here.
               ## basically generate another list 'ov' here
               ov <- as.list(1:nrow(x))
-              fo <- fracOverlap(x,x, 1.0)
-              fo <- subset(fo, frac1 == 1.0 & frac2 == 1.0)
+              fo <- fracOverlap(x,x, min.frac)
               perInd <- split(fo$Index2, fo$Index1)
               stopifnot(length(perInd)==nrow(x))
               for (j in 1:length(perInd))

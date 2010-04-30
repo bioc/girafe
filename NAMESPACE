@@ -3,7 +3,7 @@ useDynLib(girafe, girafeCoverage=girafe_coverage)
 
 import("methods")
 
-importFrom("graphics", "barplot", "legend", "plot")
+importFrom("graphics", "barplot", "legend", "plot", "hist")
 
 importFrom("grDevices", "rainbow")
 
@@ -51,7 +51,7 @@ exportClasses("AlignedGenomeIntervals")
 
 exportMethods("plot", "[", "interval_overlap", "interval_included",
               "chromosome", "coerce", "coverage", "clusters", "detail",
-              "export", "extend",
+              "export", "extend", "hist",
               "matches", "matches<-", #"id", "id<-",
               "organism", "organism<-", "reads", "reads<-", "reduce", 
               "score", "score<-", "seq_name", "show",

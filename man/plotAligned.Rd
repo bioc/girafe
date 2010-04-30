@@ -10,7 +10,7 @@ plotAligned(x, y, chr, start, end, plus.col = "#00441b",
    minus.col = "#283d78", gff, featureLegend = FALSE,
    gffChrColumn = "seq_id", gffNameColumn="name",
    featureExclude = c("chromosome", "nucleotide_match", "insertion"),
-   show="bot", ylim, highlight, main, ...)
+   show="both", ylim, highlight, main, ...)
 }
 \arguments{
   \item{x}{Object of class \code{AlignedGenomeIntervals}}

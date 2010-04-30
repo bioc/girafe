@@ -457,3 +457,21 @@ setMethod("clusters", signature("AlignedGenomeIntervals"),
             return(rv)
           }
 ) # setMethod("clusters", signature("AlignedGenomeIntervals"))
+
+
+setMethod("hist", signature(x="AlignedGenomeIntervals"),
+          function(x, plot=TRUE, ...){
+            splitted <- split(reads(x), width(x))
+            xw.tab <- sapply(splitted, sum)
+            imids <- as.integer(names(xw.tab))
+            ord <- order(imids)
+            imids <- imids[ord]
+            icounts <- xw.tab[ord]
+            ibreaks <- c(imids-0.5, imids[length(imids)]+0.5)
+            h <- list(breaks=ibreaks, counts=icounts,
+                      mids=imids)
+            class(h) <- c("histogram", class(h))
+            if (plot) plot(h, ...)
+            invisible(h) }
+) # setMethod("hist", signature("AlignedGenomeIntervals"))
+
