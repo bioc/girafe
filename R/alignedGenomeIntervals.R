@@ -458,7 +458,7 @@ setMethod("clusters", signature("AlignedGenomeIntervals"),
           }
 ) # setMethod("clusters", signature("AlignedGenomeIntervals"))
 
-
+### histogram of widths of aligned reads
 setMethod("hist", signature(x="AlignedGenomeIntervals"),
           function(x, plot=TRUE, ...){
             splitted <- split(reads(x), width(x))
@@ -475,3 +475,18 @@ setMethod("hist", signature(x="AlignedGenomeIntervals"),
             invisible(h) }
 ) # setMethod("hist", signature("AlignedGenomeIntervals"))
 
+### sort intervals
+setMethod("sort", signature(x="AlignedGenomeIntervals"),
+          function(x, decreasing=FALSE, ...) {
+            chr <- gsub("^[Cc]hr", "", chromosome(x))
+            ## replace some chromosome names by numbers for sorting:
+            chr <- gsub("X$","100", chr)
+            chr <- gsub("Y$","200", chr)
+            chr <- gsub("MT?$","300", chr)
+            chr <- gsub("_random$","000", chr)
+            suppressWarnings(chr <- as.numeric(chr))
+            ## are there still non-numeric entries left in chr?
+            if (any(is.na(chr))) chr <- chromosome(x)
+            ord <- order(chr, x[,1], x[,2], decreasing=decreasing)
+            return(x[ord])
+} ) # sort

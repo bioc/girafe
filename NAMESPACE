@@ -55,7 +55,7 @@ exportMethods("plot", "[", "interval_overlap", "interval_included",
               "matches", "matches<-", #"id", "id<-",
               "organism", "organism<-", "reads", "reads<-", "reduce", 
               "score", "score<-", "seq_name", "show",
-              "strand", "strand<-", "subset",
+              "sort", "strand", "strand<-", "subset",
               "width", "which_nearest")
 
 S3method("c", "AlignedGenomeIntervals")

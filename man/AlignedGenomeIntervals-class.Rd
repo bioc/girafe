@@ -52,6 +52,7 @@
 \alias{seq_name}
 \alias{seq_name,AlignedGenomeIntervals-method}
 \alias{seq_name,Genome_intervals-method}
+\alias{sort,AlignedGenomeIntervals-method}
 \alias{strand,AlignedGenomeIntervals-method}
 \alias{strand<-,AlignedGenomeIntervals,vector-method}
 \alias{strand<-,AlignedGenomeIntervals,factor-method}
@@ -193,7 +194,10 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
       sequence aligned to them), then use the optional argument
       \code{exact=TRUE}.
     }
-    \item{score}{access or set a custom score for the object}
+    \item{sort}{sorts the intervals by chromosome name, start and end
+      coordinate in increasing order (unless \code{decreasing=TRUE} is
+      specified) and returns the sorted object}
+   \item{score}{access or set a custom score for the object}
     \item{subset}{take a subset of reads, matrix-like subsetting via
       '\[' can also be used}
   }
@@ -223,7 +227,7 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
   ## alternative initiation of this object:
   A <- AlignedGenomeIntervals(
      start=c(1,3,4,5,8,10), end=c(5,5,6,8,9,11),
-     chromosome=rep(c("chr1","chr2","chr3"), each=2),
+     chromosome=rep(c("chr2","chrX","chr1"), each=2),
      strand=c("-","-","+","+","+","+"),
      sequence=c("ACATT","ACA","CGT","GTAA","AG","CT"),
      reads=rep(1 ,6))
@@ -232,9 +236,12 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
   ## subsetting and combining
   detail(A[c(1:4)])
   detail(c(A[1], A[4]))
+
+  ## sorting: always useful
+  A <- sort(A)
+  detail(A)
   
   ## the 'reduce' method provides a cleaned-up, compact set
-  detail(A)
   detail(reduce(A))
   
   ## biological example

@@ -6,7 +6,6 @@
 #  organism slot of AlignedGenomeIntervals objects
 getChromLengths <- function(x){
   stopifnot(inherits(x, "AlignedGenomeIntervals"))
-  
   if ( length(x@organism) != 1 )
     stop("Organism of '",deparse(substitute(x)),
          "' not defined! Set with organism <-")
