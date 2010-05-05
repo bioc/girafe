@@ -490,3 +490,20 @@ setMethod("sort", signature(x="AlignedGenomeIntervals"),
             ord <- order(chr, x[,1], x[,2], decreasing=decreasing)
             return(x[ord])
 } ) # sort
+
+## subsample; draw n alignd reads from an AlignedGenomeIntervals
+##  object and return the resulting AlignedGenomeIntervals object
+setMethod("sample", signature(x="AlignedGenomeIntervals"),
+ function(x, size, replace=FALSE, ...){
+  stopifnot(inherits(x, "AlignedGenomeIntervals"),
+            is.logical(replace))
+  ## use Rle object during subsampling
+  R <- Rle(values=seq_len(nrow(x)), length=reads(x))
+  ## sample
+  R2 <- sort(sample(R, size=size, replace=replace, ...))
+  ## create result object
+  x2 <- x[runValue(R2)]
+  x2@reads <- runLength(R2)
+  stopifnot(validObject(x2))
+  return(x2)
+} ) #sample

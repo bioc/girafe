@@ -45,13 +45,14 @@
 \alias{reads<-,AlignedGenomeIntervals,character-method}
 \alias{reduce,AlignedGenomeIntervals-method}
 \alias{reduce,Genome_intervals-method}
-\alias{show,AlignedGenomeIntervals-method}
+\alias{sample,AlignedGenomeIntervals-method}
 \alias{score,AlignedGenomeIntervals-method}
 \alias{score<-,AlignedGenomeIntervals,numeric-method}
 \alias{score<-}
 \alias{seq_name}
 \alias{seq_name,AlignedGenomeIntervals-method}
 \alias{seq_name,Genome_intervals-method}
+\alias{show,AlignedGenomeIntervals-method}
 \alias{sort,AlignedGenomeIntervals-method}
 \alias{strand,AlignedGenomeIntervals-method}
 \alias{strand<-,AlignedGenomeIntervals,vector-method}
@@ -192,15 +193,18 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
       If you only want to combine intervals that have exactly the same
       start and stop position (but may have reads of slightly different
       sequence aligned to them), then use the optional argument
-      \code{exact=TRUE}.
-    }
+      \code{exact=TRUE}. }
+    \item{sample}{draw a random sample of \code{n} (Argument
+      \code{size}) of the aligned reads (without or with replacement)
+      and returns the \code{AlignedGenomeIntervals} object defined by
+      these aligned reads.}
+    \item{score}{access or set a custom score for the object}
     \item{sort}{sorts the intervals by chromosome name, start and end
       coordinate in increasing order (unless \code{decreasing=TRUE} is
       specified) and returns the sorted object}
-   \item{score}{access or set a custom score for the object}
     \item{subset}{take a subset of reads, matrix-like subsetting via
       '\[' can also be used}
-  }
+    }
 }
 \author{Joern Toedling}
 \seealso{

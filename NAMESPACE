@@ -54,7 +54,7 @@ exportMethods("plot", "[", "interval_overlap", "interval_included",
               "export", "extend", "hist",
               "matches", "matches<-", #"id", "id<-",
               "organism", "organism<-", "reads", "reads<-", "reduce", 
-              "score", "score<-", "seq_name", "show",
+              "sample", "score", "score<-", "seq_name", "show",
               "sort", "strand", "strand<-", "subset",
               "width", "which_nearest")
 
