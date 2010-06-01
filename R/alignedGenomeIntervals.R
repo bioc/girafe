@@ -497,6 +497,8 @@ setMethod("sample", signature(x="AlignedGenomeIntervals"),
  function(x, size, replace=FALSE, ...){
   stopifnot(inherits(x, "AlignedGenomeIntervals"),
             is.logical(replace))
+  if (!replace && size>sum(reads(x)))
+    stop("cannot take a sample larger than the population when 'replace = FALSE'\n")
   ## use Rle object during subsampling
   R <- Rle(values=seq_len(nrow(x)), length=reads(x))
   ## sample

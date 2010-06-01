@@ -222,7 +222,7 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
            seq_name=factor(rep(c("chr1","chr2","chr3"), each=2)),
            strand=factor(c("-","-","+","+","+","+") ,levels=c("-","+")),
            inter_base=rep(FALSE, 6)),
-         reads=rep(1L, 6), matches=rep(1L,6),
+         reads=rep(3L, 6), matches=rep(1L,6),
          sequence=c("ACATT","ACA","CGT","GTAA","AG","CT"))
 
   show(A)
@@ -234,7 +234,7 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
      chromosome=rep(c("chr2","chrX","chr1"), each=2),
      strand=c("-","-","+","+","+","+"),
      sequence=c("ACATT","ACA","CGT","GTAA","AG","CT"),
-     reads=rep(1 ,6))
+     reads=rep(3L, 6))
   detail(A)
 
   ## subsetting and combining
@@ -247,6 +247,9 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
   
   ## the 'reduce' method provides a cleaned-up, compact set
   detail(reduce(A))
+
+  ## 'sample' to draw a sample subset of reads and their intervals
+  detail(sample(A, 10))
   
   ## biological example
   exDir <- system.file("extdata", package="girafe")
