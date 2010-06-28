@@ -16,9 +16,9 @@
 \alias{extend,AlignedGenomeIntervals-method}
 \alias{extend,Genome_intervals_stranded-method}
 \alias{extend,Genome_intervals-method}
-%\alias{id,AlignedGenomeIntervals-method}
-%\alias{id<-}
-%\alias{id<-,AlignedGenomeIntervals-method}
+\alias{id,AlignedGenomeIntervals-method}
+\alias{id<-}
+\alias{id<-,AlignedGenomeIntervals,character-method}
 \alias{hist,AlignedGenomeIntervals-method}
 \alias{interval_included,AlignedGenomeIntervals,Genome_intervals_stranded-method}
 \alias{interval_included,Genome_intervals_stranded,AlignedGenomeIntervals-method}
@@ -111,6 +111,8 @@
       \code{genome_intervals} for details}
     \item{\code{score}:}{numeric; optional score for each aligned genome
       interval}
+    \item{\code{id}:}{character; optional identifier for each aligned
+      genome interval}
   }
 }
 \section{Extends}{
@@ -236,6 +238,9 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
      sequence=c("ACATT","ACA","CGT","GTAA","AG","CT"),
      reads=rep(3L, 6))
   detail(A)
+
+  ## custom identifiers can be assigned to the intervals
+  id(A) <- paste("gi", 1:6, sep="")
 
   ## subsetting and combining
   detail(A[c(1:4)])

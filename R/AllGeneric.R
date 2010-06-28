@@ -1,6 +1,6 @@
 ### generic functions used in package girafe
 
-#setGeneric("id<-", function(x, value) standardGeneric("id<-"))
+setGeneric("id<-", function(object, value) standardGeneric("id<-"))
 
 setGeneric("organism<-", function(x, value) standardGeneric("organism<-"))
 

@@ -1,3 +1,8 @@
+Changes in version 1.1.6
+
+   o Added an 'id' slot to AlignedGenomeIntervals objects, which
+     allows users to assign a custom identifier to each interval
+
 Changes in version 1.1.5
 
    o Added a 'sample' method for AlignedGenomeIntervals objects

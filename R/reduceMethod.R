@@ -43,6 +43,7 @@ setMethod("reduce", signature("AlignedGenomeIntervals"),
 
             ### prepare result of class AlignedGenomeIntervals:
             xr <- x # [1:length(CC)]
+            hasIds <- length(x@id)==nrow(x)
 
             ### OLD STUFF:
             #treated <- vector("logical", length(ov))
@@ -74,6 +75,7 @@ setMethod("reduce", signature("AlignedGenomeIntervals"),
                 xr@closed[i,] <- c(x@closed[which.min(x[theseIdx,1]),1],
                                    x@closed[which.max(x[theseIdx,2]),2])
                 xr@reads[i]   <- sum(x@reads[theseIdx])
+                
                 ## now for the sequence use 'shift' arg of consensusString
                 # shift depends on strand of the reads:
                 if (strand(x[i])=="-") {
@@ -83,6 +85,9 @@ setMethod("reduce", signature("AlignedGenomeIntervals"),
                   consensusString(DNAStringSet(x@sequence[theseIdx]),
                                   ambiguityMap="N", #still problem with IUPAC 
                                   shift=theseShifts)
+                if (hasIds)
+                  xr@id[i] <- paste(sort(unique(x@id[theseIdx])),
+                                    collapse=",")
                 xr[i,1] <- minx
                 xr[i,2] <- maxx
               } # else

@@ -52,7 +52,7 @@ exportClasses("AlignedGenomeIntervals")
 exportMethods("plot", "[", "interval_overlap", "interval_included",
               "chromosome", "coerce", "coverage", "clusters", "detail",
               "export", "extend", "hist",
-              "matches", "matches<-", #"id", "id<-",
+              "matches", "matches<-", "id", "id<-",
               "organism", "organism<-", "reads", "reads<-", "reduce", 
               "sample", "score", "score<-", "seq_name", "show",
               "sort", "strand", "strand<-", "subset",

@@ -72,3 +72,66 @@ translateCStoNuc <- function(cs.seqs, returnInitial=FALSE){
 }#translateNucToCS  
 
 translateCStoNuc(c("T3002113202013000111111", "T0123"))
+
+
+## adapter trimming in colourspace:
+trimCSAdapter <- function(fq, adapter, match.score=1,
+                          mismatch.score=-1,score.threshold=2)
+{
+  ## argument 'fq' : BStringSet of input colourspace sequences:
+  ### check arguments:
+  stopifnot(inherits(fq,"BStringSet"),
+            inherits(adapter, "BString")||
+            (inherits(adapter, "character") && length(adapter)==1))
+  if (is.character(adapter))
+    adapter <- BString(adapter)
+
+  ## is first letter of adapter a nucleotide for decoding?
+  if (as.character(substr(adapter,1L,1L)) %in% c("A","C","G","T"))
+    adapter <- substr(adapter, 3L, nchar(adapter))
+    # cannot match those
+  n.adjust <- 1L # we need to substract one more for the unknown start of the adapter
+  read.length <- nchar(fq)
+  #construct colourspace substitution matrix:
+  mat <- matrix(mismatch.score, nrow=9, ncol=9)
+  dimnames(mat) <- list(c(0:3,".","A","C","G","T"),
+                        c(0:3,".","A","C","G","T"))
+  diag(mat) <- match.score
+  mat[".", 1:4] <- match.score
+  mat[1:4,"."] <- match.score
+
+  ## do pairwise alignment
+  pa <- pairwiseAlignment(fq, adapter, type="overlap",
+                          substitutionMatrix=mat,
+                          gapOpening=0, gapExtension=-Inf)
+  
+  areCompleteOverlap <- (score(pa) > score.threshold) &
+                        (start(pattern(pa))==1L) &
+                        (end(pattern(pa))==read.length)
+  kstarts <- integer(length(fq))+1L
+  kends <- ifelse(score(pa)<score.threshold, read.length,
+                  ifelse(end(pattern(pa))==read.length,
+                         end(pattern(pa))-width(pattern(pa))-n.adjust,
+                         read.length))
+  if (sum(areCompleteOverlap)>0){
+    kstarts[areCompleteOverlap] <- 1L
+    kends[areCompleteOverlap] <- read.length
+  }
+  fq2 <- narrow(fq, start=kstarts, end=kends)
+  stopifnot(length(fq)==length(fq2))
+  return(fq2)
+}#trimCSAdapter
+
+
+## test:
+seqs.cs <- BStringSet(c("shrek primer1 rev"=
+                        "T233020103031311231200032032222031220201003000312",
+                        "mmu-miR-294"="T3002113202002000111111",
+                        "mmu-miR-294 plus ten nt primer with 1 error"=
+                        "T30021132020020001111112330201032",
+                        "mmu-miR-293 with 20 nt primer with 3 errors"=
+                        "T321130331222100113211123302020303132223120",
+                        "mmu-miR-293 with 20 nt primer with 10 errors"=
+                        "T321130331222100113211111102211312132223122"))
+trimCSAdapter(seqs.cs, adapter=seqs.cs[[1]])
+

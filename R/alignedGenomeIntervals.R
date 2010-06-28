@@ -2,7 +2,7 @@
 ###  the idea is to use the functionality, especially the overlap function,
 ##   of the package genomeIntervals, and extending that class by
 ##   by additional features useful for aligned reads
-### class definition
+##   class definition
 setClass("AlignedGenomeIntervals",
          contains = "Genome_intervals",
          representation = representation(
@@ -10,8 +10,8 @@ setClass("AlignedGenomeIntervals",
            "reads"        ="integer",
            "matches"      ="integer",
            "organism"     ="character",
-           "score"        ="numeric"    ),
-           #"id"           ="character"),
+           "score"        ="numeric",
+           "id"           ="character"),
          prototype = prototype(score=as.numeric(NA)),
          validity = function( object ) {
             # Check 'strand' column within annotation data.frame slot
@@ -26,10 +26,9 @@ setClass("AlignedGenomeIntervals",
             if (length(object@score)!=1){
               if (length(object@score)!=nrow(object)){
                 fails <- c(fails, "The vector 'score' must have exactly the same length as the number of intervals!\n") }}
-            #if (length(object@id)>1){
-            #  if (length(object@id)!=nrow(object)){
-            #    cat("The vector 'id' must have exactly the same length as the number of intervals!\n")
-            #    return(FALSE)}}
+            if (length(object@id)>0){
+              if (length(object@id)!=nrow(object))
+                fails <- c(fails, "The vector of interval identifiers 'id' must have exactly the same length as the number of intervals!\n") }
             if (length(fails) > 0) return(fails)
             return(TRUE)
           }
@@ -43,17 +42,17 @@ setClass("AlignedGenomeIntervals",
 ##          aligned to this interval were aligned to. A value of '1' thus
 ##          means that this read sequence matches uniquely to this one
 ##          genome interval only
-#### ( id: optional identifier for each aligned genome interval )
+## id: optional identifier for each aligned genome interval
 
 
 ### alternative function to create objects of the class
-AlignedGenomeIntervals <- function(start, end, chromosome, strand, reads, matches, sequence)#, id=NULL)
+AlignedGenomeIntervals <- function(start, end, chromosome, strand, reads, matches, sequence, id=character())
 {
   stopifnot(length(start)==length(end),
             length(end)==length(chromosome),
             length(chromosome)==length(strand),
             length(strand)==length(sequence),
-            is.character(sequence))
+            is.character(sequence), is.character(id))
   if (missing(reads))
     reads <- rep.int(1L, length(start))
   if (missing(matches))
@@ -64,10 +63,10 @@ AlignedGenomeIntervals <- function(start, end, chromosome, strand, reads, matche
   start <- as.integer(start)
   end <- as.integer(end)
   stopifnot(all(end >= start))
-  #if (is.null(id))
-  #  id <- character(length(start))
-  #else
-  #  stopifnot(length(id)==length(start))
+  if (length(id)==0)
+    id <- character(length(start))
+  else
+    stopifnot(length(id)==length(start))
   GI <- new("AlignedGenomeIntervals",
             .Data = cbind(start, end),
             annotation=data.frame(
@@ -76,8 +75,10 @@ AlignedGenomeIntervals <- function(start, end, chromosome, strand, reads, matche
               "inter_base"    = vector("logical", length(start))),
             sequence = sequence,
             reads    = as.integer(reads),
-            matches  = as.integer(matches) )
-  #          id       = as.character(id))
+            matches  = as.integer(matches),
+            id       = as.character(id) )
+  ## test new object:
+  stopifnot(validObject(GI))
   return(GI)
 }# alternative initiator function for AlignedGenomeIntervals
 
@@ -116,8 +117,8 @@ setAs("AlignedRead", "AlignedGenomeIntervals",
                     "inter_base"    = vector("logical", nrow(readDat))),
                   sequence = as.character(readDat$seq),
                   reads    = as.integer(readDat$posfreq),
-                  matches  = as.integer(readDat$matches) )
-                  # id       = character(nrow(readDat)))
+                  matches  = as.integer(readDat$matches),
+                  id       = character(nrow(readDat)))
         return(GI)
 })# setAs("AlignedRead", "AlignedGenomeIntervals")
 
@@ -146,10 +147,8 @@ setMethod("[", signature( "AlignedGenomeIntervals" ),
                 # also subset scores of intervals (if specified)
                 if (length(x@score)==nrow(x))
                   x@score <- x@score[i]
-                #if (length(x@id)==nrow(x))
-                #  x@id <- x@id[i]
-                #x@annotation <- x@annotation[i,,drop=FALSE]
-                #x@annotation$"seq_name" <- factor(x@annotation$"seq_name")
+                if (length(x@id)==nrow(x))
+                  x@id <- x@id[i]
             }
             ## slots annotation and .Data are subset by methods for
             ###  super-classes
@@ -213,18 +212,17 @@ setReplaceMethod("score",
 
 ### accessing the strand:
 setMethod("strand", signature("AlignedGenomeIntervals"),
-        function( x ) x@annotation$strand
-)
+          function( x ) x@annotation$strand )
 
 ### get the identifiers of aligned genome intervals
-#setMethod("id", signature("AlignedGenomeIntervals"),
-#        function( x ) x@id )
+setMethod("id", signature("AlignedGenomeIntervals"),
+          function(object,...) object@id )
 
-#setReplaceMethod("id", signature("AlignedGenomeIntervals","character"),
-#   function(x, value) {
-#     stopifnot(length(value)==nrow(x))
-#     x@id <- value
-#     return(X) } )
+setReplaceMethod("id", signature("AlignedGenomeIntervals","character"),
+   function(object, value) {
+      stopifnot(length(value)==nrow(object))
+      object@id <- value
+      return(object) } )
 
 setReplaceMethod("strand", signature("AlignedGenomeIntervals","vector"),
    function(x, value) {
@@ -321,8 +319,8 @@ setMethod("detail", signature(object="AlignedGenomeIntervals"),
                          reads=object@reads,
                          matches=object@matches,
                          sequence=object@sequence)
-            #if (any(nchar(object@id)>0))
-            #  res$id <- object@id
+            if (any(nchar(object@id)>0))
+              res$id <- object@id
             rownames(res) <- NULL
             res$"inter_base" <- NULL
             res
@@ -372,8 +370,8 @@ c.AlignedGenomeIntervals <- function( ... )
                 reads=do.call("c", lapply( args, function(x) x@reads)),
                 matches=do.call("c", lapply(args, function(x) x@matches)),
                 organism=unique(orgs),
-                score=scores
-                # id=do.call("c", lapply(args, function(x) x@id))
+                score=scores,
+                id=do.call("c", lapply(args, function(x) x@id ))
                 )
   return(result)
 }# c.AlignedGenomeIntervals
