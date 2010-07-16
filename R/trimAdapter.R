@@ -1,6 +1,5 @@
 
-### function to remove 3' adapter contamination from reads
-
+### function to remove 3' adapter remnants from reads
 trimAdapter <- function(fq, adapter, match.score=1, mismatch.score=-1,
                         score.threshold=2)
 {
@@ -20,18 +19,17 @@ trimAdapter <- function(fq, adapter, match.score=1, mismatch.score=-1,
   pa <- pairwiseAlignment(sread(fq), adapter, type="overlap",
                           substitutionMatrix=mat,
                           gapOpening=0, gapExtension=-Inf)
-  areCompleteOverlap <- (score(pa) > score.threshold) &
+  areCompleteOverlap <- (score(pa) >= score.threshold) &
                         (start(pattern(pa))==1) &
                         (end(pattern(pa))==read.length)
   kstarts <- integer(length(fq))+1L
   kends <- ifelse(score(pa)<score.threshold, read.length,
                   ifelse(end(pattern(pa))==read.length,
                          end(pattern(pa))-width(pattern(pa)),read.length))
-  if (sum(areCompleteOverlap)>0){
-    kstarts[areCompleteOverlap] <- 1L
-    kends[areCompleteOverlap] <- read.length
-  }
-  fq2 <- narrow(fq, start=kstarts, end=kends)
+  kwidths <- kends - kstarts + 1L
+  if (sum(areCompleteOverlap)>0)
+    kwidths[areCompleteOverlap] <- 0L
+  fq2 <- narrow(fq, start=kstarts, width=kwidths)
   stopifnot(length(fq)==length(fq2))
   return(fq2)
 }#trimAdapter
