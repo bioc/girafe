@@ -460,11 +460,15 @@ setMethod("clusters", signature("AlignedGenomeIntervals"),
 setMethod("hist", signature(x="AlignedGenomeIntervals"),
           function(x, plot=TRUE, ...){
             splitted <- split(reads(x), width(x))
-            xw.tab <- sapply(splitted, sum)
-            imids <- as.integer(names(xw.tab))
+            icounts <- sapply(splitted, sum)
+            imids   <- as.integer(names(icounts))
+            ## fill in missing lengths for homogenous histogram:
+            missingLen <- setdiff(min(imids):max(imids), imids)
+            imids <- c(imids, missingLen)
+            icounts <- c(icounts, integer(length(missingLen)))
             ord <- order(imids)
             imids <- imids[ord]
-            icounts <- xw.tab[ord]
+            icounts <- icounts[ord]
             ibreaks <- c(imids-0.5, imids[length(imids)]+0.5)
             h <- list(breaks=ibreaks, counts=icounts,
                       mids=imids)

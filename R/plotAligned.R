@@ -290,7 +290,7 @@ plotFeatures <- function(gff, chr, xlim, strand, vpr, featureColorScheme=1,
     ## remove duplicated names that are not binding sites
     whnames = whnames[isBindingSite | !duplicated(featName[whnames])]
 
-    txtcex = 0.6
+    txtcex = 0.7 #was 0.6
     txtdy  = 0.7
     s      = sel[whnames]
     txtx   = (pmax.int(min(xlim), gff$start[s])+ pmin.int(max(xlim), gff$end[s]))/2

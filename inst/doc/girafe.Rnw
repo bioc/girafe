@@ -6,7 +6,8 @@
 %%%% HEAD SECTION: START EDITING BELOW %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \documentclass[11pt, a4paper, fleqn]{article}
-\usepackage{geometry}\usepackage{color}
+\usepackage{geometry}
+\usepackage{color}
 \definecolor{darkblue}{rgb}{0.0,0.0,0.75}
 \usepackage[%
 baseurl={http://www.bioconductor.org},%
@@ -75,7 +76,7 @@ reads\footnote{
   The package has been developed for 
   analysing single-end reads (fragment libraries) and 
   does not support mate-pair reads yet.}
-from next-generation sequencing data to a genome.
+from next-generation sequencing~(NGS) data to a genome.
 
 It extends the functionality of the
 Bioconductor~\citep{Gentleman2004}
@@ -414,13 +415,83 @@ intervals overlapping by at least a certain number
 of bases or by a fraction of the interval's
 length, see the function \Rfunction{fracOverlap}.
 
+\section{A word about memory usage}
+
+At the moment, \Rpackage{girafe} and the packages that it
+depends on keep all the information about the read
+alignments in memory. This allows quick access to and
+swift operations on the data, but may limit the package's
+usability on machines with low amounts of RAM.
+
+The step with the highest RAM requirements is reading in
+the alignments into objects of class \Rclass{AlignedRead} using
+the functionality in package \Rpackage{ShortRead}.
+Usually, objects of class \Rclass{AlignedGenomeIntervals}
+are created starting from \Rclass{AlignedRead} objects
+and the \Rclass{AlignedRead} objects can safely be discarded
+after this step.
+Since the data is summarised in that process, 
+\Rclass{AlignedGenomeIntervals} objects require about
+10--100 times less memory than the original
+\Rclass{AlignedRead} object\footnote{%
+  e.g., an \Rclass{AlignedRead} object for holding
+  $10^6$~reads of length 36~bp aligned to the mouse reference
+  genome occupies about 1.4~Gb in RAM but is processed into
+  an \Rclass{AlignedGenomeIntervals} object of size 66.7~Mb}.
+We recommend to perform the import of the
+alignments and the generation of the
+\Rclass{AlignedGenomeIntervals} using a separate script
+which only needs to be called once on a machine with
+sufficient RAM.
+
+A suggestion for limiting memory usage is to perform
+the read alignments and import of the results in batches of
+a few million reads each.
+The batch-wise result \Rclass{AlignedGenomeIntervals} objects
+can later be combined using the basic R function ''c'',
+the standard way of combining objects, optionally followed
+by calls of the \Rfunction{reduce} function.
+
+For alignments in SAM/BAM format,
+the \emph{Samtools} software suite~\citep{Li2009}
+as well as the Bioconductor package 
+\Rpackage{Rsamtools} allow the user to access and import
+only selected subsets of the data, which also leads to
+a lower memory footprint. For details, please
+refer to the documentation of these packages.
+
+Finally, while the processing of \Rclass{AlignedRead}
+objects is the principal way of generating 
+\Rclass{AlignedGenomeIntervals} objects, there also is
+a convenience function also called\\
+\Rfunction{AlignedGenomeIntervals}, which can be used
+to create these objects from simpler objects in the
+work space, such as data read in using basic R functions
+such as \Rfunction{scan}. This convenience function
+may be easier to use for importing and processing the
+data in manageable chunks.
+
+When following these suggestions, most operations
+with package \Rpackage{girafe} should be doable on
+a machine with 4~Gb of RAM, and we have not seen a
+use case that requires more than 12~Gb, yet
+(state as of the end of 2009). 
+However, increased throughput of sequencing machines and
+longer reads will lead to increased memory requirements.
+Future developments of this and other NGS-related
+Bioconductor packages will therefore likely involve ways
+to reduce the memory footprint. One idea is to make use
+of packages like \Rpackage{ff}, which provide ways to swap
+data from RAM to flat files on the hard disk while still
+allowing fast and direct access to the data.
+
 \section{A word about speed}
 
 For improving the run time on machines with multiple
 processors, some of the functions in package \Rpackage{girafe}
 have been implemented to make use of the functionality in
 package \Rpackage{multicore}.
-If the package \Rpackage{multicore} has been attached
+If \Rpackage{multicore} has been attached
 and initialised before calling these functions, the
 functions will make use of \Rfunction{mclapply} instead of
 the normal \Rfunction{lapply}.
@@ -431,7 +502,7 @@ in the following code example.
 
 <<multicoreShow, eval=FALSE>>=
 library("multicore")
-options("cores"=4) # adjust for your machine
+options("cores"=4) # adjust to your machine
 covAI <- coverage(exAI, byStrand=TRUE)
 @
 
