@@ -62,7 +62,7 @@ setMethod("coverage", signature("AlignedGenomeIntervals"),
            }
 
            # new part, using coverage for RangesList from IRanges
-           #  (thanks to suggestion from Patrick
+           #  (thanks to Patrick for the suggestion)
            coords <- IRanges(start=x[,1], end=x[,2])
            if (!byStrand){
              splitCoords <- split(coords, factor(chromosome(x), levels=allChr))

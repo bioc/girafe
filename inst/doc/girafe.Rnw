@@ -271,13 +271,14 @@ these two intervals are not merged
 since they are not at exactly the same position.
 
 
-\subsection{Visualizing the aligned genome intervals}
+\subsection{Visualising the aligned genome intervals}
 
 The package~\Rpackage{girafe} contains functions for
 visualising genome regions with aligned reads.
 %
-<<plotAI, fig=TRUE, include=FALSE, width=7, height=5>>=
-plot(exAI, mm.gi, chr="chrX", start=50400000, end=50410000)
+<<plotAI, fig=TRUE, include=FALSE, width=7, height=4>>=
+plot(exAI, mm.gi, chr="chrX", start=50400000, 
+     end=50410000, show="minus")
 @
 See the result in Figure~\ref{girafe-plotAI}.
 
@@ -415,7 +416,7 @@ intervals overlapping by at least a certain number
 of bases or by a fraction of the interval's
 length, see the function \Rfunction{fracOverlap}.
 
-\section{A word about memory usage}
+\section{Memory usage}
 
 At the moment, \Rpackage{girafe} and the packages that it
 depends on keep all the information about the read
@@ -505,6 +506,44 @@ library("multicore")
 options("cores"=4) # adjust to your machine
 covAI <- coverage(exAI, byStrand=TRUE)
 @
+
+\section{Links to other Bioconductor packages}
+
+The package \Rpackage{girafe} is mostly built upon the interval
+notation and implementation provided by the packages
+\Rpackage{intervals} and \Rpackage{genomeIntervals}.
+Functions from package
+\Rpackage{ShortRead}~\citep{Morgan2009} are used for
+importing the data,
+and \Rpackage{Biostrings} provides help for working
+with the read nucleotide sequences.
+\Rpackage{girafe} also makes limited use of the
+\Rclass{Rle} and \Rclass{IRanges} classes
+defined in package \Rpackage{IRanges}.
+Furthermore, the data can be converted between object
+classes defined in \Rpackage{girafe} and \Rpackage{IRanges}.
+
+We note that many of the interval operations in \Rpackage{girafe}
+can also be performed using classes and functions defined in
+the package \Rpackage{IRanges}.
+However, the scope of the packages is slightly different.
+While \Rpackage{IRanges} is meant to be a generic infrastructure
+package of the Bioconductor project, the aim of \Rpackage{girafe}
+is to provide a single, comparatively lightweight, object class
+for working with reads aligned to the genome,
+the \Rclass{AlignedGenomeIntervals}.
+This class and its methods allow easy access to such data
+and facilitate standard operations and workflows.
+
+There is some overlap in functionality between
+\Rpackage{girafe}, \Rpackage{IRanges}, \Rpackage{GenomicRanges}
+and \Rpackage{tracklayer}.
+The range of interactions between these packages and
+new Bioconductor packages related to next-generation
+sequencing is likely to increase over the releases.
+Our aim is to provide users with a broad range of alternatives
+for selecting the classes and functions 
+that are most suited for their workflows.
 
 \small
 \section*{Package versions}

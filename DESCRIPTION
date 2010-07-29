@@ -1,8 +1,8 @@
 Package: girafe
 Type: Package
 Title: Genome Intervals and Read Alignments for Functional Exploration
-Version: 1.1.8
-Date: 2010-07-20
+Version: 1.1.9
+Date: 2010-07-28
 Depends: R (>= 2.10.0), methods, IRanges (>= 1.3.53), ShortRead (>= 1.3.21), intervals (>= 0.13.1), genomeIntervals (>= 1.1.1), grid
 Imports: methods, Biobase, Biostrings, BSgenome, graphics, grDevices, stats, utils
 Suggests: MASS, org.Mm.eg.db, RColorBrewer
