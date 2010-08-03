@@ -29,8 +29,7 @@ getChromLengths <- function(x){
 # normalise: normalise counts by number of genomic copies per feature
 getFeatureCounts <- function(AI, FG, nameColumn="Name",
                              fractionIncluded=1,
-                             returnType="AlignedGenomeIntervals",
-                             normalise=TRUE)
+                             returnType="AlignedGenomeIntervals")
 {
   stopifnot(inherits(AI, "AlignedGenomeIntervals"),
             inherits(FG, "Genome_intervals"),
@@ -66,9 +65,6 @@ getFeatureCounts <- function(AI, FG, nameColumn="Name",
   IperInd2 <- split(fo$Index1, fo$Index2)
   NperInd2 <- sapply(IperInd2, function(z)
                      sum(AI[z]@reads))
-  if (normalise) # normalise by number of genomic copies per feature
-    NperInd2 <- round(NperInd2 / 
-                      featFreq[ feat[as.integer(names(NperInd2))] ])
   ## option to return named integer vector of counts here:
   if (returnType=="integer"){
     names(NperInd2) <- feat[as.integer(names(NperInd2))]

@@ -289,7 +289,7 @@ See the result in Figure~\ref{girafe-plotAI}.
   while reads aligned to the Crick strand are shown below.
   In the shown region, there only are intervals with aligned
   reads on the Crick strand, and these four intervals overlap
-  with annotated micro-RNA positions.}
+  with annotated microRNA positions.}
 
 Note that the annotation of genome elements (as shown
 in Figure~\ref{girafe-plotAI}) has to be supplied to the
