@@ -56,8 +56,9 @@ raiselinks,plainpages,pdftex]{hyperref}
 
 \SweaveOpts{eps=false, keep.source=TRUE} % produce no 'eps' figures
 
-\title{An overview of package \Rpackage{girafe}}
-\author{Joern Toedling}
+\title{An overview of the \Rpackage{girafe} package}
+\author{J.\ Toedling, C.\ Ciaudo, O.\ Voinnet,
+E.\ Heard, E.\ Barillot}
 \maketitle
 
 <<prepare, echo=FALSE>>=
@@ -92,7 +93,7 @@ library("RColorBrewer")
 
 We present the functionality of the package \Rpackage{girafe}
 using example data that was downloaded from the Gene Expression
-Omnibus database~\citep[GSE10364]{Edgar2002}.
+Omnibus (GEO) database~\citep[GSE10364]{Edgar2002}.
 The example data are Solexa reads of 26~nt length derived from
 small RNA profiling of mouse oocytes.
 The data has previously been described in \citet{Tam2008}.
@@ -115,10 +116,10 @@ ra23.wa  <- readFastq(dirPath=exDir, pattern=
 show(ra23.wa)
 @
 
-For removing the adapter sequence, we are using
+To removing adapter sequences, we use
 the function \Rfunction{trimAdapter}, which relies
-on the function \Rfunction{pairwiseAlignment}
-from package \Rpackage{Biostrings}.
+on the \Rfunction{pairwiseAlignment} function
+from the \Rpackage{Biostrings} package.
 The adapter sequence was obtained from the GEO page
 of the data.
 %
@@ -132,7 +133,7 @@ show(ra23.na)
 
 The reads have been mapped to the mouse genome
 (assembly \textit{mm9}) using the alignment tool
-\textit{Bowtie}~\citep{Langmead2009}.
+\textit{Bowtie} alignment tool~\citep{Langmead2009}.
 
 The resulting tab-delimited map file can be read into
 an object of class \Rclass{AlignedRead}
@@ -148,7 +149,7 @@ show(exA)
 
 The object of class \Rclass{AlignedRead} can be converted
 into an object of class \Rclass{AlignedGenomeIntervals},
-which is the main class of package \Rpackage{girafe}.
+which is the main class of the \Rpackage{girafe} package.
 %
 <<convertAligned, results=hide>>=
 exAI <- as(exA, "AlignedGenomeIntervals")
@@ -183,8 +184,8 @@ Another objective could be to combine overlapping
 short reads that may be (degradation) products
 of the same primary transcript.
 The function \Rfunction{reduce} combines a set of
-aligned intervals into a single aligned interval if
-the intervals
+aligned intervals into a single aligned interval, if
+the intervals:
 \begin{itemize}
   \item are on the same strand,
   \item are overlapping (or contained in each other)
@@ -239,7 +240,7 @@ detail(S)
 @
 
 Calling the \Rfunction{reduce} method on these
-data leads to the following result.
+data leads to the following result:
 %
 <<showReduceData2>>=
 detail(reduce(S))
@@ -274,7 +275,7 @@ since they are not at exactly the same position.
 \subsection{Visualising the aligned genome intervals}
 
 The package~\Rpackage{girafe} contains functions for
-visualising genome regions with aligned reads.
+visualising genomic regions with aligned reads.
 %
 <<plotAI, fig=TRUE, include=FALSE, width=7, height=4>>=
 plot(exAI, mm.gi, chr="chrX", start=50400000, 
@@ -283,11 +284,11 @@ plot(exAI, mm.gi, chr="chrX", start=50400000,
 See the result in Figure~\ref{girafe-plotAI}.
 
 \myincfig{girafe-plotAI}{0.8\textwidth}{A 10-kb region on
-  mouse chromosome X. Reads aligned to the Watson strand
+  the mouse X~chromosome. Reads aligned to the Watson strand
   in this region would be shown above the chromosome coordinate
   axis with the annotation of genome elements in this region,
   while reads aligned to the Crick strand are shown below.
-  In the shown region, there only are intervals with aligned
+  In the region shown, there are only intervals with aligned
   reads on the Crick strand, and these four intervals overlap
   with annotated microRNA positions.}
 
@@ -347,18 +348,18 @@ Additional arguments to the export function,
 besides \Rfunarg{object}, \Rfunarg{con},
 and \Rfunarg{format}, are treated
 as attributes for the track definition line, which
-specifies details about how the data should be visualised
-in the genome browser.
+specifies details concerning how the data should be
+visualised in the genome browser.
 
-Users may also want to have a look at the Bioconductor
+Users may also wish to consult the Bioconductor
 package~\Rpackage{rtracklayer} for data transfer and
 direct interaction between R and the UCSC genome
 browser.
 
 \subsection{Overlap with annotated genome features}
 
-Next, we determine the overlap of the aligned reads
-with annotated genome elements.
+Next, we determine the degree of overlap of the aligned
+reads with annotated genomic elements.
 In this example, the annotated genome elements are provided
 as an object of class
 \Rclass{Genome\_intervals\_stranded}\footnote{%
@@ -419,15 +420,17 @@ length, see the function \Rfunction{fracOverlap}.
 \section{Memory usage}
 
 At the moment, \Rpackage{girafe} and the packages that it
-depends on keep all the information about the read
-alignments in memory. This allows quick access to and
-swift operations on the data, but may limit the package's
-usability on machines with low amounts of RAM.
+depends on, retain all the information concerning the
+read alignments in memory.
+This allows quick access to and swift operations on the
+data, but may limit the package's usability on machines
+with low amounts of RAM.
 
-The step with the highest RAM requirements is reading in
-the alignments into objects of class \Rclass{AlignedRead} using
-the functionality in package \Rpackage{ShortRead}.
-Usually, objects of class \Rclass{AlignedGenomeIntervals}
+The step with the highest RAM requirements is importing
+the alignments and saving them as objects of the
+\Rclass{AlignedRead} class using the functionality
+in package \Rpackage{ShortRead}.
+Usually, objects of the \Rclass{AlignedGenomeIntervals} class
 are created starting from \Rclass{AlignedRead} objects
 and the \Rclass{AlignedRead} objects can safely be discarded
 after this step.
@@ -439,11 +442,11 @@ Since the data is summarised in that process,
   $10^6$~reads of length 36~bp aligned to the mouse reference
   genome occupies about 1.4~Gb in RAM but is processed into
   an \Rclass{AlignedGenomeIntervals} object of size 66.7~Mb}.
-We recommend to perform the import of the
+We recommend that the import of the
 alignments and the generation of the
-\Rclass{AlignedGenomeIntervals} using a separate script
-which only needs to be called once on a machine with
-sufficient RAM.
+\Rclass{AlignedGenomeIntervals} are performed
+using a separate script which only needs to be called
+once on a machine with sufficient RAM.
 
 A suggestion for limiting memory usage is to perform
 the read alignments and import of the results in batches of
@@ -463,8 +466,8 @@ refer to the documentation of these packages.
 
 Finally, while the processing of \Rclass{AlignedRead}
 objects is the principal way of generating 
-\Rclass{AlignedGenomeIntervals} objects, there also is
-a convenience function also called\\
+\Rclass{AlignedGenomeIntervals} objects, there is also
+a convenience function called\\
 \Rfunction{AlignedGenomeIntervals}, which can be used
 to create these objects from simpler objects in the
 work space, such as data read in using basic R functions
@@ -473,33 +476,33 @@ may be easier to use for importing and processing the
 data in manageable chunks.
 
 When following these suggestions, most operations
-with package \Rpackage{girafe} should be doable on
-a machine with 4~Gb of RAM, and we have not seen a
-use case that requires more than 12~Gb, yet
-(state as of the end of 2009). 
+with the \Rpackage{girafe} package should be possible
+on a machine with 4~Gb of RAM, and we have not so far
+encountered a situation that requires more than 12~Gb
+(state as of the end of 2009).
 However, increased throughput of sequencing machines and
 longer reads will lead to increased memory requirements.
 Future developments of this and other NGS-related
-Bioconductor packages will therefore likely involve ways
+Bioconductor packages will therefore likely concern ways
 to reduce the memory footprint. One idea is to make use
-of packages like \Rpackage{ff}, which provide ways to swap
-data from RAM to flat files on the hard disk while still
-allowing fast and direct access to the data.
+of packages like \Rpackage{ff}, which provide ways of
+swapping data from RAM to flat files on the hard disk,
+while still allowing fast and direct access to the data.
 
 \section{A word about speed}
 
 For improving the run time on machines with multiple
-processors, some of the functions in package \Rpackage{girafe}
-have been implemented to make use of the functionality in
-package \Rpackage{multicore}.
+processors, some of the functions in the \Rpackage{girafe}
+package have been implemented to make use of the functionality
+in the \Rpackage{multicore} package.
 If \Rpackage{multicore} has been attached
 and initialised before calling these functions, the
 functions will make use of \Rfunction{mclapply} instead of
 the normal \Rfunction{lapply}.
 
-For example, if \Rpackage{multicore} works on your machine,
-there should be an obvious speed improvement
-in the following code example.
+For example, if \Rpackage{multicore} is functional on
+a given system, there should be an obvious speed
+improvement in the following code example.
 
 <<multicoreShow, eval=FALSE>>=
 library("multicore")
@@ -509,23 +512,23 @@ covAI <- coverage(exAI, byStrand=TRUE)
 
 \section{Links to other Bioconductor packages}
 
-The package \Rpackage{girafe} is mostly built upon the interval
-notation and implementation provided by the packages
-\Rpackage{intervals} and \Rpackage{genomeIntervals}.
-Functions from package
-\Rpackage{ShortRead}~\citep{Morgan2009} are used for
-importing the data,
+The \Rpackage{girafe} package is mostly built upon the
+interval notation and implementation provided by the
+packages \Rpackage{intervals} and \Rpackage{genomeIntervals}.
+Functions from the 
+\Rpackage{ShortRead} package~\citep{Morgan2009}
+are used for importing the data,
 and \Rpackage{Biostrings} provides help for working
 with the read nucleotide sequences.
 \Rpackage{girafe} also makes limited use of the
 \Rclass{Rle} and \Rclass{IRanges} classes
-defined in package \Rpackage{IRanges}.
+defined in the \Rpackage{IRanges} package.
 Furthermore, the data can be converted between object
 classes defined in \Rpackage{girafe} and \Rpackage{IRanges}.
 
 We note that many of the interval operations in \Rpackage{girafe}
 can also be performed using classes and functions defined in
-the package \Rpackage{IRanges}.
+the \Rpackage{IRanges} package.
 However, the scope of the packages is slightly different.
 While \Rpackage{IRanges} is meant to be a generic infrastructure
 package of the Bioconductor project, the aim of \Rpackage{girafe}
@@ -555,9 +558,10 @@ toLatex(sessionInfo(), locale=FALSE)
 
 \section*{Acknowledgements}
 
-Many thanks to Nicolas Servant, Emmanuel Barillot,
-Constance Ciaudo, Edith Heard, Val\'erie Cognat,
-Nicolas Delhomme, and especially Patrick Aboyoun
+Many thanks to Nicolas Servant, 
+%Emmanuel Barillot, Constance Ciaudo, Edith Heard, 
+Val\'erie Cognat, Nicolas Delhomme,
+and especially Patrick Aboyoun
 for suggestions and feedback on the package.
 Special thanks to Julien Gagneur and Richard Bourgon for
 writing \Rpackage{genomeIntervals} and for rapidly answering
@@ -565,8 +569,11 @@ all my questions regarding the package.\\
 The plotting functions in package \Rpackage{girafe} are
 largely based on the function \Rfunction{plotAlongChrom}
 and its auxiliary functions from package \Rpackage{tilingArray},
-most of which were written by Wolfgang Huber.
+most of which were written by Wolfgang Huber.\\
+\textbf{Funding:} This work was supported by
+the Institut Curie, INCa "GepiG".
 
+\vspace{-0.2cm}
 \small
 %%% BIBLIOGRAPHY STARTS HERE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \bibliographystyle{abbrvnat}
