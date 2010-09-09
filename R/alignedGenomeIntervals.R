@@ -108,6 +108,8 @@ getReadPosDf <- function(from){
 ### coercion from ShortRead's class AlignedRead
 setAs("AlignedRead", "AlignedGenomeIntervals",
       function(from, to){
+        # first drop unaligned reads from the AlignedRead object
+        from <- from[!is.na(position(from))]
         readDat <- getReadPosDf(from=from)
         GI <- new("AlignedGenomeIntervals",
                   .Data = cbind(readDat$start, readDat$end),
@@ -305,10 +307,15 @@ setReplaceMethod("reads", signature("AlignedGenomeIntervals","character"),
      x
 })
 
-
 ### lenght of aligned genome intervals:
 setMethod("width", signature(x="AlignedGenomeIntervals"),
-          function(x) as.integer(x[,2]-x[,1]+1))
+          function(x) as.integer(x[,2]-x[,1]+1L))
+
+### length of sequences:
+setMethod("nchar", signature(x="AlignedGenomeIntervals"),
+          function(x, type = "chars", allowNA = FALSE)
+          nchar(x@reads))
+
 
 ### detailed information:
 setMethod("detail", signature(object="AlignedGenomeIntervals"),

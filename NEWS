@@ -1,3 +1,9 @@
+Changes in version 1.1.12
+
+   o Added a new function 'agiFromBam' which uses Rsamtools
+     for creating AlignedGenomeIntervals objects directly
+     from BAM files
+
 Changes in version 1.1.6
 
    o Added an 'id' slot to AlignedGenomeIntervals objects, which

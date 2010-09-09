@@ -21,8 +21,9 @@ importFrom("BSgenome", "organism")
 importMethodsFrom("Biobase", "annotation")
 importFrom("Biobase", "addVigs2WinMenu", "listLen")
 
-importFrom("Biostrings", "consensusString","pairwiseAlignment","pattern","quality")
-importFrom("Biostrings", "DNAString","DNAStringSet","nucleotideSubstitutionMatrix")
+importFrom("Biostrings", "consensusString","pairwiseAlignment","pattern","quality", "nucleotideSubstitutionMatrix")
+importClassesFrom("Biostrings", "DNAString","DNAStringSet")
+importMethodsFrom("Biostrings", "nchar")
 
 importClassesFrom("IRanges", "IRanges", "Ranges", "RangedData", "CompressedIRangesList", "RangesList", "Rle", "SimpleRleList")
 importMethodsFrom("IRanges", "score", "score<-", "width", "rdapply", "[", "endoapply", "Rle", "coverage", "sort", "split")
@@ -44,14 +45,14 @@ importFrom("genomeIntervals", "getGffAttribute")
 
 export("AlignedGenomeIntervals", "plotAligned", "trimAdapter",
        "perWindow", "fracOverlap", "intPhred", "coverageOneStrand",
-       "addNBSignificance", "plotNegBinomFit",
+       "addNBSignificance", "plotNegBinomFit", "agiFromBam",
        "clusters", "coerce", "organism", "plot", "sample") # generics
 
 exportClasses("AlignedGenomeIntervals")
 
 exportMethods("plot", "[", "interval_overlap", "interval_included",
               "chromosome", "coerce", "coverage", "clusters", "detail",
-              "export", "extend", "hist",
+              "export", "extend", "hist", "nchar",
               "matches", "matches<-", "id", "id<-",
               "organism", "organism<-", "reads", "reads<-", "reduce", 
               "sample", "score", "score<-", "seq_name", "show",

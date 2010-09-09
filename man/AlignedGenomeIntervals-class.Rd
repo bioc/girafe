@@ -32,6 +32,7 @@
 \alias{matches,AlignedGenomeIntervals-method}
 \alias{matches<-}
 \alias{matches<-,AlignedGenomeIntervals,integer-method}
+\alias{nchar,AlignedGenomeIntervals-method}
 \alias{organism,AlignedGenomeIntervals-method}
 \alias{organism<-}
 \alias{organism<-,AlignedGenomeIntervals,character-method}

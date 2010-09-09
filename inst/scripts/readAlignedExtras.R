@@ -157,7 +157,7 @@ setMethod("plot", signature=c(x="AlignmentStatistics",y="missing"),
     mtext(side=1, line=-1.3, at=xpos, font=2,
           text=paste(percentages,"%",sep=""))
     barplot(x$mm.position, ylab="Frequency",
-            main="Positions of mismatches in read", ...)
+            main="Positions of mismatches in reads", ...)
     invisible(NULL)
 }) #plot
 
