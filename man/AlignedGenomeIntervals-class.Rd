@@ -101,7 +101,7 @@
       which organism the intervals are related to. Functions making use
       of this slot require a specific annotation package
       \code{org.<organism>.eg.db}. For example if \code{organism} is
-      'Hs', the annotation package 'org.Hs.eg.db' is utilized by these
+      'Hs', the annotation package 'org.Hs.eg.db' is utilised by these
       functions. The annotation packages can be obtained from the
       Bioconductor repositories.}
     \item{\code{annotation}:}{data.frame; see class
@@ -139,7 +139,7 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
       elements are of class \code{Rle}, a class for encoding long
       repetitive vectors that is defined in package \code{IRanges}.\cr
       The additional argument \code{byStrand} governs whether
-      the coverage is computed seperately for each strand. If
+      the coverage is computed separately for each strand. If
       \code{byStrand=FALSE} (default) only one result is returned per
       chromosome. If \code{byStrand=TRUE}, each chromosome result is
       again a list with two separate \code{Rle} objects.\cr
@@ -153,8 +153,8 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
       only advisable for objects containing few intervals}
     \item{extend}{\code{signature("AlignedGenomeIntervals")} with
       additional arguments \code{fiveprime=0L} and
-      \code{threeprime=0L}. These must be integer numbers and greather
-      than or equal to 0. They specifiy how much is subtracted from the
+      \code{threeprime=0L}. These must be integer numbers and greater
+      than or equal to 0. They specify how much is subtracted from the
       left border of the interval and added to the right side. Which end
       is 5' and which one is 3' are determined from the strand
       information of the object.
@@ -182,7 +182,7 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
       \code{coverage}. These annotation packages can be obtained from
       the Bioconductor repository.
     }
-    \item{plot}{visualization method; a second argument of class
+    \item{plot}{visualisation method; a second argument of class
       \code{Genome_intervals_stranded} can be provided for additional
       annotation to the plot. Please see below and in the vignette for
       examples. Refer to the documentation of \code{\link{plotAligned}}

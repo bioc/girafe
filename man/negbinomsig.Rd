@@ -38,7 +38,7 @@ addNBSignificance(x, estimate="NB.012", correct = "none",  max.n=10L)
   mean \sQuote{\eqn{\lambda}{lambda}} (or \sQuote{mu}) and size
   \sQuote{\eqn{r}} (or \sQuote{size}).\cr
 
-  The function knowns a number of methods to estimate the parameters of
+  The function knows a number of methods to estimate the parameters of
   the NB distribution.
   \describe{
     \item{\dQuote{NB.012}}{Solely the windows with only 0,

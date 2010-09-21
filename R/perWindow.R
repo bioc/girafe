@@ -1,9 +1,11 @@
 perWindow <-
-function(object, chr, winsize, step, organism="Mm"){
-
+function(object, chr, winsize, step, organism="Mm", normaliseByMatches=TRUE)
+{
   ### arguments:
   # object: Modified genome_intervals object
-  stopifnot(inherits(object, "AlignedGenomeIntervals"))
+  stopifnot(inherits(object, "AlignedGenomeIntervals"),
+            is.character(organism), length(organism)==1L,
+            is.logical(normaliseByMatches))
   object <- object[annotation(object)$"seq_name"==chr, ]
   if (nrow(object)==0){
     warning(paste("No aligned intervals on chromosome '", chr,"'",sep=""))
@@ -35,11 +37,17 @@ function(object, chr, winsize, step, organism="Mm"){
   ### determine overlap:
   ov <- interval_overlap(iv.win, object)
 
+  ## read counts normalised by number of read matches or not?
+  if (normaliseByMatches)
+    sumfun <- function(x) sum(object@reads[x]/object@matches[x])
+  else
+    sumfun <- function(x) sum(object@reads[x])
+
+  ## create results data frame
   res <- data.frame(chr=rep(chr, length(winstarts)),
                     start=winstarts, end=winends,
                     n.overlap=listLen(ov),
-                    n.reads= sapply(ov, function(x)
-                      sum(object@reads[x])),
+                    n.reads= sapply(ov, sumfun),
                     n.unique=sapply(ov, function(x)
                       sum(object@matches[x]==1)),
                     frac.plus=sapply(ov, function(x)

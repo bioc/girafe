@@ -1,9 +1,9 @@
 \name{plotAligned}
 \Rdversion{1.1}
 \alias{plotAligned}
-\title{Visualize reads aligned to genome intervals}
+\title{Visualise reads aligned to genome intervals}
 \description{
-  Visualize reads aligned to genome intervals
+  Visualise reads aligned to genome intervals
 }
 \usage{
 plotAligned(x, y, chr, start, end, plus.col = "#00441b",
@@ -14,7 +14,7 @@ plotAligned(x, y, chr, start, end, plus.col = "#00441b",
 }
 \arguments{
   \item{x}{Object of class \code{AlignedGenomeIntervals}}
-  \item{y}{This argument is only specified for compability with
+  \item{y}{This argument is only specified for compatibility with
     plot.default and not used in the function.}
   \item{chr}{string; on which chromosome is the region to plot}
   \item{start}{integer; start coordinate of the chromosome region to

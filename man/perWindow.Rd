@@ -8,7 +8,8 @@
   windows.
 }
 \usage{
-perWindow(object, chr, winsize, step, organism = "Mm")
+perWindow(object, chr, winsize, step, organism = "Mm",
+          normaliseByMatches = TRUE)
 }
 \arguments{
   \item{object}{object of class \code{AlignedGenomeIntervals}}
@@ -18,6 +19,10 @@ perWindow(object, chr, winsize, step, organism = "Mm")
     windows}
   \item{organism}{string; with the data of which organism are we dealing
     here}
+   \item{normaliseByMatches}{logical; should the number of reads per
+     \code{AlignedGenomeInterval} be normalised by the number of genomic
+     matches of the read sequence before summing them up in each
+     window? (\emph{i.e.} derivation a weighted sum of read counts)}
 }
 \details{
   The windows are constructed from the first base position onto which a
