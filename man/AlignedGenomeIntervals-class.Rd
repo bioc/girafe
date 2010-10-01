@@ -196,7 +196,14 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
       If you only want to combine intervals that have exactly the same
       start and stop position (but may have reads of slightly different
       sequence aligned to them), then use the optional argument
-      \code{exact=TRUE}. }
+      \code{exact=TRUE}. \cr
+      Finally, it's possible to only collapse/reduce aligned genome
+      intervals that overlap each other by at least a certain fraction
+      using the argument \code{min.frac}. \code{min.frac} is a number
+      between 0.0 and 1.0. For example, if you call \code{reduce} with
+      argument \code{min.frac=0.4}, only intervals that overlap
+      each other by at least 40 percent are collapsed/merged.
+    }
     \item{sample}{draw a random sample of \code{n} (Argument
       \code{size}) of the aligned reads (without or with replacement)
       and returns the \code{AlignedGenomeIntervals} object defined by
