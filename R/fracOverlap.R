@@ -1,8 +1,11 @@
-fracOverlap <- function(I1, I2, min.frac=0.0)
+fracOverlap <- function(I1, I2, min.frac=0.0, mem.friendly=FALSE)
 {
   stopifnot(inherits(I1,"Genome_intervals"),
             inherits(I2,"Genome_intervals"))
-  ov <- interval_overlap(I1,I2)
+  if ( inherits(I1, "AlignedGenomeIntervals") || inherits(I2, "AlignedGenomeIntervals") )
+    ov <- interval_overlap(I1,I2, mem.friendly=mem.friendly)
+  else
+    ov <- interval_overlap(I1,I2)
   # get base pair overlap
   lens <- listLen(ov)
   overlap1 <- rep.int(1:length(ov), lens)

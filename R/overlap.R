@@ -4,7 +4,7 @@
 ## 5a. un-stranded case
 setMethod("interval_overlap",
           signature("AlignedGenomeIntervals", "Genome_intervals"),
-          function(from, to, check_valid = TRUE){
+          function(from, to, check_valid = TRUE, ...){
             if ( check_valid && !( validObject(to) && validObject(from) ) )
               stop( "The 'to' and/or 'from' Genome_intervals are invalid." )
             nextMethod <- getMethod("interval_overlap", signature("Genome_intervals", "Genome_intervals"))
@@ -13,7 +13,7 @@ setMethod("interval_overlap",
 
 setMethod("interval_overlap",
           signature("Genome_intervals", "AlignedGenomeIntervals"),
-          function(from, to, check_valid = TRUE){
+          function(from, to, check_valid = TRUE, ...){
             if ( check_valid && !( validObject(to) && validObject(from) ) )
               stop( "The 'to' and/or 'from' Genome_intervals are invalid." )
             nextMethod <- getMethod("interval_overlap", signature("Genome_intervals", "Genome_intervals"))
@@ -23,28 +23,45 @@ setMethod("interval_overlap",
 ## 5b. stranded case
 setMethod("interval_overlap",
           signature("AlignedGenomeIntervals", "Genome_intervals_stranded" ),
-          function(from, to, check_valid = TRUE){
+          function(from, to, check_valid=TRUE, ...){
             nextMethod <- getMethod("interval_overlap", signature("AlignedGenomeIntervals", "AlignedGenomeIntervals"))
-            return(nextMethod(from, to))
+            return(nextMethod(from, to, ...))
           }
 ) # setMethod("interval_overlap")
 
 setMethod("interval_overlap",
           signature("Genome_intervals_stranded" ,"AlignedGenomeIntervals"),
-          function(from, to, check_valid = TRUE){
+          function(from, to, check_valid=TRUE, ...){
             nextMethod <- getMethod("interval_overlap", signature("AlignedGenomeIntervals", "AlignedGenomeIntervals"))
-            return(nextMethod(from, to))
+            return(nextMethod(from, to, ...))
           }
 ) # setMethod("interval_overlap")
 
 ## 5c. AlignedGenomeIntervals, AlignedGenomeIntervals
-## outdated, check below for new version
-oldAGIoverlap <- function(from, to, check_valid = TRUE){
+setMethod("interval_overlap",
+          signature("AlignedGenomeIntervals", "AlignedGenomeIntervals" ),
+          function(from, to, check_valid=TRUE, mem.friendly=FALSE){
             if ( check_valid && !( validObject(to) && validObject(from) ) )
-              stop( "The 'to' and/or 'from' Genome_intervals are invalid." )
+              stop("The 'to' and/or 'from' AlignedGenomeInterval object(s) are invalid.")
+            if (mem.friendly)
+              return(oldAGIoverlap(from, to))
+            else
+              return(newAGIoverlap(from, to))
+}) # setMethod("interval_overlap")
+
+
+#system.time(I1 <- interval_overlap(exAI, mm.gi, mem.friendly=FALSE))
+#system.time(I2 <- interval_overlap(exAI, mm.gi, mem.friendly=TRUE))
+
+
+##-------------------------------------------------------------------------
+## actual functions for computing overlap
+##-------------------------------------------------------------------------
+
+## older but more memory-friendly version, check below for newer version
+oldAGIoverlap <- function(from, to){
             if( any( is.na(strand(to)) ) || any( is.na(strand(from)) ) )
               stop("NA(s) present in the strand of 'to' or 'from'.")
-
    
             ## loop over strands and call next method
             fromLev <- paste(chromosome(from),strand(from), sep="")
@@ -83,14 +100,10 @@ oldAGIoverlap <- function(from, to, check_valid = TRUE){
 }  # oldAGIoverlap
 
 
-### try new method without lapply:
+### newer method without lapply: faster but requires more memory
 ## add to every position a scaling factor larger than the maximal
 ##  coordinate, negative for minus strand
-setMethod("interval_overlap",
-          signature("AlignedGenomeIntervals", "AlignedGenomeIntervals" ),
-          function(from, to, check_valid = TRUE){
-            if ( check_valid && !( validObject(to) && validObject(from) ) )
-              stop( "The 'to' and/or 'from' Genome_intervals are invalid." )
+newAGIoverlap <- function(from, to){
             if( any( is.na(strand(to)) ) || any( is.na(strand(from)) ) )
               stop("NA(s) present in the strand of 'to' or 'from'.")
             ## which chromosomes are there:
@@ -112,7 +125,4 @@ setMethod("interval_overlap",
             FI <- adjustCoords(from, sf)
             TI <- adjustCoords(to, sf)
             interval_overlap(FI, TI)
-} ) # setMethod
-
-#system.time(I1 <- interval_overlap(exAI, mm.gi))
-#system.time(I2 <- oldAGIoverlap(exAI, mm.gi))
+}  # newAGIoverlap

@@ -6,13 +6,18 @@
   Function to retrieve overlapping intervals that overlap at least by a
   specified fraction of their widths.
 }
-\usage{fracOverlap(I1, I2, min.frac = 0.0)}
+\usage{fracOverlap(I1, I2, min.frac=0.0, mem.friendly=FALSE)}
 \arguments{
   \item{I1}{object that inherits from class \code{Genome_intervals}}
   \item{I2}{object that inherits from class \code{Genome_intervals}}
   \item{min.frac}{numeric; minimum required fraction of each of the two
     interval widths by which two intervals should overlap in order to be
     marked as overlapping.}
+  \item{mem.friendly}{logical; if set to \code{TRUE} an older but
+    memory-friendlier version of \code{interval_overlap} is used
+    inside this function. Note that \code{mem.friendly} is only
+    evaluated if \code{I1} or \code{I2} is of class
+    \code{AlignedGenomeIntervals}.}
 }
 \value{
   An object of class \code{data.frame} with one row each for a pair of

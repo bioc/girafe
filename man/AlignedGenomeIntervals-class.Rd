@@ -260,6 +260,8 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
   
   ## the 'reduce' method provides a cleaned-up, compact set
   detail(reduce(A))
+  ##  with arguments specifying additional conditions for merging
+  detail(reduce(A, min.frac=0.8))
 
   ## 'sample' to draw a sample subset of reads and their intervals
   detail(sample(A, 10))
