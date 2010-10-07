@@ -24,6 +24,8 @@ setMethod("reduce", signature("AlignedGenomeIntervals"),
             } else {
               res <- reduceOne(x, exact=exact, min.frac=min.frac)
             }
+            res <- sort(res)
+            stopifnot(validObject(res))
             return(res)
 }) # setMethod reduce
 
@@ -31,8 +33,10 @@ setMethod("reduce", signature("AlignedGenomeIntervals"),
 reduceOne <- function(z, exact=FALSE, min.frac=0.0){
   ## separate method for reducing only intervals
   ###  at exactly the same position?
-  if (exact) min.frac <- 1.0
-  if (exact || min.frac > 0.0) {
+  if (exact) { #min.frac <- 1.0
+    return(reduceOneExact(z))
+  }
+  if (min.frac > 0.0) {
   ## check: use of new 'interval_included' method may
   ##  be faster here.
   ## basically generate another list 'ov' here
@@ -108,10 +112,32 @@ reduceOne <- function(z, exact=FALSE, min.frac=0.0){
     } # else
   }# while (!done)
   zr <- zr[!removed]
-  stopifnot(validObject(zr))
   return(zr)
 }#reduceOne
 
+reduceOneExact <- function(z){
+  # simpler method if all intervals at exactly same position
+  hasIds <- length(z@id)==nrow(z)
+  readPos <- paste(chromosome(z), strand(z),z[,1], "-", z[,2],
+                   matches(z), sep=".")
+  splitted <- split(seq.int(nrow(z)), readPos)
+  # prepare result: single aligned interval per set of overlapping intervals
+  zr <- z[sapply(splitted, "[", 1L)]
+  for (i in which(listLen(splitted)>1L)){
+    ## iterate over each group of completely overlapping intervals
+    theseIdx <- splitted[[i]]
+    zr@reads[i] <- sum(z@reads[theseIdx])
+    ## now for the sequence use consensusString
+    ##  without shift since all reads on same position
+    zr@sequence[i] <-
+      consensusString(DNAStringSet(z@sequence[theseIdx]),
+                      ambiguityMap="N")
+    if (hasIds)
+      zr@id[i] <- paste(sort(unique(z@id[theseIdx])),
+                        collapse=",")
+  }
+  return(zr)  
+}#reduceOneExact
 
 ### for Genome_intervals
 setMethod("reduce", signature("Genome_intervals"),
