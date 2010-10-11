@@ -23,14 +23,14 @@ importFrom("Biobase", "addVigs2WinMenu", "listLen")
 
 importFrom("Biostrings", "consensusString","pairwiseAlignment","pattern","quality", "nucleotideSubstitutionMatrix")
 importClassesFrom("Biostrings", "DNAString","DNAStringSet")
-importMethodsFrom("Biostrings", "nchar")
+importMethodsFrom("Biostrings", "nchar", "detail")
 
 importClassesFrom("IRanges", "IRanges", "Ranges", "RangedData", "CompressedIRangesList", "RangesList", "Rle", "SimpleRleList")
 importMethodsFrom("IRanges", "score", "score<-", "width", "rdapply", "[", "endoapply", "Rle", "coverage", "sort", "split")
 importFrom("IRanges", "IRanges", "RangedData", "RleList")
 
 importClassesFrom("ShortRead", "AlignedRead")
-importMethodsFrom("ShortRead", "chromosome", "detail", "position", "id")
+importMethodsFrom("ShortRead", "chromosome", "position", "id")
 importFrom("ShortRead", "sread")
 
 importClassesFrom("intervals", "Intervals_virtual",

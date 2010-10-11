@@ -316,23 +316,21 @@ setMethod("nchar", signature(x="AlignedGenomeIntervals"),
           function(x, type = "chars", allowNA = FALSE)
           nchar(x@reads))
 
-
 ### detailed information:
-setMethod("detail", signature(object="AlignedGenomeIntervals"),
-          function(object, ...){
-            res <- cbind("start"=object@.Data[,1],
-                         "end"=object@.Data[,2],
-                         object@annotation,
-                         reads=object@reads,
-                         matches=object@matches,
-                         sequence=object@sequence)
-            if (any(nchar(object@id)>0))
-              res$id <- object@id
+setMethod("detail", signature(x="AlignedGenomeIntervals"),
+          function(x, ...){
+            res <- cbind("start"=x@.Data[,1],
+                         "end"=x@.Data[,2],
+                         x@annotation,
+                         reads=x@reads,
+                         matches=x@matches,
+                         sequence=x@sequence)
+            if (any(nchar(x@id)>0))
+              res$id <- x@id
             rownames(res) <- NULL
             res$"inter_base" <- NULL
             res
 }) #detail
-
             
 ### export methods:
 # see file export.R
