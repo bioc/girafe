@@ -1,12 +1,14 @@
 ### visualization function for AlignedGenomeIntervals objects
 plotAligned <- function(x, y, chr, start, end,
                         plus.col="#00441b", minus.col="#283d78",
-                        gff, featureLegend=FALSE, gffChrColumn="seq_id",
+                        gff, featureLegend=FALSE, gffChrColumn="seq_name",
                         gffNameColumn="name",
                         featureExclude=c("chromosome", "nucleotide_match",
                           "insertion"), show="both",
                         ylim, highlight, main,...){
   ### evaluate arguments:
+  stopifnot(is.data.frame(gff),
+            all(c("type", gffNameColumn, gffChrColumn) %in% names(gff)))
   show <- match.arg(show, c("both", "plus", "minus"))
   xlim <- c(start, end)
   if (!missing(ylim))
@@ -184,7 +186,7 @@ plotFeatures <- function(gff, chr, xlim, strand, vpr, featureColorScheme=1,
                          featureExclude=c("chromosome", "nucleotide_match",
                            "insertion"), featureNoLabel=c("uORF", "CDS"),
                          gffNameColumn="name",
-                         gffChrColumn="seq_id", ...)
+                         gffChrColumn="seq_name", ...)
 {
   #### check arguments:
   stopifnot(is.data.frame(gff),

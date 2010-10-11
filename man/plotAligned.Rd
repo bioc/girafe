@@ -8,7 +8,7 @@
 \usage{
 plotAligned(x, y, chr, start, end, plus.col = "#00441b",
    minus.col = "#283d78", gff, featureLegend = FALSE,
-   gffChrColumn = "seq_id", gffNameColumn="name",
+   gffChrColumn = "seq_name", gffNameColumn="name",
    featureExclude = c("chromosome", "nucleotide_match", "insertion"),
    show="both", ylim, highlight, main, ...)
 }
@@ -24,9 +24,11 @@ plotAligned(x, y, chr, start, end, plus.col = "#00441b",
   \item{plus.col}{
     which colour to use for the reads on the Plus strand}
   \item{minus.col}{
-     which colour to use for the reads on the Plus strand}
-\item{gff}{Data frame containing annotation for genomic feature to be
-    used to further annotate the plot.}
+    which colour to use for the reads on the Plus strand}
+  \item{gff}{Data frame containing annotation for genomic feature to be
+    used to further annotate the plot. Note that it must include a
+    column called \dQuote{type} that indicates the type of each genomic
+    feature (e.g. miRNA, gene etc.). }
   \item{featureLegend}{logical; should a legend that describes the
     colour code for the annotated genome features be appended at the
     bottom of the plot?}
@@ -62,7 +64,25 @@ plotAligned(x, y, chr, start, end, plus.col = "#00441b",
 }
 \seealso{\code{\link{AlignedGenomeIntervals-class}}}
 \examples{
-## See the examples in the vignette and on the manual page
+  A <- AlignedGenomeIntervals(
+        start=c(1,8,10,20), end=c(5,15,16,25),
+        chromosome=rep("chr1", each=4),
+        strand=c("+","+","+","+"),
+        sequence=c("ACATT","TATCGGAC","TCGGACT","GTAACG"),
+        reads=c(5L, 2L, 4L, 7L) )
+  M2 <- new("Genome_intervals_stranded",
+            rbind(c(2,6), c(1,15), c(20,30)),
+            closed = matrix(TRUE, ncol=2, nrow=3),
+            annotation = data.frame(
+              seq_name= factor(rep("chr1", 3)),
+              inter_base= logical(3),
+              strand=factor(rep("+", 3), levels=c("+","-")),
+              alias=c("miRNA1","gene1","tRNA1"),
+              type=c("miRNA","gene","tRNA")) )
+  plot(A, M2, chr="chr1", start=0, end=35,
+       nameColum="alias", show="plus")
+
+## See also the examples in the vignette and on the manual page
 ##  of the class 'AlignedGenomeIntervals'
 }
 \keyword{internal}

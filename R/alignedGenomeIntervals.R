@@ -166,7 +166,7 @@ setMethod("[", signature( "AlignedGenomeIntervals" ),
 setMethod("plot", signature=c("AlignedGenomeIntervals", "missing"),
           function(x, y, chr, start, end, plus.col="#00441b",
                    minus.col="#081d58", gff,
-                   featureLegend=FALSE, gffChrColumn="seq_id",
+                   featureLegend=FALSE, gffChrColumn="seq_name",
                    featureExclude=c("chromosome", "nucleotide_match",
                      "insertion"), highlight, main,...){
             plotAligned(x, y, chr, start, end, plus.col=plus.col,
@@ -178,14 +178,15 @@ setMethod("plot", signature=c("AlignedGenomeIntervals", "missing"),
 ) # setMethod("plot", signature=c("AlignedGenomeIntervals","ANY"))
 
 ### see file plotAligned.R for the source code of the plotting functions
-setMethod("plot", signature=c("AlignedGenomeIntervals", "Genome_intervals_stranded"), function(x, y, idAttributeName="Alias", ...)
+setMethod("plot", signature=c("AlignedGenomeIntervals", "Genome_intervals_stranded"), function(x, y, nameColumn="family", ...)
           {
-            this.gff <- cbind(annotation(y), start=y[,1], end=y[,2],
-                              name=getGffAttribute(y, idAttributeName))
-            names(this.gff)[c(1,8)] <- c("seq_id", "attributes")
-            
-            plotAligned(x, y=NULL, gff=this.gff, gffChrColumn="seq_id",
-                        gffNameColumn=idAttributeName, ...)
+            stopifnot(nameColumn %in% names(annotation(y)))
+            stopifnot("type" %in% names(annotation(y)))
+            this.gff <- cbind(annotation(y), start=y[,1], end=y[,2])
+            #                 getGffAttribute(y, idAttributeName))
+            #names(this.gff)[c(1,8)] <- c("seq_id", "attributes")
+            plotAligned(x, y=NULL, gff=this.gff, gffChrColumn="seq_name",
+                        gffNameColumn=nameColumn, ...)
           }
 ) # setMethod("plot", signature=c("AlignedGenomeIntervals","genome_intervals_stranded"))
 
