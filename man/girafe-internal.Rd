@@ -7,6 +7,7 @@
 \alias{getReadPosDf}
 \alias{getChromLengths}
 \alias{coverageOneStrand}
+\alias{windowCountAndGC}
 \title{Internal girafe functions}
 \description{
   Called internally by other \code{girafe} functions.

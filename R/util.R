@@ -83,3 +83,49 @@ getFeatureCounts <- function(AI, FG, nameColumn="Name",
                                )
   return(xo)
 }#getFeatureCounts
+
+# auxiliary function to compute summed read number and GC content
+#  over fixed-width windwos, faster but more restricted than "perWindow"
+# before: used only + strand, but probably not necessary since
+#  reverse complement has same GC content
+windowCountAndGC <- function(G, chr, bspackage, wsize=1000L,
+                             drop.zero=TRUE, verbose=TRUE)
+{
+  stopifnot(inherits(G, "AlignedGenomeIntervals"))
+  G <- G[chromosome(G)==chr]
+  if (nrow(G)==0){
+    warning("No aligned genome intervals on chr",chr,"!")
+    return(data.frame(start=integer(0), end=integer(0),
+                      n.reads=integer(0), GC=numeric(0)))
+  }
+  G[,1] <- G[,2] <- rowMeans(G[,1:2])
+  #G <- reduce(G, exact=TRUE)
+  if (verbose) cat("computing coverage...\n")
+  covChr <- coverage(G)   # , byStrand=TRUE)
+  stopifnot(length(covChr)==1L)
+  covPlus <- covChr[[1]]  #grep("\\+",names(covChr))]]
+  starts <- seq.int(1L, length(covPlus)-wsize+1L, by=wsize)
+  ends   <- seq.int(wsize, length(covPlus), by=wsize)
+  if (verbose) cat("summing read counts over running windows...\n")
+  agPlus  <- aggregate(covPlus, FUN=sum,
+                       start=starts, end=ends)
+  W <- data.frame(start=starts, end=ends,n.reads=agPlus)
+  if (drop.zero) W <- subset(W, n.reads>0)
+  stopifnot(require(bspackage, character.only=TRUE))
+  # get the genome sequence object from the package
+  if (verbose) cat("computing GC content...\n")
+  genseq <- get(ls(paste("package", bspackage, sep=":"))[1])
+  ## normalise chromosome name:
+  normchr <- gsub("MT$","M", chr)
+  stopifnot(normchr %in% seqnames(genseq))
+  Wseqs <- Views(unmasked(genseq[[normchr]]),
+                 start=W$start, end=W$end)
+  Waf <- alphabetFrequency(Wseqs, as.prob=TRUE, baseOnly=TRUE)
+  W$GC <- round(rowSums(Waf[,c("C","G"), drop=FALSE]),digits=3)
+  if (verbose) cat("Done.\n")
+  return(W)
+} #windowCountAndGC
+
+## usage example:
+#exW <-  windowCountAndGC(exAI, chr="chrX",
+#                         bspackage="BSgenome.Mmusculus.UCSC.mm9")

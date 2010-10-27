@@ -24,9 +24,10 @@ coverageOneStrand <- function(x, chrmax=NA){
   return(res)
 }# coverageOneStrand
 
+
 setMethod("coverage", signature("AlignedGenomeIntervals"),
          function(x, shift=NA, width=NULL, weight=NA,
-                  byStrand=FALSE, ...){
+                  byStrand=FALSE, mem.friendly=FALSE, ...){
            # shift, width, weight have to be there because
            #  the generic definition from IRanges mentions them, however
            #  they are not used here; only byStrand is relevant and
@@ -35,51 +36,65 @@ setMethod("coverage", signature("AlignedGenomeIntervals"),
 
            ## changed on 23 march 2010 to use coverage method from IRanges
            ##  (previous implemented commented out with #o#
-           
-           if (byStrand){
-             #o# on.minus <- strand(x)=="-"
-             altStrandCoding <-
-               factor(as.character(strand(x)), levels=c("-", "+"),
-                      labels=c("minus", "plus"))
-           }
- 
-           ## which chrosomes are in the data:
-           allChr <- gsub("MT","M",unique(chromosome(x)))
-           allChr <- paste("chr",gsub("^chr","",allChr),sep="")
-           ## if organism defined, chromomse length specifies
+
+           ## 1. over which sets (=spaces) to compute coverage:
+           spacex <- chromosome(x)
+           ## normalise chrosome names:
+           spacex <- gsub("MT","M", spacex)
+           spacex <- paste("chr",gsub("^chr","",spacex),sep="")
+           allChr <- unique(spacex)
+
+           ## 2. get chromosome lengths
+           ## if organism defined, chromomse lengths specifies
            ##  the length of the coverage vectors:
            if (length(x@organism)>0){
              chrlens <- getChromLengths(x)
            } else {
-             chrlens <- rep.int(as.integer(NA), length(allChr))
+             # else set arbitrarily to maximum interval end in x
+             chrlens <- rep.int(max(x[,2]), length(allChr))
              names(chrlens) <- allChr
            }
-           ## which function to use for each iteration:
-           if ("package:multicore" %in% search()){
-             lFun <- mclapply
-           } else {
-             lFun <- lapply
-           }
+           if (byStrand){
+             # adapt chromosome lengths and spacex vector
+             oldchrlens <- chrlens
+             chrlens <- rep(chrlens, each=2)
+             names(chrlens) <- paste(rep(names(oldchrlens), each=2),
+                                     c("+","-"),sep="")
+             spacex <- paste(spacex, strand(x), sep="")
+             allChr <- unique(spacex)
+           }#byStrand
 
-           # new part, using coverage for RangesList from IRanges
+           ## test whether set names in names of chromosome lengths
+           if (!all(allChr %in% names(chrlens)))
+             stop("No lengths for some chromosome names!")
+     
+           # new part, using coverage for RangedData from IRanges
            #  (thanks to Patrick for the suggestion)
-           coords <- IRanges(start=x[,1], end=x[,2])
-           if (!byStrand){
-             splitCoords <- split(coords, factor(chromosome(x), levels=allChr))
-             byChr <- coverage(splitCoords,
-                               width=as.list(chrlens)[match(allChr, names(chrlens))])
-           } else {
+           if (!mem.friendly){ # default
+             coords <- RangedData(IRanges(start=x[,1], end=x[,2]),
+                                  space=spacex, reads=reads(x))
+             byChr <- coverage(coords, weight="reads",
+                               width=as.list(chrlens[allChr]))
+           } else { # mem.friendly==TRUE
+             
+             ## which function to use for each iteration:
+             if ("package:multicore" %in% search())
+               lFun <- mclapply
+             else 
+               lFun <- lapply
              byChr <-
                lFun(structure(as.list(allChr), names=allChr),
                     function(z){
-                      on.z <- chromosome(x) == z
-                      splitCoords <- split(coords[on.z], altStrandCoding[on.z])
-                      lens <- list("minus"=chrlens[z], "plus"=chrlens[z])
-                      coverage(splitCoords, width=lens)
+                      on.z <- which(spacex == z)
+                      coords <- RangedData(IRanges(start=x[on.z,1],
+                                                   end=x[on.z,2]),
+                                           space=z, reads=reads(x)[on.z])
+                      coverage(coords, width=as.list(chrlens[z]),
+                               weight="reads")[[1]]
                     })
-           }
+           }# mem.friendly==TRUE
 
-           #o#  old implementation, slower
+           #o#  old implementation, slower and not up to date:
            #byChr <- lFun(as.list(allChr),  function(z){
            #  on.z <- chromosome(x) == z
            #  if (!byStrand)

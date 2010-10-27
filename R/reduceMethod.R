@@ -156,7 +156,8 @@ setMethod("reduce", signature("Genome_intervals"),
             if (exact || min.frac > 0.0) {
             ## basically generate another list 'ov' here
               ov <- as.list(1:nrow(x))
-              fo <- fracOverlap(x,x, min.frac)
+              fo <- fracOverlap(x,x, 0)
+              fo <- subset(fo, fraction1 >= min.frac | fraction2 >= min.frac)
               perInd <- split(fo$Index2, fo$Index1)
               stopifnot(length(perInd)==nrow(x))
               for (j in 1:length(perInd))
@@ -200,7 +201,6 @@ setMethod("reduce", signature("Genome_intervals"),
             stopifnot(validObject(xr))
             return(xr)
 }) # setMethod reduce for Genome_intervals
-
 
 ### resurrect the reduce methods from package 'IRanges'
 ###  which were overwritten by later import of 'intervals'

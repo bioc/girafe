@@ -141,11 +141,12 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
       The additional argument \code{byStrand} governs whether
       the coverage is computed separately for each strand. If
       \code{byStrand=FALSE} (default) only one result is returned per
-      chromosome. If \code{byStrand=TRUE}, each chromosome result is
-      again a list with two separate \code{Rle} objects.\cr
+      chromosome. If \code{byStrand=TRUE}, there result is
+      two separate \code{Rle} objects per chromosome with the strand
+      appended to the chromosome name.\cr
       By now, the \code{coverage} method for
       \code{AlignedGenomeIntervals} makes use of the method for
-      \code{RangesList} objects from package \code{IRanges} (thanks to a
+      \code{RangedData} objects from package \code{IRanges} (thanks to a
       suggestion from P. Aboyoun).
     }
     \item{detail}{\code{signature("AlignedGenomeIntervals")}: a more

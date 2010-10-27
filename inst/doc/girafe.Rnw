@@ -507,7 +507,7 @@ improvement in the following code example.
 <<multicoreShow, eval=FALSE>>=
 library("multicore")
 options("cores"=4) # adjust to your machine
-covAI <- coverage(exAI, byStrand=TRUE)
+exAI.R <- reduce(exAI, mem.friendly=TRUE)
 @
 
 \section{Links to other Bioconductor packages}
