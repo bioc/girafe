@@ -6,12 +6,19 @@
 \alias{[,AlignedGenomeIntervals,ANY,ANY-method}
 \alias{c.AlignedGenomeIntervals}
 \alias{c,AlignedGenomeIntervals-method}
+\alias{chrlengths}
+\alias{chrlengths,AlignedGenomeIntervals-method}
+\alias{chrlengths<-}
+\alias{chrlengths<-,AlignedGenomeIntervals,numeric-method}
 \alias{clusters,AlignedGenomeIntervals-method}
 \alias{clusters,Genome_intervals-method}
 \alias{coerce,AlignedRead,AlignedGenomeIntervals-method}
 \alias{coerce,AlignedGenomeIntervals,RangedData-method}
 \alias{coverage,AlignedGenomeIntervals-method}
 \alias{detail,AlignedGenomeIntervals-method}
+\alias{export}
+\alias{export,AlignedGenomeIntervals,character,character-method}
+\alias{export,Genome_intervals,character,ANY-method}
 \alias{extend}
 \alias{extend,AlignedGenomeIntervals-method}
 \alias{extend,Genome_intervals_stranded-method}
@@ -60,8 +67,6 @@
 \alias{strand<-,AlignedGenomeIntervals,factor-method}
 \alias{subset,AlignedGenomeIntervals-method}
 \alias{width,AlignedGenomeIntervals-method}
-\alias{export}
-\alias{export,AlignedGenomeIntervals,character,character-method}
 \alias{chromosome,AlignedGenomeIntervals-method}
 \alias{chromosome,Genome_intervals-method}
 \title{Class 'AlignedGenomeIntervals'}
@@ -114,6 +119,10 @@
       interval}
     \item{\code{id}:}{character; optional identifier for each aligned
       genome interval}
+    \item{\code{chrlengths}:}{integer; optional named integer vector of
+      chromosome lengths for the respective genome; if present it is
+      used in place of the chromosome lengths retrieved from the
+      annotation package (see slot \code{organism})}
   }
 }
 \section{Extends}{
@@ -171,7 +180,13 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
       into two separate files (formats \sQuote{bedStrand} and
       \sQuote{bedGraphStrand}, respectively).
       Details about these track formats can be found
-      at the UCSC genome browser web pages.}
+      at the UCSC genome browser web pages.\cr
+      The additional argument \code{writeHeader} can be set to
+      \code{FALSE} to suppress writing of the track definition header
+      line to the file.\cr
+      For \code{Genome_intervals} objects, only \sQuote{bed} format is
+      supported at the moment and does not need to be specified.
+    }
     \item{hist}{\code{signature("AlignedGenomeIntervals")}: creates
       a histogram of the lengths of the reads aligned to the intervals}
     \item{organism}{Get or set the organism that the genome intervals in

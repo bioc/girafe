@@ -3,18 +3,19 @@
 ###########################################################################
 
 ### auxiliary function for writing to file
-writeExportData <- function(dat, attribs, format, filename){
+writeExportData <- function(dat, attribs, format, filename, writeHeader=TRUE){
   trackDef <- paste('track type=', format, sep='')
   for (i in 1:length(attribs))
     trackDef <- paste(trackDef,' ',names(attribs)[i],'="',
                       attribs[[i]],'"', sep="")
-  cat(trackDef, "\n", file=filename, sep="")
+  if (writeHeader)
+    cat(trackDef, "\n", file=filename, sep="")
   suppressWarnings(write.table(dat, file=filename, append=TRUE, sep=" ", col.names=FALSE, row.names=FALSE, quote=FALSE))
   message(paste("Result written to file:\n", filename,"\n"))
 }#writeExportData
 
 
-setMethod("export", signature("AlignedGenomeIntervals", "character", "character"), function(object, con, format, ...){
+setMethod("export", signature("AlignedGenomeIntervals", "character", "character"), function(object, con, format, writeHeader=TRUE, ...){
   format <- match.arg(format, c("wiggle_0", "bed", "bedGraph",
                                 "bedStrand", "bedGraphStrand"))
   # maybe others later (esp. bigWig, bigBed may be of interest)
@@ -97,7 +98,8 @@ setMethod("export", signature("AlignedGenomeIntervals", "character", "character"
                       strand=as.character(strand(object)),
                       stringsAsFactors=FALSE)
     resultFile <- paste(gsub("\\..+$","", con),fileSuffix, sep=".")
-    writeExportData(dat, attribs, "bed", resultFile)
+    writeExportData(dat, attribs, "bed", resultFile,
+                    writeHeader=writeHeader)
   }
   if (format=="bedStrand") {
     ## see 'bed', but one file per strand
@@ -120,7 +122,8 @@ setMethod("export", signature("AlignedGenomeIntervals", "character", "character"
       attribs2[["description"]] <-
         paste(attribs[["description"]],", ", strand," strand",sep="")
       dat2 <- dat[as.character(strand(object))==strand, , drop=FALSE]
-      writeExportData(dat2, attribs2, "bed", resultFile)
+      writeExportData(dat2, attribs2, "bed", resultFile,
+                      writeHeader=writeHeader)
     }#for (strand in c("-", "+"))}
   }
   if (format=="bedGraph") {
@@ -158,8 +161,62 @@ setMethod("export", signature("AlignedGenomeIntervals", "character", "character"
       attribs2[["description"]] <-
         paste(attribs[["description"]],strand,"strand")
       dat2 <- dat[as.character(strand(object))==strand, , drop=FALSE]
-      writeExportData(dat2, attribs2, "bedGraph", resultFile)
+      writeExportData(dat2, attribs2, "bedGraph", resultFile,
+                      writeHeader=writeHeader)
     }#for (strand in c("-", "+"))}
   }# bedGraphStrand
   invisible(dat)
 })
+
+setMethod("export", signature("Genome_intervals", "character", "ANY"),
+          function(object, con, format="bed", writeHeader=TRUE,
+                   nameColumn=NULL, ...)
+          {
+            if (!is.null(nameColumn))
+              stopifnot(nameColumn %in% names(annotation(object)))
+            
+            ## additional arguments for UCSC track definition line?
+            further.args <-
+              lapply(as.list(match.call(expand.dots=FALSE)[["..."]]),eval)
+            ## default track attributes
+            attribs <- list(name="intervals data",
+                            description="intervals data",
+                            color="200,100,00", altColor="0,100,200",
+                            visibility="full", autoScale="on")
+            if (length(further.args)>0)
+              for (i in 1:length(further.args))
+                attribs[names(further.args)[i]] <- further.args[[i]]
+ 
+            ## chromosome information and chromsome replacements
+            chroms <- as.character(seq_name(object))
+            chroms <- gsub("chrMT","chrM", chroms)
+
+            ## BED has three required columns and up to nine optional
+            ## five columns: 1.chrom 2.chromStart 3.chromEnd
+            ## 4. OPTIONAL name (displayed next to element)
+            ## 5. OPTIONAL score (not used)
+            ## 6. OPTIONAL strand (either '+' or '-')
+            
+            ## bed coordinates are zero-based, half-open
+            dat <- data.frame(chr=chroms,
+                              chromStart=sprintf("%.0f", object[,1]
+                                - ifelse(object@closed[,1], 1L, 0L)),
+                              chromEnd=sprintf("%.0f", object[,2]
+                                - ifelse(object@closed[,2], 0L, 1L)),
+                              stringsAsFactors=FALSE)
+            ## names for genomic intervals provided?
+            if (!is.null(nameColumn))
+              dat$name <- as.character(annotation(object)[[nameColumn]])
+            ## strand information provided (Genome_intervals_stranded)?
+            if (inherits(object, "Genome_intervals_stranded")){
+              ## strand is only 6th column, fill in 'name' and 'score' before
+              if (is.null(nameColumn))
+                dat$name <- rep(".", nrow(object))
+              dat$score  <- rep(".", nrow(object))
+              dat$strand <- as.character(strand(object))
+            }# if Genome_intervals_stranded
+            resultFile <- paste(gsub("\\..+$","", con),"bed", sep=".")
+            writeExportData(dat, attribs, "bed", resultFile,
+                            writeHeader=writeHeader)
+            invisible(dat)
+}) # setMethod("export", signature("Genome_intervals", "character"))

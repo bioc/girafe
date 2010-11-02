@@ -8,6 +8,7 @@
 \alias{getChromLengths}
 \alias{coverageOneStrand}
 \alias{windowCountAndGC}
+\alias{plotAllChrom}
 \title{Internal girafe functions}
 \description{
   Called internally by other \code{girafe} functions.

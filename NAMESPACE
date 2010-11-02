@@ -47,12 +47,14 @@ export("AlignedGenomeIntervals", "plotAligned", "trimAdapter",
        "perWindow", "fracOverlap", "intPhred", "coverageOneStrand",
        "addNBSignificance", "plotNegBinomFit",
        "agiFromBam", "getFeatureCounts",
-       "clusters", "coerce", "organism", "plot", "sample") # generics
+       "chrlengths", "clusters", "coerce", "organism",
+       "plot", "sample") # generics
 
 exportClasses("AlignedGenomeIntervals")
 
 exportMethods("plot", "[", "interval_overlap", "interval_included",
-              "chromosome", "coerce", "coverage", "clusters", "detail",
+              "chrlengths", "chrlengths<-", "chromosome",
+              "coerce", "coverage", "clusters", "detail",
               "export", "extend", "hist", "nchar",
               "matches", "matches<-", "id", "id<-",
               "organism", "organism<-", "reads", "reads<-", "reduce", 

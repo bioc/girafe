@@ -1,3 +1,14 @@
+Changes in version 1.3.2
+
+   o Added slot 'chrlengths' to S4 class 'AlignedGenomeIntervals'
+     This optional slot stores a named integer vector of
+     chromosome lengths. If present, it is used by 'coverage' and
+     other methods, instead of obtaining those chromosome lengths
+     from the annotation package indicated by the 'organism' slot.
+
+   o Added an "export" method for objects of classes 
+     "Genome_intervals" and "Genome_intervals_stranded"
+
 Changes in version 1.1.15
 
    o Certain functions (reduce, interval_overlap, fracOverlap)

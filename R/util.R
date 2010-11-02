@@ -6,19 +6,34 @@
 #  organism slot of AlignedGenomeIntervals objects
 getChromLengths <- function(x){
   stopifnot(inherits(x, "AlignedGenomeIntervals"))
-  if ( length(x@organism) != 1 )
-    stop("Organism of '",deparse(substitute(x)),
-         "' not defined! Set with organism <-")
-  orgpackage <- paste("org",x@organism,"eg.db", sep=".")
-  worked <- require(orgpackage, character.only=TRUE)
-  if (!worked)
-    stop("No package called '",orgpackage,"' found.",
-         "Install this package or check wether the organism annotation",
-         "of ",deparse(substitute(x))," is correct (e.g. 'Mm' or 'Hs')\n")
-  chrlens <- get(paste(gsub("\\.db$", "", orgpackage),
-                       "CHRLENGTHS", sep=""))
-  names(chrlens) <- paste("chr",
-                          gsub("^chr","", names(chrlens)),sep="")
+  if ("chrlengths" %in% slotNames(x) && length(x@chrlengths)>0) {
+    chrlens <- x@chrlengths
+  } else {
+    if ( length(x@organism) != 1 ) {
+      warning("Neither 'chrlengths' nor 'organism' are defined in ",
+              "object '", deparse(substitute(x)), "'!")
+      splitted <- split(x[,2], chromosome(x))
+      chrlens <- sapply(splitted, max)
+    } else {
+      orgpackage <- paste("org",x@organism,"eg.db", sep=".")
+      worked <- require(orgpackage, character.only=TRUE)
+      if (!worked)
+        stop("No package called '",orgpackage,"' found. ",
+             "Install this package or check wether the organism annotation ",
+             "of ",deparse(substitute(x))," is correct (e.g. 'Mm' or 'Hs')\n")
+      chrlens <- get(paste(gsub("\\.db$", "", orgpackage),
+                           "CHRLENGTHS", sep=""))
+      names(chrlens) <- paste("chr",
+                              gsub("^chr","", names(chrlens)),sep="")
+      names(chrlens) <- gsub("MT$", "M", names(chrlens))
+    }
+  }
+  unichrx <- unique(chromosome(x))
+  areIn <- unichrx %in% names(chrlens)
+  if (!all(areIn))
+    warning("Chromosomes '", paste(unichrx[!areIn], collapse=","),
+            "' mentioned in object but not found in names of ",
+            "vector of chromosome lengths.")
   return(chrlens)
 } #getChromLengths
 

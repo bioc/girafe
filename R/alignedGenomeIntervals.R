@@ -10,12 +10,11 @@ setClass("AlignedGenomeIntervals",
            "reads"        ="integer",
            "matches"      ="integer",
            "organism"     ="character",
+           "chrlengths"   ="integer", # to replace 'organism'
            "score"        ="numeric",
            "id"           ="character"),
          prototype = prototype(score=as.numeric(NA)),
          validity = function( object ) {
-            # Check 'strand' column within annotation data.frame slot
-            # copied from genomeIntervals package
             fails <- character(0)
             if ( !('strand' %in% names(object@annotation) || !is.factor( object@annotation$strand) || nlevels(object@annotation$strand)!=2)){
               fails <- c(fails, "The 'annotation' slot should have column named 'strand' that is a factor with exactly two levels." )}
@@ -29,6 +28,12 @@ setClass("AlignedGenomeIntervals",
             if (length(object@id)>0){
               if (length(object@id)!=nrow(object))
                 fails <- c(fails, "The vector of interval identifiers 'id' must have exactly the same length as the number of intervals!\n") }
+            if ("chrlengths" %in% slotNames(object) &&
+                length(object@chrlengths)>0){
+              unichrx <- unique(chromosome(object))
+              areIn <- unichrx %in% names(object@chrlengths)
+              if (!all(areIn))
+                fails <- c(fails, paste("Chromosomes '", paste(unichrx[!areIn], collapse=","), "' mentioned in object but not found in names of", "vector of chromosome lengths.")) }
             if (length(fails) > 0) return(fails)
             return(TRUE)
           }
@@ -43,10 +48,12 @@ setClass("AlignedGenomeIntervals",
 ##          means that this read sequence matches uniquely to this one
 ##          genome interval only
 ## id: optional identifier for each aligned genome interval
-
+## chrlengths: optional vector of chromosome lengths; used by 'coverage'
+##             and other methods in place of retrieving the chromosome
+##             lengths from an organism annotation package
 
 ### alternative function to create objects of the class
-AlignedGenomeIntervals <- function(start, end, chromosome, strand, reads, matches, sequence, id=character())
+AlignedGenomeIntervals <- function(start, end, chromosome, strand, reads, matches, sequence, id=character(), chrlengths=integer())
 {
   stopifnot(length(start)==length(end),
             length(end)==length(chromosome),
@@ -73,10 +80,11 @@ AlignedGenomeIntervals <- function(start, end, chromosome, strand, reads, matche
               "seq_name"      = factor(chromosome),
               "strand"        = strand,
               "inter_base"    = vector("logical", length(start))),
-            sequence = sequence,
-            reads    = as.integer(reads),
-            matches  = as.integer(matches),
-            id       = as.character(id) )
+            sequence   = sequence,
+            reads      = as.integer(reads),
+            matches    = as.integer(matches),
+            id         = as.character(id),
+            chrlengths = as.integer(chrlengths))
   ## test new object:
   stopifnot(validObject(GI))
   return(GI)
@@ -157,7 +165,6 @@ setMethod("[", signature( "AlignedGenomeIntervals" ),
             callNextMethod( x, i, j, ..., drop=drop)
         }
 )#setMethod("[", signature( "AlignedGenomeIntervals" )
-
 
 
 ###-----------------------------------------------------------------------
@@ -272,6 +279,26 @@ setReplaceMethod("organism", signature("AlignedGenomeIntervals","character"),
      x
 })
 
+### accessor and replacement methods for vector of chromosome lengths
+setMethod("chrlengths", signature("AlignedGenomeIntervals"),
+          function( x ) x@chrlengths
+)
+
+setReplaceMethod("chrlengths", signature("AlignedGenomeIntervals","numeric"),
+   function(x, value) {
+     if (is.null(names(value)))
+       stop("Vector of chromosome lengths must have names!")
+     unichrx <- unique(chromosome(x))
+     areIn <- unichrx %in% names(value)
+     if (!all(areIn))
+       stop("Chromosomes '", paste(unichrx[!areIn], collapse=","),
+            "' mentioned in object but not found in names of ",
+            "vector of chromosome lengths!")
+     mode(value) <- "integer"
+     x@chrlengths <- value
+     x
+})
+
 ### get chromosome annotation
 setMethod("chromosome", signature("Genome_intervals"),
           function(object, ...)
@@ -357,7 +384,16 @@ c.AlignedGenomeIntervals <- function( ... )
   orgs <- do.call("c", lapply(args, function(x) x@organism))
   if (length(unique(orgs))>1)
     stop("Cannot combine intervals aligned to different genomes.")
-  
+
+  ## chromosome lengths vector
+  comb.chrlengths <- do.call("c", lapply(args, function(x) x@chrlengths))
+  if (length(comb.chrlengths)>0 &&
+      any(duplicated(names(comb.chrlengths)))){
+    splitted <- split(as.vector(comb.chrlengths),
+                      names(comb.chrlengths))
+    comb.chrlengths <- sapply(splitted, max)
+  }
+ 
   # rbinds the data frame if possible
   annot <-  try( do.call( rbind, lapply( args, function(x) annotation(x) ) ), silent = TRUE )
   if( class(annot) == "try-error")
@@ -377,7 +413,8 @@ c.AlignedGenomeIntervals <- function( ... )
                 matches=do.call("c", lapply(args, function(x) x@matches)),
                 organism=unique(orgs),
                 score=scores,
-                id=do.call("c", lapply(args, function(x) x@id ))
+                id=do.call("c", lapply(args, function(x) x@id )),
+                chrlengths=comb.chrlengths
                 )
   return(result)
 }# c.AlignedGenomeIntervals

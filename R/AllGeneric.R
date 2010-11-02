@@ -16,3 +16,8 @@ setGeneric("matches", function(x) standardGeneric("matches"))
 setGeneric("matches<-", function(x, value) standardGeneric("matches<-"))
 
 setGeneric("extend", function(x, ...) standardGeneric("extend"))
+
+## new slot 'chrlengths' vector of chromosome lengths
+setGeneric("chrlengths", function(x) standardGeneric("chrlengths"))
+
+setGeneric("chrlengths<-", function(x, value) standardGeneric("chrlengths<-"))
