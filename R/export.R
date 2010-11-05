@@ -3,19 +3,24 @@
 ###########################################################################
 
 ### auxiliary function for writing to file
-writeExportData <- function(dat, attribs, format, filename, writeHeader=TRUE){
+writeExportData <- function(dat, attribs, format, filename,
+                            writeHeader=TRUE, append=FALSE)
+{
   trackDef <- paste('track type=', format, sep='')
   for (i in 1:length(attribs))
     trackDef <- paste(trackDef,' ',names(attribs)[i],'="',
                       attribs[[i]],'"', sep="")
   if (writeHeader)
-    cat(trackDef, "\n", file=filename, sep="")
-  suppressWarnings(write.table(dat, file=filename, append=TRUE, sep=" ", col.names=FALSE, row.names=FALSE, quote=FALSE))
+    cat(trackDef, "\n", file=filename, sep="", append=append)
+  suppressWarnings(write.table(dat, file=filename, sep=" ",
+                               append=(append || writeHeader),
+                               col.names=FALSE, row.names=FALSE,
+                               quote=FALSE))
   message(paste("Result written to file:\n", filename,"\n"))
 }#writeExportData
 
 
-setMethod("export", signature("AlignedGenomeIntervals", "character", "character"), function(object, con, format, writeHeader=TRUE, ...){
+setMethod("export", signature("AlignedGenomeIntervals", "character", "character"), function(object, con, format, ..., writeHeader=TRUE, append=FALSE){
   format <- match.arg(format, c("wiggle_0", "bed", "bedGraph",
                                 "bedStrand", "bedGraphStrand"))
   # maybe others later (esp. bigWig, bigBed may be of interest)
@@ -99,7 +104,7 @@ setMethod("export", signature("AlignedGenomeIntervals", "character", "character"
                       stringsAsFactors=FALSE)
     resultFile <- paste(gsub("\\..+$","", con),fileSuffix, sep=".")
     writeExportData(dat, attribs, "bed", resultFile,
-                    writeHeader=writeHeader)
+                    writeHeader=writeHeader, append=append)
   }
   if (format=="bedStrand") {
     ## see 'bed', but one file per strand
@@ -123,7 +128,7 @@ setMethod("export", signature("AlignedGenomeIntervals", "character", "character"
         paste(attribs[["description"]],", ", strand," strand",sep="")
       dat2 <- dat[as.character(strand(object))==strand, , drop=FALSE]
       writeExportData(dat2, attribs2, "bed", resultFile,
-                      writeHeader=writeHeader)
+                      writeHeader=writeHeader, append=append)
     }#for (strand in c("-", "+"))}
   }
   if (format=="bedGraph") {
@@ -140,7 +145,8 @@ setMethod("export", signature("AlignedGenomeIntervals", "character", "character"
                       score=formatC(iscores, format="fg"),
                       stringsAsFactors=FALSE)
     resultFile <- paste(gsub("\\..+$","", con),fileSuffix, sep=".")
-    writeExportData(dat, attribs, "bedGraph", resultFile)
+    writeExportData(dat, attribs, "bedGraph", resultFile,
+                    writeHeader=writeHeader, append=append)
   }
   if (format=="bedGraphStrand") {
     # like 'bedGraph' but one file per strand
@@ -162,15 +168,16 @@ setMethod("export", signature("AlignedGenomeIntervals", "character", "character"
         paste(attribs[["description"]],strand,"strand")
       dat2 <- dat[as.character(strand(object))==strand, , drop=FALSE]
       writeExportData(dat2, attribs2, "bedGraph", resultFile,
-                      writeHeader=writeHeader)
+                      writeHeader=writeHeader, append=append)
     }#for (strand in c("-", "+"))}
   }# bedGraphStrand
   invisible(dat)
 })
 
+# "..." not last because everything after "..." needs exact matching of argument name
 setMethod("export", signature("Genome_intervals", "character", "ANY"),
-          function(object, con, format="bed", writeHeader=TRUE,
-                   nameColumn=NULL, ...)
+          function(object, con, format="bed", ..., # ... not last
+                   nameColumn=NULL, writeHeader=TRUE, append=FALSE)
           {
             if (!is.null(nameColumn))
               stopifnot(nameColumn %in% names(annotation(object)))
@@ -212,11 +219,11 @@ setMethod("export", signature("Genome_intervals", "character", "ANY"),
               ## strand is only 6th column, fill in 'name' and 'score' before
               if (is.null(nameColumn))
                 dat$name <- rep(".", nrow(object))
-              dat$score  <- rep(".", nrow(object))
+              dat$score  <- integer(nrow(object))
               dat$strand <- as.character(strand(object))
             }# if Genome_intervals_stranded
             resultFile <- paste(gsub("\\..+$","", con),"bed", sep=".")
-            writeExportData(dat, attribs, "bed", resultFile,
-                            writeHeader=writeHeader)
+            girafe:::writeExportData(dat, attribs, "bed", resultFile,
+                            writeHeader=writeHeader, append=append)
             invisible(dat)
 }) # setMethod("export", signature("Genome_intervals", "character"))

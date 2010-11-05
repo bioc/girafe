@@ -89,6 +89,21 @@ library("girafe")
 library("RColorBrewer")
 @
 
+If you use \Rpackage{girafe} for analysing your data,
+please cite:
+\begin{itemize}
+\item{J Toedling, C Ciaudo, O Voinnet, E Heard and E Barillot (2010) girafe -- an {R/Bioconductor} package for functional exploration of aligned next-generation sequencing reads. \textsl{Bioinformatics}, 26(22):2902-3.}
+\end{itemize}
+\nocite{Toedling2010}
+
+\subsection*{Getting help}
+
+If possible, please send questions about \Rpackage{girafe} to the
+Bioconductor mailing list.\\
+See \url{http://www.bioconductor.org/docs/mailList.html} \\
+Their archive of questions and responses may prove helpful, too.
+
+
 \section{Workflow}
 
 We present the functionality of the package \Rpackage{girafe}
@@ -111,7 +126,6 @@ We load reads that include parts of the  adapter sequence.
 ra23.wa  <- readFastq(dirPath=exDir, pattern=
                       "aravinSRNA_23_plus_adapter_excerpt.fastq")
 @ 
-\clearpage % for nicer layout only
 <<showReads>>=
 show(ra23.wa)
 @

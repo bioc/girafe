@@ -171,18 +171,11 @@ setMethod("[", signature( "AlignedGenomeIntervals" ),
 ### visualization: ( a first attempt)
 ###----------------------------------------------------------------------
 setMethod("plot", signature=c("AlignedGenomeIntervals", "missing"),
-          function(x, y, chr, start, end, plus.col="#00441b",
-                   minus.col="#081d58", gff,
-                   featureLegend=FALSE, gffChrColumn="seq_name",
-                   featureExclude=c("chromosome", "nucleotide_match",
-                     "insertion"), highlight, main,...){
-            plotAligned(x, y, chr, start, end, plus.col=plus.col,
-                   minus.col=minus.col, gff,
-                   featureLegend=FALSE, gffChrColumn=gffChrColumn,
-                   featureExclude=featureExclude,
-                   highlight, main,...)
+          function(x, y, ...){
+            plotAligned(x, y=NULL, ...)
           }
-) # setMethod("plot", signature=c("AlignedGenomeIntervals","ANY"))
+) # setMethod("plot", signature=c("AlignedGenomeIntervals","missing"))
+
 
 ### see file plotAligned.R for the source code of the plotting functions
 setMethod("plot", signature=c("AlignedGenomeIntervals", "Genome_intervals_stranded"), function(x, y, nameColumn="family", ...)
