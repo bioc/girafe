@@ -2,11 +2,12 @@
 ## 1: combining intervals which are completely included in each other
 ## 2: combining overlapping intervals
 setMethod("reduce", signature("AlignedGenomeIntervals"),
-          function(x, exact=FALSE, min.frac=0.0,
+          function(x, method="standard", min.frac=0.0,
                    mem.friendly=FALSE, ...){
             ## mem.friendly: version that requires less RAM but is considerably slower
-            stopifnot(is.logical(exact),
-                      is.logical(mem.friendly))
+            stopifnot(is.logical(mem.friendly))
+            method <- match.arg(method, c("standard", "exact",
+                                          "same5", "same3"))
             ## which function to use for each iteration:
             if ("package:multicore" %in% search()){
               lFun <- mclapply
@@ -18,11 +19,11 @@ setMethod("reduce", signature("AlignedGenomeIntervals"),
               allChr <- unique(chromosome(x))
               res <- lFun(as.list(allChr), function(chr){
                 reduceOne(x[x@annotation$seq_name==chr],
-                          exact=exact, min.frac=min.frac)
+                          method=method, min.frac=min.frac)
               })
               res <- do.call("c", res)
             } else {
-              res <- reduceOne(x, exact=exact, min.frac=min.frac)
+              res <- reduceOne(x, method=method, min.frac=min.frac)
             }
             res <- sort(res)
             stopifnot(validObject(res))
@@ -30,12 +31,19 @@ setMethod("reduce", signature("AlignedGenomeIntervals"),
 }) # setMethod reduce
 
 ## function for single iteration of reduce
-reduceOne <- function(z, exact=FALSE, min.frac=0.0){
+reduceOne <- function(z, method=method, min.frac=0.0){
   ## separate method for reducing only intervals
   ###  at exactly the same position?
-  if (exact) { #min.frac <- 1.0
+  method <- match.arg(method, c("standard", "exact",
+                                "same5", "same3"))
+  ## only reduce intervals with exactly same start and end?
+  if (method == "exact") { #min.frac <- 1.0
     return(reduceOneExact(z))
   }
+  ## only reduce intervals with exactly same 5' or 3' end?
+  if (method %in% c("same5","same3"))
+    return(reduceOneEnd(z, type=method))
+  
   if (min.frac > 0.0) {
   ## check: use of new 'interval_included' method may
   ##  be faster here.
@@ -139,10 +147,41 @@ reduceOneExact <- function(z){
   return(zr)  
 }#reduceOneExact
 
+reduceOneEnd <- function(z, type="same5"){
+  # simpler method if all intervals have exactly same 5' or 3' end
+  type <- match.arg(type, c("same5", "same3"))
+  hasIds <- length(z@id)==nrow(z)
+  if (type=="same5")
+    readPos <- paste(chromosome(z), strand(z),
+                     ifelse(strand(z)=="+", z[,1], z[,2]),
+                     matches(z), sep=".")
+  if (type=="same3")
+    readPos <- paste(chromosome(z), strand(z),
+                     ifelse(strand(z)=="+", z[,2], z[,1]),
+                     matches(z), sep=".")
+  splitted <- split(seq.int(nrow(z)), readPos)
+  # prepare result: single aligned interval per set of overlapping intervals
+  zr <- z[sapply(splitted, "[", 1L)]
+  for (i in which(listLen(splitted)>1L)){
+    ## iterate over each group of completely overlapping intervals
+    theseIdx <- splitted[[i]]
+    zr@reads[i] <- sum(z@reads[theseIdx])
+    ## now for the sequence use consensusString
+    ##  without shift since all reads on same position
+    zr@sequence[i] <-
+      consensusString(DNAStringSet(z@sequence[theseIdx]),
+                      ambiguityMap="N")
+    if (hasIds)
+      zr@id[i] <- paste(sort(unique(z@id[theseIdx])),
+                        collapse=",")
+  }
+  return(zr)  
+}#reduceOneEnd
+
 ### for Genome_intervals
 setMethod("reduce", signature("Genome_intervals"),
-          function(x, exact=FALSE, min.frac=0.0, ...){
-            stopifnot(is.logical(exact))
+          function(x, method="standard", min.frac=0.0, ...){
+            method <- match.arg(method, c("standard", "exact"))
             ## separate method for reducing only intervals
             ###  at exactly the same position?
             ## which function to use for each iteration:
@@ -151,9 +190,8 @@ setMethod("reduce", signature("Genome_intervals"),
             } else {
               lFun <- lapply
             }
-            
-            if (exact) min.frac <- 1.0
-            if (exact || min.frac > 0.0) {
+            if (method=="exact") min.frac <- 1.0
+            if (min.frac > 0.0) {
             ## basically generate another list 'ov' here
               ov <- as.list(1:nrow(x))
               fo <- fracOverlap(x,x, 0)

@@ -135,7 +135,9 @@ setAs("AlignedRead", "AlignedGenomeIntervals",
 ### show method
 setMethod("show",signature="AlignedGenomeIntervals",
           function(object){
-            cat(nrow(object),"genome intervals with aligned reads ")
+            cat(nrow(object),"genome intervals with",
+                formatC(sum(object@reads), big.mark=","),
+                "aligned reads ")
             cat("on",nlevels(annotation(object)$"seq_name"),"chromosome(s).")
             if (length(object@organism)>0)
               cat("\nOrganism:",object@organism, collapse=" ")

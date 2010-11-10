@@ -9,6 +9,8 @@
 \alias{coverageOneStrand}
 \alias{windowCountAndGC}
 \alias{plotAllChrom}
+\alias{reduceOneEnd}
+\alias{reduceOneExact}
 \title{Internal girafe functions}
 \description{
   Called internally by other \code{girafe} functions.

@@ -22,10 +22,12 @@ writeExportData <- function(dat, attribs, format, filename,
 
 setMethod("export", signature("AlignedGenomeIntervals", "character", "character"), function(object, con, format, ..., writeHeader=TRUE, append=FALSE){
   format <- match.arg(format, c("wiggle_0", "bed", "bedGraph",
-                                "bedStrand", "bedGraphStrand"))
+                                "bedStrand", "bedGraphStrand", "fasta"))
+  stopifnot(is.logical(append))
   # maybe others later (esp. bigWig, bigBed may be of interest)
   fileSuffix <- switch(format,"wiggle_0"="wig","bed"="bed", "bedGraph"="beg",
-                       "bedStrand"="bed", "bedGraphStrand"="beg", "txt")
+                       "bedStrand"="bed", "bedGraphStrand"="beg",
+                       "fasta"="fa", "txt")
 
   further.args <- lapply(as.list(match.call(expand.dots=FALSE)[["..."]]),eval)
 
@@ -171,6 +173,27 @@ setMethod("export", signature("AlignedGenomeIntervals", "character", "character"
                       writeHeader=writeHeader, append=append)
     }#for (strand in c("-", "+"))}
   }# bedGraphStrand
+
+  if (format=="fasta") {
+    # format fasta file of read sequences, 
+    # one line for each aligned read
+    # (could lead to very big files, maybe instead add number of reads to
+    #  Fasta identifiers for each sequence)
+    resultFile <- paste(gsub("\\..+$","", con),fileSuffix, sep=".")
+    fasta.ids <- paste(">", chroms, "|", as.character(strand(object)),
+                       "|", object[,1],"-", object[,2], sep="")
+    if (!is.null(id(object)) && length(id(object))==nrow(object))
+      fasta.ids <- paste(fasta.ids, id(object))
+    mycon <- file(resultFile, open=ifelse(append, "at", "wt")) # initialise
+    on.exit(close(mycon))
+    for (i in seq.int(nrow(object))){
+      fasta <- character(reads(object)[i]*2)
+      fasta[c(TRUE,FALSE)] <- fasta.ids[i]
+      fasta[c(FALSE, TRUE)] <- object@sequence[i]
+      writeLines(fasta, con=mycon)
+    }#for
+    cat(dat <- paste("Sequenes written to file:\n", resultFile,"\n"))
+  }# fasta
   invisible(dat)
 })
 

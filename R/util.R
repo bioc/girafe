@@ -114,7 +114,7 @@ windowCountAndGC <- function(G, chr, bspackage, wsize=1000L,
                       n.reads=integer(0), GC=numeric(0)))
   }
   G[,1] <- G[,2] <- rowMeans(G[,1:2])
-  #G <- reduce(G, exact=TRUE)
+  #G <- reduce(G, method="exact")
   if (verbose) cat("computing coverage...\n")
   covChr <- coverage(G)   # , byStrand=TRUE)
   stopifnot(length(covChr)==1L)

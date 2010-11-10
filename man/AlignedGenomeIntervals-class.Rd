@@ -206,13 +206,19 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
     \item{reduce}{collapse/reduce aligned genome intervals by combining
       intervals which are completely included in each other, combining
       overlapping intervals AND combining immediately adjacent
-      intervals. Intervals are only combined if they are on the same
-      chromosome, the same strand AND have the same specificity of the
-      aligned reads. \cr
+      intervals (if \code{method="standard"}).
+      Intervals are only combined if they are on the same
+      chromosome, the same strand AND have the same match specificity
+      of the aligned reads. \cr
       If you only want to combine intervals that have exactly the same
       start and stop position (but may have reads of slightly different
-      sequence aligned to them), then use the optional argument
-      \code{exact=TRUE}. \cr
+      sequence aligned to them), then use the argument
+      \code{method="exact"}. \cr
+      If you only want to combine intervals that have exactly the same
+      5' or 3' end (but may differ in the other end and in the aligned
+      sequence), then use the argument
+      \code{method="same5"} (same 5' end) or
+      \code{method="same3"} (same 3' end). \cr
       Finally, it's possible to only collapse/reduce aligned genome
       intervals that overlap each other by at least a certain fraction
       using the argument \code{min.frac}. \code{min.frac} is a number

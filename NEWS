@@ -1,3 +1,14 @@
+Changes in version 1.3.4
+
+   o Added an argument 'method' for the 'reduce' function. This 
+     argument supersedes the boolean argument 'exact', use
+     'method="exact"' in place of 'exact=TRUE'. Additional options
+     are 'method="same5"' and 'method="same3"' to combine intervals
+     that have the same 5' or 3'end, respectively.
+
+   o Added a "fasta" format option to the export method for
+     AlignedGenomeIntervals objects.
+
 Changes in version 1.3.2
 
    o Added slot 'chrlengths' to S4 class 'AlignedGenomeIntervals'
