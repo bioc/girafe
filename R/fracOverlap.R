@@ -1,4 +1,4 @@
-fracOverlap <- function(I1, I2, min.frac=0.0, mem.friendly=FALSE)
+fracOverlap <- function(I1, I2, min.frac=0.0, both=TRUE, mem.friendly=FALSE)
 {
   stopifnot(inherits(I1,"Genome_intervals"),
             inherits(I2,"Genome_intervals"))
@@ -24,6 +24,10 @@ fracOverlap <- function(I1, I2, min.frac=0.0, mem.friendly=FALSE)
   #frac <- round(bases/min.len, digits=2)
   res <- data.frame("Index1"=overlap1, "Index2"=overlap2,
                     "n"=bases, "fraction1"=frac1, "fraction2"=frac2)
-  res <- subset(res, fraction1 >= min.frac & fraction2 >= min.frac )
+  if (min.frac > 0.0) # fraction specified?
+    if (both) # shall both overlap partners meet that requirement?
+      res <- subset(res, fraction1 >= min.frac & fraction2 >= min.frac)
+    else # or is one sufficient?
+      res <- subset(res, fraction1 >= min.frac | fraction2 >= min.frac)
   return(res)
 }# fracOverlap

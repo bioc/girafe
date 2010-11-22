@@ -312,8 +312,8 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
   exOv <- interval_overlap(exAI, mm.gi)
   ## how many elements do read match positions generally overlap:
   table(listLen(exOv))
-  ## what are the 12 elements overlapped by a single match position:
-  mm.gi[exOv[[which(listLen(exOv)==12)]]]
+  ## what are the 13 elements overlapped by a single match position:
+  mm.gi[exOv[[which.max(listLen(exOv))]]]
   ## what kinds of elements are overlapped
   (tabOv <- table(as.character(mm.gi$type)[unlist(exOv)]))
   ### display those classes:

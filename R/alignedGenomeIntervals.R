@@ -180,7 +180,7 @@ setMethod("plot", signature=c("AlignedGenomeIntervals", "missing"),
 
 
 ### see file plotAligned.R for the source code of the plotting functions
-setMethod("plot", signature=c("AlignedGenomeIntervals", "Genome_intervals_stranded"), function(x, y, nameColumn="family", ...)
+setMethod("plot", signature=c("AlignedGenomeIntervals", "Genome_intervals_stranded"), function(x, y, nameColumn="ID", ...)
           {
             stopifnot(nameColumn %in% names(annotation(y)))
             stopifnot("type" %in% names(annotation(y)))
@@ -534,18 +534,28 @@ setMethod("sort", signature(x="AlignedGenomeIntervals"),
 ## subsample; draw n alignd reads from an AlignedGenomeIntervals
 ##  object and return the resulting AlignedGenomeIntervals object
 setMethod("sample", signature(x="AlignedGenomeIntervals"),
- function(x, size, replace=FALSE, ...){
+ function(x, size, replace=TRUE, ...){
   stopifnot(inherits(x, "AlignedGenomeIntervals"),
-            is.logical(replace))
-  if (!replace && size>sum(reads(x)))
-    stop("cannot take a sample larger than the population when 'replace = FALSE'\n")
-  ## use Rle object during subsampling
-  R <- Rle(values=seq_len(nrow(x)), length=reads(x))
-  ## sample
-  R2 <- sort(sample(R, size=size, replace=replace, ...))
-  ## create result object
-  x2 <- x[runValue(R2)]
-  x2@reads <- runLength(R2)
+            is.numeric(size), is.logical(replace))
+  ## only supports sampling with replacement at the moment.
+  #if (!replace && size>sum(reads(x)))
+  #  stop("cannot take a sample larger than the population when 'replace = FALSE'\n")
+  ## OLD VERSION: use Rle object during subsampling
+  # -> but RLE problems with large objects "too large a range of values in 'x'"
+  #R <- Rle(values=seq_len(nrow(x)), length=reads(x))
+  #R2 <- sort(sample(R, size=size, replace=replace, ...))
+  #x2 <- x[runValue(R2)]
+  #x2@reads <- runLength(R2)
+
+  ## NEW VERSION: using sample.int
+  sel <- sample.int(nrow(x), size=size,
+                    replace=TRUE, prob=reads(x))
+  sel <- sort(sel)
+  freq <- tabulate(sel, nbins=nrow(x))
+  ## remove zero-read intervals
+  freq <- freq[freq > 0L]
+  x2 <- x[unique(sel)]
+  x2@reads <- freq
   stopifnot(validObject(x2))
   return(x2)
 } ) #sample

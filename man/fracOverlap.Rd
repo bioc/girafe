@@ -6,13 +6,17 @@
   Function to retrieve overlapping intervals that overlap at least by a
   specified fraction of their widths.
 }
-\usage{fracOverlap(I1, I2, min.frac=0.0, mem.friendly=FALSE)}
+\usage{fracOverlap(I1, I2, min.frac=0.0, both=TRUE, mem.friendly=FALSE)}
 \arguments{
   \item{I1}{object that inherits from class \code{Genome_intervals}}
   \item{I2}{object that inherits from class \code{Genome_intervals}}
   \item{min.frac}{numeric; minimum required fraction of each of the two
     interval widths by which two intervals should overlap in order to be
     marked as overlapping.}
+  \item{both}{logical; shall both overlap partners meet the minimum
+    fraction {\code{min.frac}} requirement? If \code{FALSE}, then
+    overlaps with only partner involved to at least that fraction are
+    also reported.}
   \item{mem.friendly}{logical; if set to \code{TRUE} an older but
     memory-friendlier version of \code{interval_overlap} is used
     inside this function. Note that \code{mem.friendly} is only
@@ -34,7 +38,7 @@
 \seealso{\code{\link[genomeIntervals]{interval_overlap}}}
 \examples{
    data("gen_ints", package="genomeIntervals")
-   i[4,2] <- 13
+   i[4,2] <- 13L
    fracOverlap(i, i, 0.5)
 }
 \keyword{manip}

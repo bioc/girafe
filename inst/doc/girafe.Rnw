@@ -394,10 +394,11 @@ How many elements do read match positions generally overlap?
 table(listLen(exOv))
 @ 
 
-What are the 12 elements overlapped by a single match position?
+What are the \Sexpr{which.max(listLen(exOv))}~elements
+overlapped by a single match position?
 %
 <<show12Elements>>=
-getGffAttribute(mm.gi[exOv[[which(listLen(exOv)==12)]]],"Alias")[,1]
+getGffAttribute(mm.gi[exOv[[which.max(listLen(exOv))]]],"Alias")[,1]
 @ 
 
 And in general,
