@@ -318,6 +318,6 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
   (tabOv <- table(as.character(mm.gi$type)[unlist(exOv)]))
   ### display those classes:
   my.cols <- rainbow(length(tabOv))
-  pie(tabOv, col=my.cols, radius=0.95)
+  pie(tabOv, col=my.cols, radius=0.85)
 }
 \keyword{classes}

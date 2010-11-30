@@ -398,7 +398,7 @@ What are the \Sexpr{which.max(listLen(exOv))}~elements
 overlapped by a single match position?
 %
 <<show12Elements>>=
-getGffAttribute(mm.gi[exOv[[which.max(listLen(exOv))]]],"Alias")[,1]
+mm.gi$ID[exOv[[which.max(listLen(exOv))]]]
 @ 
 
 And in general,
@@ -412,7 +412,7 @@ We display these overlap classes using a pie chart.
 %
 <<displayPie, fig=TRUE, include=FALSE, width=7, height=7, pie=TRUE>>=
 my.cols <- brewer.pal(length(tabOv), "Set3")
-pie(tabOv, col=my.cols, radius=0.95)
+pie(tabOv, col=my.cols, radius=0.85)
 @
 See the result in Figure~\ref{girafe-displayPie}.
 
@@ -420,7 +420,7 @@ See the result in Figure~\ref{girafe-displayPie}.
   showing what kinds of genome elements are overlapped
   by aligned reads. Note that the proportions of the pie
   chart are given by the proportions among all annotated
-  genome elements that \mbox{have $geq 1$ reads} mapped
+  genome elements that \mbox{have $\geq 1$ reads} mapped
   to them and not by the total numbers of reads mapped
   to elements of that class, in which case the proportion
   of the miRNA class would be significantly larger.}

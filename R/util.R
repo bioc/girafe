@@ -144,3 +144,5 @@ windowCountAndGC <- function(G, chr, bspackage, wsize=1000L,
 ## usage example:
 #exW <-  windowCountAndGC(exAI, chr="chrX",
 #                         bspackage="BSgenome.Mmusculus.UCSC.mm9")
+
+

@@ -45,8 +45,8 @@ importFrom("genomeIntervals", "getGffAttribute")
 
 export("AlignedGenomeIntervals", "plotAligned", "trimAdapter",
        "perWindow", "fracOverlap", "intPhred", "coverageOneStrand",
-       "addNBSignificance", "plotNegBinomFit",
-       "agiFromBam", "getFeatureCounts",
+       "addNBSignificance", "plotNegBinomFit", "medianByPosition",
+       "agiFromBam", "getFeatureCounts", "countReadsAnnotated",
        "chrlengths", "clusters", "coerce", "organism",
        "plot", "sample") # generics
 
