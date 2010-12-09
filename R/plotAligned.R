@@ -359,16 +359,6 @@ featureColors <- function(scheme=1){
   defaultColors = c(
     "centromere"               = "#FFEDA0",    ## orange
     "telomere"                 = "#FFEDA0",    ## orange
-    "novel_pseudogene"         = "#f0f0f0",    ## light gray
-    "novel_retrotransposed"    = "#f0f0f0",    ## light gray
-    "novel_coding"             = "#e0f1f2",    ## lighter blue
-    "novel_RNA"                = "#b6e97a",    ## green 
-    "novel_tRNA"               = "#b6e97a",    ## green 
-    "novel_scRNA"              = "#9C9BC1",    ## purple
-    "novel_snRNA"              = "#9C7BC1",    ## purple
-    "novel_rRNA"               = "#ffbe71",    ## meat
-    "novel_snoRNA"             = "#8F6A68",    ## red brown
-    "novel_miRNA"              = "#DC76DC",    ## light red-violet
     "pseudogene"               = "#e0e0e0",    ## light gray
     "uORF"                     = "#FED976" ,   ## orange
     "nc_primary_transcript"    = "#a0a0a0",    ## grey
@@ -386,6 +376,7 @@ featureColors <- function(scheme=1){
     "exon"        = "#5E88B0",             ## aquamarine
     "transcript"  = "#5E88B0",             ## aquamarine
     "ncRNA"       = "#86b94a",             ## dark green 
+    "sRNA"        = "#86b94a",             ## dark green 
     "tRNA"        = "#a6d96a",             ## green
     "snRNA"       = "#8C6BB1",             ## purple
     "rRNA"        = "#fdae61",             ## meat
@@ -402,7 +393,7 @@ featureColors <- function(scheme=1){
   fill = switch(scheme,
     default  = defaultColors,
     unicolor = ifelse(is.na(defaultColors), NA,  "#addfff"),  ## light blue
-    stop("Encountered error when filling in colors."))
+    stop("Encountered error when filling in colours."))
   
   ## calculate hex string for a color that is a little bit darker than the
   ## hex string in the argument

@@ -16,8 +16,8 @@ fracOverlap <- function(I1, I2, min.frac=0.0, both=TRUE, mem.friendly=FALSE)
   bases <- right-left+1L
   len1 <- I1[overlap1,2]-I1[overlap1,1]+1L
   len2 <- I2[overlap2,2]-I2[overlap2,1]+1L
-  frac1 <- round(bases/len1, digits=2)
-  frac2 <- round(bases/len2, digits=2)
+  frac1 <- bases/len1
+  frac2 <- bases/len2 # removed rounding here
   #frac <- round(bases/pmin(len1, len2), digits=2)
   #min.len <- pmin.int(I1[overlap1,2]- I1[overlap1,1]+1,
   #                    I2[overlap2,2]- I2[overlap2,1]+1)

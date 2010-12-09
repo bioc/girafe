@@ -450,12 +450,10 @@ setMethod("extend", signature(x="AlignedGenomeIntervals"),
             ## right end:
             x[,2] <- x[,2] + ifelse(strand(x)=="-",
                                     fivePrime, threePrime)
-            ## if organism defined, do not exceed chromlength:
-            if (length(x@organism)>0){
-              chrlens <- getChromLengths(x)
-              xchrom <- gsub("MT", "M", chromosome(x))
-              x[,2] <- pmin.int(x[,2], chrlens[xchrom], na.rm=TRUE)
-            }
+            ## do not exceed chromlength:
+            chrlens <- getChromLengths(x)
+            xchrom <- gsub("MT$", "M", chromosome(x))
+            x[,2] <- pmin.int(x[,2], chrlens[xchrom], na.rm=TRUE)
             return(x)
 }) #extend
 

@@ -29,16 +29,17 @@ setMethod("export", signature("AlignedGenomeIntervals", "character", "character"
                        "bedStrand"="bed", "bedGraphStrand"="beg",
                        "fasta"="fa", "txt")
 
-  further.args <- lapply(as.list(match.call(expand.dots=FALSE)[["..."]]),eval)
-
   ## default track attributes
   attribs <- list(name="aligned data", description="aligned data",
                   color="200,100,00", altColor="0,100,200",
                   visibility="full", autoScale="on")
+
+  ## additional track attributes specified?
+  further.args <- as.list(match.call(expand.dots=FALSE)[["..."]])
   if (length(further.args)>0)
     for (i in 1:length(further.args))
-     attribs[names(further.args)[i]] <- further.args[[i]]
-
+      attribs[names(further.args)[i]] <- eval(further.args[[i]])
+  
   ## chromosome information and chromsome replacements
   chroms <- as.character(seq_name(object))
   chroms <- gsub("chrMT","chrM", chroms)
@@ -205,17 +206,16 @@ setMethod("export", signature("Genome_intervals", "character", "ANY"),
             if (!is.null(nameColumn))
               stopifnot(nameColumn %in% names(annotation(object)))
             
-            ## additional arguments for UCSC track definition line?
-            further.args <-
-              lapply(as.list(match.call(expand.dots=FALSE)[["..."]]),eval)
             ## default track attributes
             attribs <- list(name="intervals data",
                             description="intervals data",
                             color="200,100,00", altColor="0,100,200",
                             visibility="full", autoScale="on")
+            ## additional track attributes specified?
+            further.args <- as.list(match.call(expand.dots=FALSE)[["..."]])
             if (length(further.args)>0)
               for (i in 1:length(further.args))
-                attribs[names(further.args)[i]] <- further.args[[i]]
+                attribs[names(further.args)[i]] <- eval(further.args[[i]])
  
             ## chromosome information and chromsome replacements
             chroms <- as.character(seq_name(object))
