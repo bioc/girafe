@@ -10,7 +10,7 @@ plotAligned(x, y, chr, start, end, plus.col = "#00441b",
    minus.col = "#283d78", gff, featureLegend = FALSE,
    gffChrColumn = "seq_name", gffNameColumn="name",
    featureExclude = c("chromosome", "nucleotide_match", "insertion"),
-   showStrands="both", ylim, highlight, main, ...)
+   showStrands="both", extraColors=NULL, ylim, highlight, main, ...)
 }
 \arguments{
   \item{x}{Object of class \code{AlignedGenomeIntervals}}
@@ -42,6 +42,10 @@ plotAligned(x, y, chr, start, end, plus.col = "#00441b",
   \item{showStrands}{string; which strands to show in the plot; defaults
     to \dQuote{both}, but users can specify to show only the reads on
     \dQuote{plus} or \dQuote{minus} strand}
+  \item{extraColors}{named character vector which allows the user to
+    specify custom colours for feature types; colours must be specified
+    in RGB format as hexadecimal strings starting with \dQuote{#},
+    e.g. \dQuote{#addfff} for light-blue}
   \item{ylim}{range of read numbers to plot (y-axis limits); if not
     specified they are computed from the data in the specified region}
   \item{highlight}{currently unused}
@@ -79,11 +83,17 @@ plotAligned(x, y, chr, start, end, plus.col = "#00441b",
               strand=factor(rep("+", 3), levels=c("+","-")),
               alias=c("miRNA1","gene1","tRNA1"),
               type=c("miRNA","gene","tRNA")) )
-  plot(A, M2, chr="chr1", start=0, end=35,
-       nameColum="alias", showStrands="plus")
+  if (interactive())
+    plot(A, M2, chr="chr1", start=0, end=35,
+         nameColum="alias", showStrands="plus")
 
-## See also the examples in the vignette and on the manual page
-##  of the class 'AlignedGenomeIntervals'
+  if (interactive())
+  ## use 'extraColors' to replace default colours (or to add new ones):
+    plot(A, M2, chr="chr1", start=0, end=35, nameColum="alias",
+         showStrands="plus", extraColors=c("tRNA"="#6666DD"))
+
+  ## See also the examples in the vignette and on the manual page
+  ##  of the class 'AlignedGenomeIntervals'
 }
 \keyword{internal}
 \keyword{hplot}

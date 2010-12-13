@@ -1,3 +1,11 @@
+Changes in version 1.3.8
+
+   o Several minor changes including corrections to the documentation.
+     For plotting the aligned reads, the user can now specify custom
+     colours for certain types of annotated feature. See
+     ?plotAligned
+     for an example and details.
+
 Changes in version 1.3.6
 
    o New function "countReadsAnnotated" to sum up aligned reads per

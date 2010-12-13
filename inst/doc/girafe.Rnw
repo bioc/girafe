@@ -264,10 +264,9 @@ Notice that the reads that match the same segment of the
 X~chromosome differ in their last base. This ambiguity
 is represented in the combined aligned interval having
 %an 'R', the IUPAC code for 'A' or 'G',
-an 'N'
-as the last letter.
+an 'N' as the last letter.
 
-The additional argument~\Rfunarg{exact=TRUE}
+The additional argument~\Rfunarg{method="exact"}
 can be specified if you want to solely combine intervals
 that have exactly the same start and stop position (but may
 have reads of slightly different sequence aligned to them).
@@ -275,15 +274,19 @@ Consider the following example:
 <<reduceExample3>>=
 S2 <- exAI[seq_name(exAI)=="chr11" & exAI@matches==1 & exAI[,1]>8e7]
 detail(S2)
-detail(reduce(S2, exact=TRUE))
+detail(reduce(S2, method="exact"))
 @
 Notice that the 6th aligned interval in~\Robject{S2} is
 only shifted by 1~nt from the 5th one. 
 By default, the function \Rfunction{reduce}
 would merge them into one aligned genome interval.
-However, when \Rfunarg{exact=TRUE} is specified,
+However, when \Rfunarg{method="exact"} is specified,
 these two intervals are not merged
 since they are not at exactly the same position.
+There are additional methods for restricting the merging
+to intervals with the same 5'- and \mbox{3'-ends}
+(specify \Rfunarg{method="same5"} and
+\Rfunarg{method="same3"}, respectively).
 
 
 \subsection{Visualising the aligned genome intervals}

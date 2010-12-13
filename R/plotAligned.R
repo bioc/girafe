@@ -5,7 +5,8 @@ plotAligned <- function(x, y, chr, start, end,
                         gffNameColumn="name",
                         featureExclude=c("chromosome", "nucleotide_match",
                           "insertion"), showStrands="both",
-                        ylim, highlight, main,...){
+                        extraColors=NULL, ylim, highlight, main,...)
+{
   ### evaluate arguments:
   if (!missing(gff))
     stopifnot(is.data.frame(gff),
@@ -122,7 +123,9 @@ plotAligned <- function(x, y, chr, start, end,
                    featureColorScheme=1,
                    vpr=which(names(VP)==sprintf("gff%s", strand)),
                    gffChrColumn=gffChrColumn,
-                   gffNameColumn=gffNameColumn, ...)
+                   gffNameColumn=gffNameColumn,
+                   extraColors=extraColors, 
+                   ...)
   
   ###########################################################
   ### plot  chromosomal coordinate axis #####################
@@ -171,7 +174,8 @@ plotAligned <- function(x, y, chr, start, end,
   if(featureLegend)
     plotAlongChromLegend(which(names(VP)=="legend"),
                          featureColorScheme=1,
-                         featureExclude=featureExclude)
+                         featureExclude=featureExclude,
+                         extraColors=extraColors)
 
   #### END ALL PLOTTING
   popViewport(2)
@@ -187,7 +191,8 @@ plotFeatures <- function(gff, chr, xlim, strand, vpr, featureColorScheme=1,
                          featureExclude=c("chromosome", "nucleotide_match",
                            "insertion"), featureNoLabel=c("uORF", "CDS"),
                          gffNameColumn="name",
-                         gffChrColumn="seq_name", ...)
+                         gffChrColumn="seq_name",
+                         extraColors=NULL, ...)
 {
   #### check arguments:
   stopifnot(is.data.frame(gff),
@@ -250,7 +255,7 @@ plotFeatures <- function(gff, chr, xlim, strand, vpr, featureColorScheme=1,
   
   ## 4. colors for boxes
   ## check that we know how deal with all features
-  featCols = featureColors(featureColorScheme)
+  featCols = featureColors(featureColorScheme, extraColors=extraColors)
   whm = names(featsp) %in% rownames(featCols)
   ### indicate features of unknown types as such:
   if(!all(whm)){
@@ -354,39 +359,48 @@ alongChromTicks <- function(x){
 ## here, this can be used to let important features overdraw less
 ## important ones (e.g. tRNA is more specific than ncRNA)
 ## to test, say tilingArray:::plotAlongChromLegend()
+## user can replace or add extra colours for feature types by supplying
+##  a named vector of hexadecimal colours as 'extraColors'
 ##------------------------------------------------------------
-featureColors <- function(scheme=1){
+featureColors <- function(scheme=1, extraColors=NULL){
+  if (!is.null(extraColors))
+    stopifnot(is.character(extraColors),
+              length(attr(extraColors, "names"))>0,
+              all(nchar(extraColors)==7L),
+              all(substr(extraColors, 1, 1)=="#") )
   defaultColors = c(
-    "centromere"               = "#FFEDA0",    ## orange
-    "telomere"                 = "#FFEDA0",    ## orange
-    "pseudogene"               = "#e0e0e0",    ## light gray
-    "uORF"                     = "#FED976" ,   ## orange
-    "nc_primary_transcript"    = "#a0a0a0",    ## grey
-    "repeat_family"            = "#CC6666",    ## light red
-    "repeat_region"            = "#e31a1c",    ## bright red
-    "retrotransposed"          = "#f1b6da",    ## pink
-    "transposable_element"     = "#f1b6da",    ## pink
-    "transposable_element_gene"= "#f1b6da",
-    "ARS"         = "#CC9966",             ## light brown
-    "insertion"   = "#FFEDA0",             ## orange
-    "CDS_dubious" = "#e0f1f2",             ## lighter blue
-    "gene"        = "#addfff",             ## light blue
-    "CDS"         = "#addfff",             ## light blue
-    "coding"      = "#5E88B0",             ## light blue
-    "exon"        = "#5E88B0",             ## aquamarine
-    "transcript"  = "#5E88B0",             ## aquamarine
-    "ncRNA"       = "#86b94a",             ## dark green 
-    "sRNA"        = "#86b94a",             ## dark green 
-    "tRNA"        = "#a6d96a",             ## green
-    "snRNA"       = "#8C6BB1",             ## purple
-    "rRNA"        = "#fdae61",             ## meat
-    "ribozyme"    = "#dd8e41",             ## meat
-    "snoRNA"      = "#7F5A58",             ## red brown
-    "miRNA"       = "#cc66cc",             ## light red-violet
+    "centromere"            = "#FFEDA0",    ## orange
+    "telomere"              = "#FFEDA0",    ## orange
+    "pseudogene"            = "#e0e0e0",    ## light gray
+    "uORF"                  = "#FED976" ,   ## orange
+    "repeat_family"         = "#CC6666",    ## light red
+    "repeat_region"         = "#e31a1c",    ## bright red
+    "retrotransposon"       = "#f1b6da",    ## pink
+    "transposable_element"  = "#f1b6da",    ## pink
+    "ARS"                   = "#CC9966",    ## light brown
+    "insertion"             = "#FFEDA0",    ## orange
+    "CDS_dubious"           = "#e0f1f2",    ## lighter blue
+    "gene"                  = "#addfff",    ## light blue
+    "CDS"                   = "#addfff",    ## light blue
+    "exon"                  = "#5E88B0",    ## aquamarine
+    "transcript"            = "#5E88B0",    ## aquamarine
+    "ncRNA"                 = "#86b94a",    ## dark green 
+    "sRNA"                  = "#86b94a",    ## dark green 
+    "tRNA"                  = "#a6d96a",    ## green
+    "snRNA"                 = "#8C6BB1",    ## purple
+    "piRNA"                 = "#fc63a1",    ## reddish pink
+    "rRNA"                  = "#fdae61",    ## meat
+    "ribozyme"              = "#dd8e41",    ## meat
+    "snoRNA"                = "#7F5A58",    ## red brown
+    "miRNA"                 = "#cc66cc"     ## light red-violet
+  )
+  ## add user-specified extra colours
+  defaultColors[names(extraColors)] <- extraColors
+  defaultColors <- c(defaultColors, c(
     "unknown"     = "#a0a0a0",
     "nucleosome_binding_motif" = "#C9C299",## lemon chiffon
     "TF_binding_site" = "#C9C299"          ## lemon chiffon
-    )
+  ))
   darkenborder <- as.logical(c(rep(1, length(defaultColors)-2),0, 0))
   stopifnot(length(darkenborder)==length(defaultColors))
   
@@ -416,7 +430,7 @@ featureColors <- function(scheme=1){
 ##------------------------------------------------------------
 plotAlongChromLegend <- function(vpr, nr=2, featureColorScheme=1,
     featureExclude=c("chromosome", "nucleotide_match", "insertion"),
-    mainLegend, cexLegend=0.35, cexMain=1)
+    extraColors=NULL, mainLegend, cexLegend=0.35, cexMain=1)
 {
   endVP = FALSE
   # when this function is called on its own 
@@ -446,7 +460,7 @@ plotAlongChromLegend <- function(vpr, nr=2, featureColorScheme=1,
               just  = c("center", "center"), gp=gpar(cex=cexLegend))
   } 
 
-  featCols = featureColors(featureColorScheme)
+  featCols = featureColors(featureColorScheme, extraColors=extraColors)
   featCols = featCols[ !(rownames(featCols) %in% featureExclude), ]
 
   pushViewport(viewport(layout.pos.col=1, layout.pos.row=vpr, yscale=c(0.5, nr+0.5)))

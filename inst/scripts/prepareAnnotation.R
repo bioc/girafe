@@ -42,7 +42,7 @@ mm.mir$gffAttributes <- paste(mm.mir$gffAttributes, " Alias=", getGffAttribute(m
 
 ### First we downloaded the annotation of ncRNAs in the mouse genome
 ###  from the RFAM database in form of the file
-### ftp://ftp.sanger.ac.uk/pub/databases/Rfam/CURRENT/genome_gff3.tar.gz
+### ftp://ftp.sanger.ac.uk/pub/databases/Rfam/CURRENT/genome.gff3.tar.gz
 
 ### Files fro M_musculus were combined (via 'cat') into one file
 ###  containing the complete RFAM annotation for mouse
