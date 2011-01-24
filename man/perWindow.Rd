@@ -8,8 +8,8 @@
   windows.
 }
 \usage{
-perWindow(object, chr, winsize, step, organism = "Mm",
-          normaliseByMatches = TRUE)
+perWindow(object, chr, winsize, step, normaliseByMatches = TRUE,
+          mem.friendly = FALSE)
 }
 \arguments{
   \item{object}{object of class \code{AlignedGenomeIntervals}}
@@ -17,18 +17,18 @@ perWindow(object, chr, winsize, step, organism = "Mm",
   \item{winsize}{integer; size of the sliding window in base-pairs}
   \item{step}{integer; offset between the start positions of two sliding
     windows}
-  \item{organism}{string; with the data of which organism are we dealing
-    here}
-   \item{normaliseByMatches}{logical; should the number of reads per
+  \item{normaliseByMatches}{logical; should the number of reads per
      \code{AlignedGenomeInterval} be normalised by the number of genomic
      matches of the read sequence before summing them up in each
      window? (\emph{i.e.} derivation a weighted sum of read counts)}
+  \item{mem.friendly}{logical; argument passed on to function
+    \code{interval_overlap}; if \code{TRUE} the less RAM and, if the
+    \code{multicore} package is attached, multiple processors are used
+    for computing the overlap, on the expense of time}
 }
 \details{
   The windows are constructed from the first base position onto which a
   read has been mapped until the end of the chromosome.
-  Chromosome lengths are obtained from organism annotation packages,
-  such as \code{org.mm.eg.db}.
 }
 \value{
   a \code{data.frame} with the following information for each sliding
@@ -48,6 +48,10 @@ perWindow(object, chr, winsize, step, organism = "Mm",
     contained inside this window}
   \item{max.reads}{integer; the maximal number of reads at any single
     one match position contained inside this window}
+  \item{first}{integer; coordinate of the first read alignment found
+    inside the window}
+  \item{last}{integer; coordinate of the last read alignment found
+    inside the window}
   %\item{score}{numeric; a custom score that should indicate how relevant
   % this window is for our analyses. This score is very preliminary and
   %  not relevant for most users.}

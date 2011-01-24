@@ -8,4 +8,4 @@ journal = "Bioinformatics",
   volume = "26",
   pages = "2902-2903",
   doi = "10.1093/bioinformatics/btq531",
-  textVersion = paste("Joern Toedling, Constance Ciaudo, Olivier Voinnet, Edith Heard, and Emmanuel Barillot (2010)", "girafe - an R/Bioconductor package for functional exploration of aligned next-generation sequencing reads.", "Bioinformatics"))
+  textVersion = paste("Joern Toedling, Constance Ciaudo, Olivier Voinnet, Edith Heard, and Emmanuel Barillot (2010)", "girafe - an R/Bioconductor package for functional exploration of aligned next-generation sequencing reads.", "Bioinformatics", "26:2902-2903."))

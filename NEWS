@@ -27,7 +27,7 @@ Changes in version 1.3.5
      IF TRUE (default), both overlapping partners must be involved
      to at least a proportion of 'min.frac' in order to report the
      overlap; if FALSE, it suffices that one of the partners meets
-     the 'min.frac' requirements.
+     the 'min.frac' requirement.
  
 Changes in version 1.3.4
 

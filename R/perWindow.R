@@ -1,21 +1,18 @@
 perWindow <-
-function(object, chr, winsize, step, organism="Mm", normaliseByMatches=TRUE)
+function(object, chr, winsize, step, normaliseByMatches=TRUE,
+         mem.friendly=FALSE)
 {
   ### arguments:
   # object: Modified genome_intervals object
   stopifnot(inherits(object, "AlignedGenomeIntervals"),
-            is.character(organism), length(organism)==1L,
-            is.logical(normaliseByMatches))
+             is.logical(normaliseByMatches))
   object <- object[annotation(object)$"seq_name"==chr, ]
   if (nrow(object)==0){
     warning(paste("No aligned intervals on chromosome '", chr,"'",sep=""))
     return(NULL)
   }
-  ## organism package for chr length
-  orgname <- paste("org.", organism, ".eg",sep="")
-  require(paste(orgname, "db", sep="."), character.only=TRUE)
-  stopifnot(exists(paste(orgname, "CHRLENGTHS",sep="")))
-  chrlen <- get(paste(orgname, "CHRLENGTHS",sep=""))[gsub("^chr","",gsub("MT","M",chr))]
+  ## get vector of chromosome lengths
+  chrlen <- getChromLengths(object)
   stopifnot(!is.na(chrlen))
 
   ### prepare sliding windows
@@ -35,7 +32,7 @@ function(object, chr, winsize, step, organism="Mm", normaliseByMatches=TRUE)
                 )
 
   ### determine overlap:
-  ov <- interval_overlap(iv.win, object)
+  ov <- interval_overlap(iv.win, object, mem.friendly=mem.friendly)
 
   ## read counts normalised by number of read matches or not?
   if (normaliseByMatches)
@@ -57,9 +54,12 @@ function(object, chr, winsize, step, organism="Mm", normaliseByMatches=TRUE)
                       if (length(xreads)==0)
                         return(0)
                       else
-                        return(max(object@reads[x]))})
+                        return(max(object@reads[x]))}),
+                    first=sapply(ov, function(x)
+                      min(object[x, 1]) ),
+                    last=sapply(ov, function(x)
+                      max(object[x, 2]) )
                     )
-
   ### we want a high cluster score for
   ## a.) many match positions
   ## b.) few reads per match position
@@ -69,7 +69,7 @@ function(object, chr, winsize, step, organism="Mm", normaliseByMatches=TRUE)
   #res$score <- with(res, n.overlap*
   #                  (n.overlap/n.reads + n.unique/n.overlap -
   #                  (frac.plus-0.5)^2))
-                    # * 1/(end-start+1))
+                    # * 1/(last-first+1L))
   class(res) <- c(class(res), "slidingWindowSummary")
   return(res)
 }#perWindow

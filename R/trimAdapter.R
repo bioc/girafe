@@ -4,8 +4,7 @@ trimAdapter <- function(fq, adapter, match.score=1, mismatch.score=-1,
                         score.threshold=2)
 {
   stopifnot(inherits(fq,"ShortReadQ"),
-            inherits(adapter, "DNAString")|inherits(adapter, "character"),
-            length(adapter)==1)
+            inherits(adapter, "DNAString")|inherits(adapter, "character"))
   if (is.character(adapter))
     adapter <- DNAString(adapter)
   read.length <- unique(width(fq))
