@@ -2,7 +2,7 @@
 plotAligned <- function(x, y, chr, start, end,
                         plus.col="#00441b", minus.col="#283d78",
                         gff, featureLegend=FALSE, gffChrColumn="seq_name",
-                        gffNameColumn="name",
+                        gffTypeColumn="type", gffNameColumn="ID",
                         featureExclude=c("chromosome", "nucleotide_match",
                           "insertion"), showStrands="both",
                         extraColors=NULL, ylim, highlight, main,...)
@@ -10,7 +10,9 @@ plotAligned <- function(x, y, chr, start, end,
   ### evaluate arguments:
   if (!missing(gff))
     stopifnot(is.data.frame(gff),
-              all(c("type", gffNameColumn, gffChrColumn) %in% names(gff)))
+       all(c(gffTypeColumn, gffNameColumn, gffChrColumn) %in% names(gff)))
+  if (missing(chr) || missing(start) || missing(end))
+    stop("Arguments 'chr', 'start', and 'end' need to be supplied!")
   showStrands <- match.arg(showStrands, c("both", "plus", "minus"))
   xlim <- c(start, end)
   if (!missing(ylim))
@@ -123,6 +125,7 @@ plotAligned <- function(x, y, chr, start, end,
                    featureColorScheme=1,
                    vpr=which(names(VP)==sprintf("gff%s", strand)),
                    gffChrColumn=gffChrColumn,
+                   gffTypeColumn=gffTypeColumn,
                    gffNameColumn=gffNameColumn,
                    extraColors=extraColors, 
                    ...)
@@ -190,7 +193,7 @@ plotAligned <- function(x, y, chr, start, end,
 plotFeatures <- function(gff, chr, xlim, strand, vpr, featureColorScheme=1,
                          featureExclude=c("chromosome", "nucleotide_match",
                            "insertion"), featureNoLabel=c("uORF", "CDS"),
-                         gffNameColumn="name",
+                         gffNameColumn="ID", gffTypeColumn="type",
                          gffChrColumn="seq_name",
                          extraColors=NULL, ...)
 {
@@ -220,7 +223,7 @@ plotFeatures <- function(gff, chr, xlim, strand, vpr, featureColorScheme=1,
   featName = gff[sel, gffNameColumn]
   
   ## split by feature type (e.g. CDS, ncRNA)
-  feature  = as.character(gff[sel, "type"])
+  feature  = as.character(gff[sel, gffTypeColumn])
   featsp = split(seq(along=sel), feature)
   
   ## There are now five different cases, and we need to deal with them:

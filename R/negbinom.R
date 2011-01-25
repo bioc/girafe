@@ -62,7 +62,7 @@ addNBSignificance <- function(x, estimate="NB.012", correct="none", max.n=10L){
     E <- list(mu=sum(x$n.reads)/nrow(x),
               size=.Machine$integer.max)
   }
-  pval <- suppressWarnings(pnbinom(x$n.reads-1L, mu=E$mu, size=E$size,
+  pval <- suppressWarnings(pnbinom(x$n.reads-1, mu=E$mu, size=E$size,
                                    lower.tail=FALSE))
   if (any(is.nan(pval)))
     stop("Parameter estimation '", estimate,"' failed. Try another method.\n")

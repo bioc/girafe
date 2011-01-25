@@ -181,15 +181,17 @@ setMethod("plot", signature=c("AlignedGenomeIntervals", "missing"),
 
 
 ### see file plotAligned.R for the source code of the plotting functions
-setMethod("plot", signature=c("AlignedGenomeIntervals", "Genome_intervals_stranded"), function(x, y, nameColumn="ID", ...)
+setMethod("plot", signature=c("AlignedGenomeIntervals", "Genome_intervals_stranded"), function(x, y, nameColumn="ID", typeColumn="type", ...)
           {
             stopifnot(nameColumn %in% names(annotation(y)))
-            stopifnot("type" %in% names(annotation(y)))
+            stopifnot(typeColumn %in% names(annotation(y)))
             this.gff <- cbind(annotation(y), start=y[,1], end=y[,2])
             #                 getGffAttribute(y, idAttributeName))
             #names(this.gff)[c(1,8)] <- c("seq_id", "attributes")
-            plotAligned(x, y=NULL, gff=this.gff, gffChrColumn="seq_name",
-                        gffNameColumn=nameColumn, ...)
+            plotAligned(x, y=NULL, gff=this.gff,
+                        gffChrColumn="seq_name",
+                        gffNameColumn=nameColumn,
+                        gffTypeColumn=typeColumn, ...)
           }
 ) # setMethod("plot", signature=c("AlignedGenomeIntervals","genome_intervals_stranded"))
 

@@ -249,7 +249,7 @@ in contrast to the other intervals.
 
 Here is another example using the data introduced above.
 <<showReduceData>>=
-S <- exAI[seq_name(exAI)=="chrX" & exAI@matches==1 & exAI[,1]>1e8]
+S <- exAI[seq_name(exAI)=="chrX" & matches(exAI)==1L & exAI[,1]>1e8]
 detail(S)
 @
 
@@ -272,7 +272,7 @@ that have exactly the same start and stop position (but may
 have reads of slightly different sequence aligned to them).
 Consider the following example:
 <<reduceExample3>>=
-S2 <- exAI[seq_name(exAI)=="chr11" & exAI@matches==1 & exAI[,1]>8e7]
+S2 <- exAI[seq_name(exAI)=="chr11" & matches(exAI)==1L & exAI[,1]>8e7]
 detail(S2)
 detail(reduce(S2, method="exact"))
 @

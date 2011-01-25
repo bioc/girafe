@@ -58,6 +58,6 @@ medianByPosition <- function(x, method="Sanger", batchSize=100000L){
                                  Rle(theseQuals[,j])))
   }
   ## compute medians:
-  medianPerPos <- sapply(qualsPerPos, median)
+  medianPerPos <- sapply(qualsPerPos, median, na.rm=TRUE)
   return(medianPerPos)
 }##medianByPosition

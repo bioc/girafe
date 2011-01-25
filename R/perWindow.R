@@ -5,15 +5,17 @@ function(object, chr, winsize, step, normaliseByMatches=TRUE,
   ### arguments:
   # object: Modified genome_intervals object
   stopifnot(inherits(object, "AlignedGenomeIntervals"),
-             is.logical(normaliseByMatches))
+            is.logical(normaliseByMatches),
+            is.character(chr), length(chr)==1L)
   object <- object[annotation(object)$"seq_name"==chr, ]
   if (nrow(object)==0){
     warning(paste("No aligned intervals on chromosome '", chr,"'",sep=""))
     return(NULL)
   }
   ## get vector of chromosome lengths
-  chrlen <- getChromLengths(object)
-  stopifnot(!is.na(chrlen))
+  chrLengths <- getChromLengths(object)
+  stopifnot(chr %in% names(chrLengths))
+  chrlen <- chrLengths[[chr]]
 
   ### prepare sliding windows
   winstarts <- seq.int(from=min(object[,1]), to=chrlen, by=step)
@@ -55,10 +57,12 @@ function(object, chr, winsize, step, normaliseByMatches=TRUE,
                         return(0)
                       else
                         return(max(object@reads[x]))}),
-                    first=sapply(ov, function(x)
-                      min(object[x, 1]) ),
-                    last=sapply(ov, function(x)
-                      max(object[x, 2]) )
+                    first=sapply(ov, function(x){
+                      if (length(x)==0) return(as.integer(NA))
+                      min(object[x, 1]) } ),
+                    last=sapply(ov, function(x){
+                      if (length(x)==0) return(as.integer(NA))
+                      max(object[x, 2]) } )
                     )
   ### we want a high cluster score for
   ## a.) many match positions

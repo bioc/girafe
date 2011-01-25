@@ -8,7 +8,8 @@
 \usage{
 plotAligned(x, y, chr, start, end, plus.col = "#00441b",
    minus.col = "#283d78", gff, featureLegend = FALSE,
-   gffChrColumn = "seq_name", gffNameColumn="name",
+   gffChrColumn = "seq_name", gffTypeColumn="type",
+   gffNameColumn="ID",
    featureExclude = c("chromosome", "nucleotide_match", "insertion"),
    showStrands="both", extraColors=NULL, ylim, highlight, main, ...)
 }
@@ -34,6 +35,9 @@ plotAligned(x, y, chr, start, end, plus.col = "#00441b",
     bottom of the plot?}
   \item{gffChrColumn}{string; which column of the \code{gff} data.frame
     holds the chromosome identifier of each feature.}
+  \item{gffTypeColumn}{string; which column of the \code{gff} data.frame
+    holds the type/class identifier of each feature. Used for the
+    colouring of features.}
   \item{gffNameColumn}{what is the column of the gff data.frame called
     that holds the identifier of the element that should be displayed in
     the plot; default: \dQuote{name}}
