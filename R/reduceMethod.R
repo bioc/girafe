@@ -108,10 +108,14 @@ reduceOne <- function(z, method=method, min.frac=0.0){
       if (strand(z[i])=="-") {
         theseShifts <- maxx-z[theseIdx,2]
       } else { theseShifts <- z[theseIdx,1]-minx }
-      zr@sequence[i] <-
-        consensusString(DNAStringSet(z@sequence[theseIdx]),
-                        ambiguityMap="N", #still problem with IUPAC 
-                        shift=theseShifts)
+      ## get consensus matrix of read sequences:
+      #iConsMat <- consensusMatrix(DNAStringSet(z@sequence[theseIdx]),
+      #                            shift=theseShifts, baseOnly=TRUE)
+      ## NEW VERSION with consensus weighted by read counts
+      iConsMat <- weightedConsensusMatrix(z@sequence[theseIdx],
+                                          z@reads[theseIdx],
+                                          shift=theseShifts)
+      zr@sequence[i] <- consensusString(iConsMat,  ambiguityMap="N")
       if (hasIds)
         zr@id[i] <- paste(sort(unique(z@id[theseIdx])),
                           collapse=",")
@@ -137,9 +141,13 @@ reduceOneExact <- function(z){
     zr@reads[i] <- sum(z@reads[theseIdx])
     ## now for the sequence use consensusString
     ##  without shift since all reads on same position
-    zr@sequence[i] <-
-      consensusString(DNAStringSet(z@sequence[theseIdx]),
-                      ambiguityMap="N")
+    #zr@sequence[i] <-
+    #  consensusString(DNAStringSet(z@sequence[theseIdx]),
+    #                  ambiguityMap="N")
+    ##New version: weighing consensus by read counts:
+    iConsMat <- weightedConsensusMatrix(z@sequence[theseIdx],
+                                        z@reads[theseIdx])
+    zr@sequence[i] <- consensusString(iConsMat,  ambiguityMap="N")
     if (hasIds)
       zr@id[i] <- paste(sort(unique(z@id[theseIdx])),
                         collapse=",")
@@ -168,9 +176,13 @@ reduceOneEnd <- function(z, type="same5"){
     zr@reads[i] <- sum(z@reads[theseIdx])
     ## now for the sequence use consensusString
     ##  without shift since all reads on same position
-    zr@sequence[i] <-
-      consensusString(DNAStringSet(z@sequence[theseIdx]),
-                      ambiguityMap="N")
+    #zr@sequence[i] <-
+    #  consensusString(DNAStringSet(z@sequence[theseIdx]),
+    #                  ambiguityMap="N")
+    ## NEW: weighted consensus sequence
+    iConsMat <- weightedConsensusMatrix(z@sequence[theseIdx],
+                                        z@reads[theseIdx])
+    zr@sequence[i] <- consensusString(iConsMat,  ambiguityMap="N")
     if (hasIds)
       zr@id[i] <- paste(sort(unique(z@id[theseIdx])),
                         collapse=",")
@@ -263,3 +275,4 @@ setMethod("reduce", signature("RangedData"),
           function(x, by, ...){
             if (missing(by)) by <- seq(ncol(rd))
             getMethod("reduce", signature("RangedData"), where=match("package:IRanges",search())) (x, by=by, ...)  }  )
+

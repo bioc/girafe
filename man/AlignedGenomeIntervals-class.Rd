@@ -265,8 +265,8 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
      start=c(1,3,4,5,8,10), end=c(5,5,6,8,9,11),
      chromosome=rep(c("chr2","chrX","chr1"), each=2),
      strand=c("-","-","+","+","+","+"),
-     sequence=c("ACATT","ACA","CGT","GTAA","AG","CT"),
-     reads=rep(3L, 6))
+     sequence=c("ACATT","ACA","CGT","GGAA","AG","CT"),
+     reads=c(1L, 5L, 2L, 7L, 3L, 3L))
   detail(A)
 
   ## custom identifiers can be assigned to the intervals

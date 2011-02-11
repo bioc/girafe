@@ -23,7 +23,7 @@ genomeFeatureClassOrder <-
 countReadsAnnotated <- function(GI, M, typeColumn="type", fractionGI=0.7,
                                 mem.friendly=FALSE, showAllTypes=FALSE)
 {
-  stopifnot(inherits(GI, "AlignedGenomeIntervals"),
+  stopifnot(inherits(GI, "Genome_intervals"), #"AlignedGenomeIntervals"),
             inherits(M, "Genome_intervals"))
   ## which function to use for each iteration:
   if ("package:multicore" %in% search())
@@ -40,11 +40,17 @@ countReadsAnnotated <- function(GI, M, typeColumn="type", fractionGI=0.7,
   splitted <- split(fo$Index2, fo$Index1)
   classPerInt <- unlist(lFun(splitted, function(x)
                              return(sort(mClass[x])[1])), use.names=FALSE)
-  nreadsPerClass <- sapply(split(as.integer(names(splitted)), classPerInt),
-                           function(z) sum(reads(GI)[z]/matches(GI)[z]) )
-  nreadsPerClass <- round(nreadsPerClass)
-  nreadsPerClass["unannotated"] <-
-    round(sum(reads(GI)/matches(GI)) - sum(nreadsPerClass))
+  if (inherits(GI, "AlignedGenomeIntervals")){
+    nreadsPerClass <- sapply(split(as.integer(names(splitted)), classPerInt),
+                             function(z) sum(reads(GI)[z]/matches(GI)[z]) )
+    nreadsPerClass <- round(nreadsPerClass)
+    nreadsPerClass["unannotated"] <-
+      round(sum(reads(GI)/matches(GI)) - sum(nreadsPerClass))
+  } else {
+    nreadsPerClass <- sapply(split(as.integer(names(splitted)), classPerInt),
+                             function(z) length(z) )
+    nreadsPerClass["unannotated"] <- nrow(GI) - sum(nreadsPerClass)
+  }
   nreadsPerClass <- nreadsPerClass[nreadsPerClass!=0L]
   return(nreadsPerClass)
 }#countReadsAnnotated

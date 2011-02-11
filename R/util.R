@@ -146,3 +146,46 @@ windowCountAndGC <- function(G, chr, bspackage, wsize=1000L,
 #                         bspackage="BSgenome.Mmusculus.UCSC.mm9")
 
 
+## auxiliary function to compute consensus with number of aligned
+##  reads as weights
+weightedConsensusMatrix <- function(seqs, weights, shift=NULL,
+                                    baseLetters=c("A", "C", "G", "T", "N"))
+{
+  stopifnot(is.character(seqs), is.integer(weights),
+            length(seqs)==length(weights))
+  ## any shift of sequences specified?
+  if (is.null(shift))
+    shift <- integer(length(seqs))
+  else
+    stopifnot(length(shift)==length(seqs))
+  ## what is the final length of the consensus matrix?
+  maxreadlen <- max(nchar(seqs)+shift)
+  ## initialise result matrix:
+  DW <- matrix(0L, nrow=length(baseLetters), ncol=maxreadlen)
+  rownames(DW) <- baseLetters
+
+  ## split sequences into individual letters
+  splitted.seqs <- strsplit(seqs, split="")
+  ## loop over individual sequences and fill in matrix:
+  for (i in seq.int(length(seqs))){
+    x.coords <- match(splitted.seqs[[i]], baseLetters)
+    y.coords <- pmax.int(0L,
+                         seq.int(length(splitted.seqs[[i]])) + shift[[i]])
+    DW[cbind(x.coords, y.coords)] <-
+      DW[cbind(x.coords, y.coords)] + weights[[i]]
+  }
+  return(DW)
+}#weightedConsensusMatrix
+
+### test new function:
+### Align following sequences with weights:
+###   ACATT       1
+###    CGTTA     10
+###     TTG       3
+###  GACATT       4
+
+#dweights <- c(1L, 10L, 3L, 4L)
+#d <- c("ACATT","CGTTA", "TTG", "GACATT")
+#dshifts <- c(0L, 1L, 2L, -1L)
+#weightedConsensusMatrix(d, dweights, shift=dshifts)
+#consensusString(.Last.value, ambiguityMap="N")
