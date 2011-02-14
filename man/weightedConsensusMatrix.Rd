@@ -31,7 +31,7 @@ weightedConsensusMatrix(seqs, weights, shift = NULL,
  dweights <- c(1L, 10L, 3L, 4L)
  d <- c("ACATT","CGTTA", "TTG", "GACATT")
  dshifts <- c(0L, 1L, 2L, -1L)
- W <- weightedConsensusMatrix(d, dweights, shift=dshifts)
+ W <- girafe:::weightedConsensusMatrix(d, dweights, shift=dshifts)
  consensusString(W, ambiguityMap="N")
 }
 \keyword{manip}
