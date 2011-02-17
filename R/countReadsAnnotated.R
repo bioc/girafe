@@ -17,7 +17,10 @@ genomeFeatureClassOrder <-
        "ncRNA"=c("ncRNA", "NCRNA","non-coding"),
        "pseudogene"=c("pseudogene","Pseudogene"),
        "exon"="exon", "intron"="intron",
-       "gene"=c("gene","Gene", "CDS")
+       "gene"=c("gene","Gene", "CDS"),
+       "LINE"=c("LINE", "LINE_repeat"),
+       "repeat"=c("repeat", "SINE", "LTR",
+         "Satellite", "Simple_repeat")
        )
 
 countReadsAnnotated <- function(GI, M, typeColumn="type", fractionGI=0.7,

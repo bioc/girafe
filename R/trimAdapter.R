@@ -10,7 +10,7 @@ trimAdapter <- function(fq, adapter, match.score=1, mismatch.score=-1,
   read.length <- unique(width(fq))
   if (length(read.length)>1)
     stop(paste("Expected all reads in object",
-               parse(substitute(fq)),
+               deparse(substitute(fq)),
                "to be of the same lengths! Found lengths:",
                paste(read.length, collapse=", "),"\n"))
   mat <- nucleotideSubstitutionMatrix(match=match.score,

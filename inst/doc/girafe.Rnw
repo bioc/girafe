@@ -261,10 +261,11 @@ detail(reduce(S))
 @ 
 
 Notice that the reads that match the same segment of the
-X~chromosome differ in their last base. This ambiguity
-is represented in the combined aligned interval having
-%an 'R', the IUPAC code for 'A' or 'G',
-an 'N' as the last letter.
+X~chromosome differ in their last base.
+However, since most of the reads have a 'G' as final
+letter, the combined aligned interval als has a 'G'
+%an 'R', the IUPAC code for 'A' or 'G', %an 'N'
+as the last letter.
 
 The additional argument~\Rfunarg{method="exact"}
 can be specified if you want to solely combine intervals
