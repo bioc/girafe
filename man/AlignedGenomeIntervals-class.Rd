@@ -305,17 +305,17 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
   coverage(exAI[is.element(chromosome(exAI),  c("chr1","chr2"))])
 
   ### plotting:
-  load(file.path(exDir, "anno_mm_genint.RData"))
-  plot(exAI, mm.gi, chr="chrX", start=50400000, end=50410000)
+  load(file.path(exDir, "mgi_gi.RData"))
+  plot(exAI, mgi.gi, chr="chrX", start=50400000, end=50410000)
 
   ### overlap with annotated genome elements:
-  exOv <- interval_overlap(exAI, mm.gi)
+  exOv <- interval_overlap(exAI, mgi.gi)
   ## how many elements do read match positions generally overlap:
   table(listLen(exOv))
   ## what are the 13 elements overlapped by a single match position:
-  mm.gi[exOv[[which.max(listLen(exOv))]]]
+  mgi.gi[exOv[[which.max(listLen(exOv))]]]
   ## what kinds of elements are overlapped
-  (tabOv <- table(as.character(mm.gi$type)[unlist(exOv)]))
+  (tabOv <- table(as.character(mgi.gi$type)[unlist(exOv)]))
   ### display those classes:
   my.cols <- rainbow(length(tabOv))
   pie(tabOv, col=my.cols, radius=0.85)

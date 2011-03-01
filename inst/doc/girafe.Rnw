@@ -115,7 +115,8 @@ The data has previously been described in \citet{Tam2008}.
 
 <<setUp>>=
 exDir <- system.file("extdata", package="girafe")
-load(file.path(exDir, "anno_mm_genint.RData"))
+### load object describing annotated mouse genome features:
+load(file.path(exDir, "mgi_gi.RData"))
 @
 
 \subsection{Adapter trimming}
@@ -296,7 +297,7 @@ The package~\Rpackage{girafe} contains functions for
 visualising genomic regions with aligned reads.
 %
 <<plotAI, fig=TRUE, include=FALSE, width=7, height=4>>=
-plot(exAI, mm.gi, chr="chrX", start=50400000, 
+plot(exAI, mgi.gi, chr="chrX", start=50400000, 
      end=50410000, show="minus")
 @
 See the result in Figure~\ref{girafe-plotAI}.
@@ -313,7 +314,7 @@ See the result in Figure~\ref{girafe-plotAI}.
 Note that the annotation of genome elements (as shown
 in Figure~\ref{girafe-plotAI}) has to be supplied to the
 function.
-Here the object \Robject{mm.gi} contains most annotated
+Here the object \Robject{mgi.gi} contains most annotated
 genes and ncRNAs for the mouse genome (assembly: \textit{mm9}).
 This object has been created beforehand\footnote{See the
 script \texttt{prepareAnnotation.R} in the package scripts
@@ -385,11 +386,11 @@ Objects of class \Rclass{Genome\_intervals} and
 \Rclass{AlignedGenomeIntervals} are also allowed.}.
 This objects needs to be created beforehand. See the
 script \texttt{prepareAnnotation.R} in the package scripts
-directory\footnote{\texttt{system.file('scripts', package='girafe')}}
+directory\footnote{\texttt{system.file("scripts", package="girafe")}}
 for an example of how to create such an object.
 %
 <<getIntervalOverlap>>=
-exOv <- interval_overlap(exAI, mm.gi)
+exOv <- interval_overlap(exAI, mgi.gi)
 @ 
 
 How many elements do read match positions generally overlap?
@@ -398,18 +399,18 @@ How many elements do read match positions generally overlap?
 table(listLen(exOv))
 @ 
 
-What are the \Sexpr{which.max(listLen(exOv))}~elements
+What are the \Sexpr{max(listLen(exOv))}~elements
 overlapped by a single match position?
 %
 <<show12Elements>>=
-mm.gi$ID[exOv[[which.max(listLen(exOv))]]]
+mgi.gi$ID[exOv[[which.max(listLen(exOv))]]]
 @ 
 
 And in general,
 what kinds of annotated genome elements are overlapped by reads?
 %
 <<computeTabOv>>=
-(tabOv <- table(as.character(mm.gi$type)[unlist(exOv)]))
+(tabOv <- table(as.character(mgi.gi$type)[unlist(exOv)]))
 @
 
 We display these overlap classes using a pie chart.
@@ -578,7 +579,6 @@ toLatex(sessionInfo(), locale=FALSE)
 \section*{Acknowledgements}
 
 Many thanks to Nicolas Servant, 
-%Emmanuel Barillot, Constance Ciaudo, Edith Heard, 
 Val\'erie Cognat, Nicolas Delhomme,
 and especially Patrick Aboyoun
 for suggestions and feedback on the package.

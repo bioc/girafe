@@ -50,11 +50,11 @@
   exAI <- as(exA, "AlignedGenomeIntervals")
 
   ## load annotated genome features
-  load(file.path(exDir, "anno_mm_genint.RData"))
+  load(file.path(exDir, "mgi_gi.RData"))
 
   ## subset for sake of speed:
   A <- exAI[is.element(seq_name(exAI), c("chrX","chrY"))]
-  G <- mm.gi[is.element(seq_name(mm.gi), c("chrX","chrY"))]
+  G <- mgi.gi[is.element(seq_name(mgi.gi), c("chrX","chrY"))]
 
   ## find nearest annotated feature for each AlignedGenomeInterval
   WN <- which_nearest(A, G)
