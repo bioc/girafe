@@ -8,19 +8,22 @@ genomeFeatureClassOrder <-
   list("miRNA"=c("miRNA","microRNA"),
        "7SK"=c("7SK","7SK-RNA","7SK_RNA", "RN7SK"),
        "Y_RNA"=c("yRNA","Y-RNA","Y_RNA"),
-       "rRNA"="rRNA", "snoRNA"="snoRNA",
+       "rRNA"=c("rRNA", "ribosomal-RNA"),
+       "snoRNA"="snoRNA",
        "snRNA"="snRNA", "tRNA"=c("tRNA","transfer-RNA"),
        "ribozyme"="ribozyme",
        "vRNA"=c("Vault","vRNA","Vault-RNA","svRNA","VAULT"),
        "TERC"=c("Telomerase-vert","TERC"),
        "NRON"="NRON",
+       "lincRNA"=c("lincRNA", "lncRNA", "long-ncRNA"),
        "ncRNA"=c("ncRNA", "NCRNA","non-coding"),
        "pseudogene"=c("pseudogene","Pseudogene"),
        "exon"="exon", "intron"="intron",
        "gene"=c("gene","Gene", "CDS"),
        "LINE"=c("LINE", "LINE_repeat"),
        "repeat"=c("repeat", "SINE", "LTR",
-         "Satellite", "Simple_repeat")
+         "Satellite", "Simple_repeat", "other_repeat"),
+       "other"="other"
        )
 
 countReadsAnnotated <- function(GI, M, typeColumn="type", fractionGI=0.7,
@@ -36,8 +39,11 @@ countReadsAnnotated <- function(GI, M, typeColumn="type", fractionGI=0.7,
   classOrder <- genomeFeatureClassOrder # separate to allow easy editing
     mClass <- factor(M@annotation[[typeColumn]])
   levels(mClass) <- classOrder
+  if (any(is.na(mClass))){
+    warning('Unrecognised classes in class factor replaced by "other".')
+    mClass[is.na(mClass)] <- "other"
+  }
   if (showAllTypes) print(table(mClass))
-  if (any(is.na(mClass))) stop("NA's in class factor.")
   fo <- fracOverlap(GI, M, mem.friendly=mem.friendly)
   fo <- subset(fo, fraction1 >= fractionGI)
   splitted <- split(fo$Index2, fo$Index1)

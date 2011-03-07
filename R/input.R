@@ -34,6 +34,13 @@ agiFromBam <- function(bamfile, ...)
   require("Rsamtools")
   ## tests:
   stopifnot(file.exists(bamfile), length(bamfile)==1)
+
+  ## which function to use for each iteration:
+  if ("package:multicore" %in% search())
+    lFun <- mclapply
+  else
+    lFun <- lapply
+
   ## read BAM header:
   H <- scanBamHeader(bamfile)
   allChr <- names(H[[1]]$targets)
@@ -43,9 +50,9 @@ agiFromBam <- function(bamfile, ...)
                         reverseComplement=TRUE,
                         what=bamWhat)
   ## now read each chromosome seperately:
-  res <- vector("list", length(allChr))
-  names(res) <- allChr
-  for (thisChr in allChr){
+  #res <- vector("list", length(allChr))
+  #for (thisChr in allChr){
+  res <- lFun(as.list(allChr), function(thisChr){
     thisRange <- RangesList(IRanges(1, H[[1]]$targets[thisChr]))
     names(thisRange) <- thisChr
     theseParams <- initialize(param, simpleCigar=TRUE,
@@ -54,10 +61,13 @@ agiFromBam <- function(bamfile, ...)
                               what=bamWhat, which=thisRange)
     S <- scanBam(bamfile, param=theseParams, ...)[[1]]
     if (length(S[[1]])==0){
-      res[[thisChr]] <- NULL; next}
-    ## TO DO: build AlignedGenomeIntervals here
-    res[[thisChr]] <- agiFromOneChrBam(S)
-  }# for all chromosomes
+      return(NULL)}
+      #res[[thisChr]] <- NULL; next}
+    #res[[thisChr]] <- agiFromOneChrBam(S)
+    return(agiFromOneChrBam(S))
+  })# for all chromosomes
+  names(res) <- allChr
+  res <- res[!sapply(res, is.null)]
   ## compute matches over all chromosomes
   res <- do.call("c", res)
   tabSeq <- table(res@sequence)

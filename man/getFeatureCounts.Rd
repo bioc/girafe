@@ -6,7 +6,7 @@
 }
 \usage{
 getFeatureCounts(AI, FG, nameColumn = "Name", fractionIncluded = 1,
-returnType = "AlignedGenomeIntervals")
+returnType = "AlignedGenomeIntervals", mem.friendly = FALSE)
 }
 \arguments{
   \item{AI}{\code{AlignedGenomeIntervals} object}
@@ -18,6 +18,9 @@ returnType = "AlignedGenomeIntervals")
     be included in a feature in order to count for the feature}
   \item{returnType}{one of \code{AlignedGenomeIntervals} or
     \code{integer}}
+  \item{mem.friendly}{logical; passed on to \code{fracOverlap} function,
+    determines if overlap should be computed chromosome-wise, optionally
+    distributed over several CPUs (with package \code{multicore})}
 }
 %\details{}
 \value{
@@ -29,4 +32,4 @@ returnType = "AlignedGenomeIntervals")
 \seealso{\code{\link{fracOverlap}}}
 %\examples{}
 \keyword{manip}
-\keyword{internal}% __ONLY ONE__ keyword per line
+\keyword{internal}

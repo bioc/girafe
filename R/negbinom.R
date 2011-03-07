@@ -39,6 +39,9 @@ addNBSignificance <- function(x, estimate="NB.012", correct="none", max.n=10L){
             "n.reads" %in% names(x))
   correct  <- match.arg(correct, p.adjust.methods)
   estimate <- match.arg(estimate, c("NB.012", "NB.ML", "Poisson", "Poisson2"))
+  ## 'x$n.reads' has to be integer, but maybe is not when weigthing each
+  ##  interval count by the number of matches.
+  x$n.reads <- round(x$n.reads)
   ## 1st way, using counts of windows with 0, 1, or 2 reads
   if (estimate == "NB.012"){
     tab.n <- table(x$n.reads)

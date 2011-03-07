@@ -41,8 +41,9 @@ perWindow(object, chr, winsize, step, normaliseByMatches = TRUE,
   \item{n.overlap}{integer; number of read match positions inside the
     window. Per match position there can be one or more reads mapped, so
     this number always is smaller than \code{n.reads}}
-  \item{n.reads}{integer; number of reads which match positions inside
-    this window}
+  \item{n.reads}{numeric; number of reads which match positions inside
+    this window; can be floating-point numbers if argument
+    \code{normaliseByMatches=TRUE}}
   \item{n.unique}{integer; number of reads which each only have one
     match position in the genome and for which this position is
     contained inside this window}

@@ -25,7 +25,8 @@ getChromLengths <- function(x){
                            "CHRLENGTHS", sep=""))
       names(chrlens) <- paste("chr",
                               gsub("^chr","", names(chrlens)),sep="")
-      names(chrlens) <- gsub("MT$", "M", names(chrlens))
+      #names(chrlens) <- gsub("MT$", "M", names(chrlens))
+      #maybe do something about the chrM/MT nuisance later
     }
   }
   unichrx <- unique(chromosome(x))
@@ -44,7 +45,8 @@ getChromLengths <- function(x){
 # normalise: normalise counts by number of genomic copies per feature
 getFeatureCounts <- function(AI, FG, nameColumn="Name",
                              fractionIncluded=1,
-                             returnType="AlignedGenomeIntervals")
+                             returnType="AlignedGenomeIntervals",
+                             mem.friendly=FALSE)
 {
   stopifnot(inherits(AI, "AlignedGenomeIntervals"),
             inherits(FG, "Genome_intervals"),
@@ -58,7 +60,7 @@ getFeatureCounts <- function(AI, FG, nameColumn="Name",
   ## I. first drop intervals with more matches than maximal number
   ##     of feature copies:
   AI <- AI[AI@matches <= featMaxFreq]
-  fo  <- fracOverlap(AI, FG, 0)
+  fo  <- fracOverlap(AI, FG, 0, mem.friendly=mem.friendly)
   fo  <- subset(fo, fraction1 >= fractionIncluded)
   # additional filtering for at most as many matches as feature copies:
   fo$featname <- feat[fo$Index2]
