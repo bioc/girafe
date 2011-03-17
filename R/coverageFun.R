@@ -45,15 +45,7 @@ setMethod("coverage", signature("AlignedGenomeIntervals"),
            allChr <- unique(spacex)
 
            ## 2. get chromosome lengths
-           ## if organism defined, chromomse lengths specifies
-           ##  the length of the coverage vectors:
-           if (length(x@organism)>0){
-             chrlens <- getChromLengths(x)
-           } else {
-             # else set arbitrarily to maximum interval end in x
-             chrlens <- rep.int(max(x[,2]), length(allChr))
-             names(chrlens) <- allChr
-           }
+           chrlens <- getChromLengths(x)
            if (byStrand){
              # adapt chromosome lengths and spacex vector
              oldchrlens <- chrlens
