@@ -1,8 +1,8 @@
 Package: girafe
 Type: Package
 Title: Genome Intervals and Read Alignments for Functional Exploration
-Version: 1.5.0
-Date: 2011-03-17
+Version: 1.5.1
+Date: 2011-06-03
 Depends: R (>= 2.10.0), methods, IRanges (>= 1.3.53), Rsamtools,
          ShortRead (>= 1.3.21), intervals (>= 0.13.1),
          genomeIntervals (>= 1.7.3), grid
@@ -10,7 +10,7 @@ Imports: methods, Biobase, Biostrings, BSgenome, graphics, grDevices, stats, uti
 Suggests: MASS, org.Mm.eg.db, RColorBrewer
 Enhances: genomeIntervals
 Author: Joern Toedling, with contributions from Constance Ciaudo, Olivier Voinnet, Edith Heard, Emmanuel Barillot, and Wolfgang Huber
-Maintainer: J. Toedling <joern.toedling@curie.fr>
+Maintainer: J. Toedling <j.toedling@imb-mainz.de>
 Description: The package 'girafe' deals with the genome-level representation of aligned reads from next-generation sequencing data. It contains an object class for enabling a detailed description of genome intervals with aligned reads and functions for comparing, visualising, exporting and working with such intervals and the aligned reads. As such, the package interacts with and provides a link between the packages ShortRead, IRanges and genomeIntervals.
 License: Artistic-2.0
 LazyLoad: yes
