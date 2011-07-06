@@ -169,7 +169,15 @@ which is the main class of the \Rpackage{girafe} package.
 <<convertAligned, results=hide>>=
 exAI <- as(exA, "AlignedGenomeIntervals")
 organism(exAI) <- "Mm"
-@ 
+@
+
+For alignments in BAM format~\citep{Li2009}, there is an
+alternative way of importing the data.
+The function \Rfunction{agiFromBam} can be used to directly
+create \Rclass{AlignedGenomeIntervals} objects from
+indexed and sorted BAM files, making use of functionalities
+in the \Rpackage{Rsamtools} package.
+
 
 \subsection{Exploring the aligned reads}
 
