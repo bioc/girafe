@@ -65,7 +65,10 @@
 \alias{strand,AlignedGenomeIntervals-method}
 \alias{strand<-,AlignedGenomeIntervals,vector-method}
 \alias{strand<-,AlignedGenomeIntervals,factor-method}
+\alias{subset}
 \alias{subset,AlignedGenomeIntervals-method}
+\alias{summary}
+\alias{summary,AlignedGenomeIntervals-method}
 \alias{width,AlignedGenomeIntervals-method}
 \alias{chromosome,AlignedGenomeIntervals-method}
 \alias{chromosome,Genome_intervals-method}

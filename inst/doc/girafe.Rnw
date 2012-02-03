@@ -196,6 +196,12 @@ can be obtained using subsetting via \verb='['=.
 detail(exAI[seq_name(exAI)=="chrMT"])
 @
 
+Finally, what is the number of
+aligned \underline{reads} per chromosome?
+<<showSummary>>=
+summary(exAI)
+@ 
+
 \subsection{Processing the aligned intervals}
 
 Sometimes,
@@ -425,7 +431,7 @@ We display these overlap classes using a pie chart.
 %
 <<displayPie, fig=TRUE, include=FALSE, width=7, height=7, pie=TRUE>>=
 my.cols <- brewer.pal(length(tabOv), "Set3")
-pie(tabOv, col=my.cols, radius=0.85)
+pie(tabOv, col=my.cols, radius=0.88)
 @
 See the result in Figure~\ref{girafe-displayPie}.
 

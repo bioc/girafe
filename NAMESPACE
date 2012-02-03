@@ -48,7 +48,7 @@ export("AlignedGenomeIntervals", "plotAligned", "trimAdapter",
        "addNBSignificance", "plotNegBinomFit", "medianByPosition",
        "agiFromBam", "getFeatureCounts", "countReadsAnnotated",
        "chrlengths", "clusters", "coerce", "organism",
-       "plot", "sample") # generics
+       "plot", "sample", "subset", "summary") # generics
 
 exportClasses("AlignedGenomeIntervals")
 
@@ -59,7 +59,7 @@ exportMethods("plot", "[", "interval_overlap", "interval_included",
               "matches", "matches<-", "id", "id<-",
               "organism", "organism<-", "reads", "reads<-", "reduce", 
               "sample", "score", "score<-", "seq_name", "show",
-              "sort", "strand", "strand<-", "subset",
+              "sort", "strand", "strand<-", "subset", "summary",
               "width", "which_nearest")
 
 S3method("c", "AlignedGenomeIntervals")

@@ -560,3 +560,22 @@ setMethod("sample", signature(x="AlignedGenomeIntervals"),
   stopifnot(validObject(x2))
   return(x2)
 } ) #sample
+
+
+## summary method, currently display number of reads per chromosome,
+##  optional limit to reads with specific number of matches
+setMethod("summary", signature(object="AlignedGenomeIntervals"),
+ function(object, nMatches=NA, ...){
+   output <- "Number of aligned reads"
+   if (!is.na(nMatches)){
+     stopifnot(is.numeric(nMatches), length(nMatches)==1L)
+     object <- object[matches(object)==nMatches]
+     output <- paste(output, "(with", nMatches, "matches)")
+   }
+   splitted  <- split(reads(object), chromosome(object))
+   chrcounts <- sapply(splitted, sum)
+   output <- paste(output, "per chromosome:\n")
+   cat(output)
+   print(chrcounts)
+   invisible(chrcounts)
+} ) # summary

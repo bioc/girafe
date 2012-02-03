@@ -7,8 +7,7 @@ intPhred <- function(x, method="Sanger", returnType="list"){
                      "Solexa"=function(z){ utf8ToInt(z)-64},
                      "previousSolexa"=function(z){
                        Q <- utf8ToInt(z)-64
-                       log10(1+10^(Q/10)) })
-                       #round(-10*log10((10^(-Q/10))/(1+10^(-Q/10))))})
+                       round(10*log10(1+10^(Q/10))) })
   ## which function to use for each iteration:
   if ("package:multicore" %in% search()){
     lFun <- mclapply

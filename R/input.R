@@ -8,7 +8,7 @@ agiFromOneChrBam <- function(from){
   readPos   <- paste(from$rname, from$strand,
                      from$pos, from$pos+fromWidth-1L,
                      from$seq, sep=".")
-  tablePos  <- table(readPos)
+  tablePos  <- table(sort(readPos))
   ## get index of unique positions
   idx       <- which(!duplicated(readPos))
   ### condense multiply mentioned alignments; element 'posfreq' preserves
@@ -33,7 +33,7 @@ agiFromBam <- function(bamfile, ...)
 {
   require("Rsamtools")
   ## tests:
-  stopifnot(file.exists(bamfile), length(bamfile)==1)
+  stopifnot(file.exists(bamfile), length(bamfile)==1L)
 
   ## which function to use for each iteration:
   if ("package:multicore" %in% search())
@@ -45,20 +45,20 @@ agiFromBam <- function(bamfile, ...)
   H <- scanBamHeader(bamfile)
   allChr <- names(H[[1]]$targets)
   ## what to read from the BAM files:
-  bamWhat <- c("flag", "rname", "strand", "pos","seq")
+  selWhat <- c("flag", "rname", "strand", "pos","seq")
   param <- ScanBamParam(simpleCigar=TRUE,
                         reverseComplement=TRUE,
-                        what=bamWhat)
+                        what=selWhat)
   ## now read each chromosome seperately:
   #res <- vector("list", length(allChr))
   #for (thisChr in allChr){
   res <- lFun(as.list(allChr), function(thisChr){
-    thisRange <- RangesList(IRanges(1, H[[1]]$targets[thisChr]))
+    thisRange <- RangesList(IRanges(1L, H[[1]]$targets[thisChr]))
     names(thisRange) <- thisChr
     theseParams <- initialize(param, simpleCigar=TRUE,
                               flag=scanBamFlag(isUnmappedQuery=FALSE),
                               reverseComplement=TRUE,
-                              what=bamWhat, which=thisRange)
+                              what=selWhat, which=thisRange)
     S <- scanBam(bamfile, param=theseParams, ...)[[1]]
     if (length(S[[1]])==0){
       return(NULL)}
@@ -70,7 +70,7 @@ agiFromBam <- function(bamfile, ...)
   res <- res[!sapply(res, is.null)]
   ## compute matches over all chromosomes
   res <- do.call("c", res)
-  tabSeq <- table(res@sequence)
+  tabSeq <- table(sort(res@sequence))
   res@matches <- as.integer(tabSeq[match(res@sequence, names(tabSeq))])
   return(res)
 }#agiFromBam
