@@ -39,9 +39,6 @@ setMethod("coverage", signature("AlignedGenomeIntervals"),
 
            ## 1. over which sets (=spaces) to compute coverage:
            spacex <- chromosome(x)
-           ## normalise chrosome names:
-           spacex <- gsub("MT","M", spacex)
-           spacex <- paste("chr",gsub("^chr","",spacex),sep="")
            allChr <- unique(spacex)
 
            ## 2. get chromosome lengths
@@ -56,7 +53,6 @@ setMethod("coverage", signature("AlignedGenomeIntervals"),
              allChr <- unique(spacex)
            }#byStrand
 
-           ## test whether set names in names of chromosome lengths
            if (!all(allChr %in% names(chrlens)))
              stop("No lengths for some chromosome names!")
      
