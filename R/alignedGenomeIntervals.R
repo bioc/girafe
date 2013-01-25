@@ -543,20 +543,20 @@ setMethod("sample", signature(x="AlignedGenomeIntervals"),
   #  stop("cannot take a sample larger than the population when 'replace = FALSE'\n")
   ## OLD VERSION: use Rle object during subsampling
   # -> but RLE problems with large objects "too large a range of values in 'x'"
-  #R <- Rle(values=seq_len(nrow(x)), length=reads(x))
-  #R2 <- sort(sample(R, size=size, replace=replace, ...))
-  #x2 <- x[runValue(R2)]
-  #x2@reads <- runLength(R2)
-
-  ## NEW VERSION: using sample.int
-  sel <- sample.int(nrow(x), size=size,
-                    replace=TRUE, prob=reads(x))
-  sel <- sort(sel)
-  freq <- tabulate(sel, nbins=nrow(x))
+  R  <- Rle(values=seq_len(nrow(x)), lengths=reads(x))
+  R2 <- sort(sample(R, size=size, replace=replace, ...))
+  x2 <- x[runValue(R2)]
+  x2@reads <- runLength(R2)
+  ## POSSIBLE NEW VERSION: using sample.int
+  ##  ISSUE: may generate extremely long vectors
+  #sel <- sample.int(nrow(x), size=size,
+  #                  replace=TRUE, prob=reads(x))
+  #sel <- sort(sel)
+  #freq <- tabulate(sel, nbins=nrow(x))
   ## remove zero-read intervals
-  freq <- freq[freq > 0L]
-  x2 <- x[unique(sel)]
-  x2@reads <- freq
+  #freq <- freq[freq > 0L]
+  #x2 <- x[unique(sel)]
+  #x2@reads <- freq
   stopifnot(validObject(x2))
   return(x2)
 } ) #sample
