@@ -19,7 +19,7 @@ getChromLengths <- function(x){
       worked <- require(orgpackage, character.only=TRUE)
       if (!worked)
         stop("No package called '",orgpackage,"' found. ",
-             "Install this package or check wether the organism annotation ",
+             "Install this package or check whether the organism annotation ",
              "of ",deparse(substitute(x))," is correct (e.g. 'Mm' or 'Hs')\n")
       chrlens <- get(paste(gsub("\\.db$", "", orgpackage),
                            "CHRLENGTHS", sep=""))

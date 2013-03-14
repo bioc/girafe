@@ -179,6 +179,11 @@ setMethod("plot", signature=c("AlignedGenomeIntervals", "missing"),
           }
 ) # setMethod("plot", signature=c("AlignedGenomeIntervals","missing"))
 
+setMethod("plot", signature=c("AlignedGenomeIntervals", "ANY"),
+          function(x, y, ...){
+            plotAligned(x, y=NULL, ...)
+          }
+) # setMethod("plot", signature=c("AlignedGenomeIntervals","ANY"))
 
 ### see file plotAligned.R for the source code of the plotting functions
 setMethod("plot", signature=c("AlignedGenomeIntervals", "Genome_intervals_stranded"), function(x, y, nameColumn="ID", typeColumn="type", ...)

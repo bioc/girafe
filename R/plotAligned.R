@@ -54,7 +54,7 @@ plotAligned <- function(x, y, chr, start, end,
   
   ## plot margin
   pushViewport(viewport(width=0.85, height=0.95)) ## plot margin
-  pushViewport(viewport(layout=grid.layout(length(VP), 1, height=VP)))
+  pushViewport(viewport(layout=grid.layout(length(VP), 1, heights=VP)))
 
   names.strand <- c("plus"="Watson", "minus"="Crick")
   if (showStrands!="both")
@@ -493,7 +493,7 @@ newVP <- function(main, cexMain=1, dataPanelHeight=1, vpHeight=0.7, titleOffSet=
     vpr = which(names(vpr)=="data")
   } else {
     vpr = c("data"=dataPanelHeight)
-    pushViewport(viewport(width=0.85, height=vpHeight)) ## plot margin
+    pushViewport(viewport(width=0.85, heights=vpHeight)) ## plot margin
     pushViewport(viewport(layout=grid.layout(length(vpr), 1, height=vpr)))
   }
   return(vpr)

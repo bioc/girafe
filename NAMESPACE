@@ -33,6 +33,8 @@ importClassesFrom("ShortRead", "AlignedRead")
 importMethodsFrom("ShortRead", "chromosome", "position", "id")
 importFrom("ShortRead", "sread")
 
+importFrom("intervals", "plot")
+
 importClassesFrom("intervals", "Intervals_virtual",
                      "Intervals_virtual_or_numeric", "Intervals_full")
 importMethodsFrom("intervals", "clusters", "interval_included", "interval_overlap", "which_nearest", "reduce")
