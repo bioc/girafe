@@ -21,3 +21,7 @@ setGeneric("extend", function(x, ...) standardGeneric("extend"))
 setGeneric("chrlengths", function(x) standardGeneric("chrlengths"))
 
 setGeneric("chrlengths<-", function(x, value) standardGeneric("chrlengths<-"))
+
+## standard generics
+setGeneric("plot")
+setGeneric("summary")
