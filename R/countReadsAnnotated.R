@@ -5,16 +5,19 @@
 #  miRNAs not for genes too); order from most specific to least specific
 # II. normalise read counts by number of matches per read
 genomeFeatureClassOrder <-
-  list("miRNA"=c("miRNA","microRNA"),
+  list("miRNA"=c("miRNA", "microRNA"),
+       "piRNA"=c("piRNA", "piwiRNA"),
+       "siRNA"=c("siRNA", "SIRNA", "endo-siRNA"),
+       "scnRNA"=c("scnRNA"),
        "7SK"=c("7SK","7SK-RNA","7SK_RNA", "RN7SK"),
        "Y_RNA"=c("yRNA","Y-RNA","Y_RNA"),
        "rRNA"=c("rRNA", "ribosomal-RNA"),
        "snoRNA"="snoRNA",
-       "snRNA"="snRNA", "tRNA"=c("tRNA","transfer-RNA"),
+       "snRNA"="snRNA", "snlRNA"="snlRNA",
+       "tRNA"=c("tRNA","transfer-RNA"),
        "ribozyme"="ribozyme",
        "vRNA"=c("Vault","vRNA","Vault-RNA","svRNA","VAULT"),
-       "TERC"=c("Telomerase-vert","TERC"),
-       "NRON"="NRON",
+       "TERC"=c("Telomerase-vert","TERC"), "NRON"="NRON",
        "lincRNA"=c("lincRNA", "lncRNA", "long-ncRNA"),
        "ncRNA"=c("ncRNA", "NCRNA","non-coding"),
        "pseudogene"=c("pseudogene","Pseudogene"),
