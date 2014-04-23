@@ -3,7 +3,6 @@ using namespace std;
 
 // the above stuff is pure C++, thus needs to be outside the 'extern "C"'
 
-extern "C" {
 
 #include <R.h>
 #include <Rdefines.h>
@@ -14,6 +13,7 @@ extern "C" {
  
   /* MAIN PART */
 
+extern "C" {
 
  /*  coverage for AlignedGenomeIntervalsObjects 
      Written by Joern Toedling, 2010.
