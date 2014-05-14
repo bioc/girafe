@@ -51,8 +51,8 @@ addNBSignificance <- function(x, estimate="NB.012", correct="none", max.n=10L){
   }
   if (estimate == "NB.ML"){
     require("MASS")
-    F <- suppressWarnings(MASS:::fitdistr(x$n.reads[x$n.reads <= max.n],
-                                          "negative binomial"))
+    F <- suppressWarnings(MASS::fitdistr(x$n.reads[x$n.reads <= max.n],
+                                         "negative binomial"))
     E <- as.list(F$estimate)
   }
   if (estimate == "Poisson"){

@@ -246,7 +246,7 @@ setMethod("export", signature("Genome_intervals", "character", "ANY"),
               dat$strand <- as.character(strand(object))
             }# if Genome_intervals_stranded
             resultFile <- paste(gsub("\\..+$","", con),"bed", sep=".")
-            girafe:::writeExportData(dat, attribs, "bed", resultFile,
+            writeExportData(dat, attribs, "bed", resultFile,
                             writeHeader=writeHeader, append=append)
             invisible(dat)
 }) # setMethod("export", signature("Genome_intervals", "character"))

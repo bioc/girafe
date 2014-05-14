@@ -20,7 +20,7 @@ returnType = "AlignedGenomeIntervals", mem.friendly = FALSE)
     \code{integer}}
   \item{mem.friendly}{logical; passed on to \code{fracOverlap} function,
     determines if overlap should be computed chromosome-wise, optionally
-    distributed over several CPUs (with package \code{multicore})}
+    distributed over several CPUs (with package \code{parallel})}
 }
 %\details{}
 \value{

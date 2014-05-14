@@ -23,7 +23,7 @@ perWindow(object, chr, winsize, step, normaliseByMatches = TRUE,
      window? (\emph{i.e.} derivation a weighted sum of read counts)}
   \item{mem.friendly}{logical; argument passed on to function
     \code{interval_overlap}; if \code{TRUE} the less RAM and, if the
-    \code{multicore} package is attached, multiple processors are used
+    \code{parallel} package is attached, multiple processors are used
     for computing the overlap, on the expense of time}
 }
 \details{

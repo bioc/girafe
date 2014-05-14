@@ -309,7 +309,8 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
 
   ### plotting:
   load(file.path(exDir, "mgi_gi.RData"))
-  plot(exAI, mgi.gi, chr="chrX", start=50400000, end=50410000)
+  if (interactive())
+     plot(exAI, mgi.gi, chr="chrX", start=50400000, end=50410000)
 
   ### overlap with annotated genome elements:
   exOv <- interval_overlap(exAI, mgi.gi)
@@ -321,6 +322,7 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
   (tabOv <- table(as.character(mgi.gi$type)[unlist(exOv)]))
   ### display those classes:
   my.cols <- rainbow(length(tabOv))
-  pie(tabOv, col=my.cols, radius=0.85)
+  if (interactive())
+     pie(tabOv, col=my.cols, radius=0.85)
 }
 \keyword{classes}

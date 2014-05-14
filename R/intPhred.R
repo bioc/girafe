@@ -9,7 +9,7 @@ intPhred <- function(x, method="Sanger", returnType="list"){
                        Q <- utf8ToInt(z)-64
                        round(10*log10(1+10^(Q/10))) })
   ## which function to use for each iteration:
-  if ("package:multicore" %in% search()){
+  if ("package:parallel" %in% search()){
     lFun <- mclapply
   } else {
     lFun <- lapply

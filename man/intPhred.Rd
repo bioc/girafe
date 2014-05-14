@@ -51,7 +51,8 @@ intPhred(x, method="Sanger", returnType="list")
   ra.quals <- intPhred(ra, method="Sanger",
                        returnType="matrix")
   ra.qmed  <- apply(ra.quals, 2, median)
-  plot(ra.qmed, type="h", ylim=c(0,42), xlab="Base postion",
-       ylab="Median Phred Quality Score", lwd=2, col="steelblue")
+  if (interactive())
+     plot(ra.qmed, type="h", ylim=c(0,42), xlab="Base postion",
+          ylab="Median Phred Quality Score", lwd=2, col="steelblue")
 }
 \keyword{manip}

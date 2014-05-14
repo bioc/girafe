@@ -475,7 +475,7 @@ setMethod("clusters", signature("AlignedGenomeIntervals"),
             strdlev <- levels(xLev)
             
             ## which function to use for each iteration:
-            if ("package:multicore" %in% search()){
+            if ("package:parallel" %in% search()){
               lFun <- mclapply
             } else {
               lFun <- lapply

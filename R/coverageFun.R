@@ -66,7 +66,7 @@ setMethod("coverage", signature("AlignedGenomeIntervals"),
            } else { # mem.friendly==TRUE
              
              ## which function to use for each iteration:
-             if ("package:multicore" %in% search())
+             if ("package:parallel" %in% search())
                lFun <- mclapply
              else 
                lFun <- lapply

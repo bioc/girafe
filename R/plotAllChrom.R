@@ -5,7 +5,7 @@ plotAllChrom <- function(x, ...){
   spacex <- paste("chr",gsub("^chr","",spacex),sep="")
   allChr <- unique(spacex)
   nChr <- length(allChr)
-  chrlens <- girafe:::getChromLengths(x)
+  chrlens <- getChromLengths(x)
   ## order chromosomes such that the combined length of two
   ##  chromosomes in each row is similar:
   if (nChr>1){

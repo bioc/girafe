@@ -528,19 +528,24 @@ while still allowing fast and direct access to the data.
 For improving the run time on machines with multiple
 processors, some of the functions in the \Rpackage{girafe}
 package have been implemented to make use of the functionality
-in the \Rpackage{multicore} package.
-If \Rpackage{multicore} has been attached
+in the \Rpackage{parallel} package.
+If \Rpackage{parallel} has been attached
 and initialised before calling these functions, the
 functions will make use of \Rfunction{mclapply} instead of
-the normal \Rfunction{lapply}.
+the normal \Rfunction{lapply} function.
+The number of cores to be used in parallel is
+determined by the \texttt{mc.cores} option (see
+the example below).
 
-For example, if \Rpackage{multicore} is functional on
-a given system, there should be an obvious speed
+For example, if \Rpackage{parallel} is functional on
+a given system\footnote{The \Rfunction{mclapply} function
+currently does not support Windows operating systems.},
+there should be an obvious speed
 improvement in the following code example.
 
 <<multicoreShow, eval=FALSE>>=
-library("multicore")
-options("cores"=4) # adjust to your machine
+library("parallel")
+options("mc.cores"=4) # adjust to your machine
 exAI.R <- reduce(exAI, mem.friendly=TRUE)
 @
 

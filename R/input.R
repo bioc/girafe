@@ -31,12 +31,11 @@ agiFromOneChrBam <- function(from){
 
 agiFromBam <- function(bamfile, ...)
 {
-  require("Rsamtools")
   ## tests:
   stopifnot(file.exists(bamfile), length(bamfile)==1L)
 
   ## which function to use for each iteration:
-  if ("package:multicore" %in% search())
+  if ("package:parallel" %in% search())
     lFun <- mclapply
   else
     lFun <- lapply

@@ -9,7 +9,7 @@ setMethod("reduce", signature("AlignedGenomeIntervals"),
             method <- match.arg(method, c("standard", "exact",
                                           "same5", "same3"))
             ## which function to use for each iteration:
-            if ("package:multicore" %in% search()){
+            if ("package:parallel" %in% search()){
               lFun <- mclapply
             } else {
               lFun <- lapply
@@ -197,7 +197,7 @@ setMethod("reduce", signature("Genome_intervals"),
             ## separate method for reducing only intervals
             ###  at exactly the same position?
             ## which function to use for each iteration:
-            if ("package:multicore" %in% search()){
+            if ("package:parallel" %in% search()){
               lFun <- mclapply
             } else {
               lFun <- lapply

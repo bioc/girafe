@@ -35,7 +35,7 @@ countReadsAnnotated <- function(GI, M, typeColumn="type", fractionGI=0.7,
   stopifnot(inherits(GI, "Genome_intervals"), #"AlignedGenomeIntervals"),
             inherits(M, "Genome_intervals"))
   ## which function to use for each iteration:
-  if ("package:multicore" %in% search())
+  if ("package:parallel" %in% search())
     lFun <- mclapply
   else
     lFun <- lapply

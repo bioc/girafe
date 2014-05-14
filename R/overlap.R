@@ -69,7 +69,7 @@ oldAGIoverlap <- function(from, to){
             strdlev <- levels(factor(fromLev))
             
             ## which function to use for each iteration:
-            if ("package:multicore" %in% search()){
+            if ("package:parallel" %in% search()){
               lFun <- mclapply
             } else {
               lFun <- lapply
