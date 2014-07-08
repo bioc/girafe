@@ -16,6 +16,9 @@ importFrom("utils", "write.table")
 
 importFrom("stats", "p.adjust", "p.adjust.methods", "pnbinom", "rnbinom")
 
+import("BiocGenerics")
+import("S4Vectors")
+
 importFrom("BSgenome", "organism")
 
 importMethodsFrom("Biobase", "annotation")
@@ -25,8 +28,8 @@ importFrom("Biostrings", "consensusString","pairwiseAlignment","pattern","qualit
 importClassesFrom("Biostrings", "DNAString","DNAStringSet")
 importMethodsFrom("Biostrings", "nchar", "detail")
 
-importClassesFrom("IRanges", "IRanges", "Ranges", "RangedData", "CompressedIRangesList", "RangesList", "Rle", "SimpleRleList")
-importMethodsFrom("IRanges", "score", "score<-", "width", "rdapply", "[", "endoapply", "Rle", "coverage", "sort", "split")
+importClassesFrom("IRanges", "IRanges", "Ranges", "RangedData", "CompressedIRangesList", "RangesList", "SimpleRleList")
+importMethodsFrom("IRanges", "score", "score<-", "rdapply", "[", "endoapply", "coverage", "sort", "split")
 importFrom("IRanges", "IRanges", "RangedData", "RleList")
 
 importClassesFrom("ShortRead", "AlignedRead")
