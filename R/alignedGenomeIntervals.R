@@ -214,8 +214,8 @@ setMethod("score", signature(x="AlignedGenomeIntervals"),
 
           
 setReplaceMethod("score",
-  signature(x="AlignedGenomeIntervals", value="numeric"),
-  function(x, value){
+  signature(x="AlignedGenomeIntervals"),
+  function(x, ..., value){
     if (length(value)!=nrow(x))
       stop(paste("Number of scores must correspond to the number",
                  "of intervals (",nrow(x),").\n"))
