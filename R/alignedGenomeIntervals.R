@@ -258,12 +258,12 @@ setReplaceMethod("strand", signature("AlignedGenomeIntervals","factor"),
 
 ### organism assignment
 setMethod("organism", signature("AlignedGenomeIntervals"),
-          function( x ) x@organism
+          function( object ) object@organism
 )
 
-setReplaceMethod("organism", signature("AlignedGenomeIntervals","character"),
-   function(x, value) {
-     stopifnot(length(value)==1)
+setReplaceMethod("organism", signature("AlignedGenomeIntervals"),
+   function(object, value) {
+     stopifnot(is.character(value) && length(value)==1)
      orgpackage <- paste("org",value,"eg.db", sep=".")
      suppressWarnings(packageThere <- require(orgpackage, character.only=TRUE))
      if (!packageThere){
@@ -277,8 +277,8 @@ setReplaceMethod("organism", signature("AlignedGenomeIntervals","character"),
                      "> source('http://www.bioconductor.org/biocLite.R')\n",
                      "> biocLite('",orgpackage,"')\n", sep=""))
      }
-     x@organism <- value
-     x
+     object@organism <- value
+     object
 })
 
 ### accessor and replacement methods for vector of chromosome lengths

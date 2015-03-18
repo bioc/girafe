@@ -2,8 +2,6 @@
 
 setGeneric("id<-", function(object, value) standardGeneric("id<-"))
 
-setGeneric("organism<-", function(x, value) standardGeneric("organism<-"))
-
 setGeneric("export", function(object, con, format, ...) standardGeneric("export"))
 # deliberately similar to the generic definition in rtracklayer
 

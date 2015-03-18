@@ -19,8 +19,6 @@ importFrom("stats", "p.adjust", "p.adjust.methods", "pnbinom", "rnbinom")
 import("BiocGenerics")
 import("S4Vectors")
 
-importFrom("BSgenome", "organism")
-
 importMethodsFrom("Biobase", "annotation")
 importFrom("Biobase", "addVigs2WinMenu", "listLen")
 
@@ -51,7 +49,7 @@ export("AlignedGenomeIntervals", "plotAligned", "trimAdapter",
        "perWindow", "fracOverlap", "intPhred", "coverageOneStrand",
        "addNBSignificance", "plotNegBinomFit", "medianByPosition",
        "agiFromBam", "getFeatureCounts", "countReadsAnnotated",
-       "chrlengths", "clusters", "coerce", "organism",
+       "chrlengths", "clusters", "coerce", 
        "plot", "sample", "subset", "summary") # generics
 
 exportClasses("AlignedGenomeIntervals")
