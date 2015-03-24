@@ -43,6 +43,7 @@
 \alias{organism}
 \alias{organism,AlignedGenomeIntervals-method}
 \alias{organism<-}
+\alias{organism<-,AlignedGenomeIntervals-method}
 \alias{organism<-,AlignedGenomeIntervals,character-method}
 \alias{plot,AlignedGenomeIntervals-method}
 \alias{plot,AlignedGenomeIntervals,ANY-method}
@@ -57,6 +58,7 @@
 \alias{sample,AlignedGenomeIntervals-method}
 \alias{score,AlignedGenomeIntervals-method}
 \alias{score<-,AlignedGenomeIntervals,numeric-method}
+\alias{score<-,AlignedGenomeIntervals-method}
 \alias{score<-}
 \alias{seq_name}
 \alias{seq_name,AlignedGenomeIntervals-method}
