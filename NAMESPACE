@@ -42,7 +42,7 @@ importMethodsFrom("intervals", "clusters", "interval_included", "interval_overla
 importClassesFrom("genomeIntervals", "Genome_intervals",
                   "Genome_intervals_stranded")
 importMethodsFrom("genomeIntervals", "strand", "strand<-",
-                  "seq_name", "seq_name<-")
+                  "seqnames", "seqnames<-")
 importFrom("genomeIntervals", "getGffAttribute")
 
 export("AlignedGenomeIntervals", "plotAligned", "trimAdapter",
@@ -60,7 +60,7 @@ exportMethods("plot", "[", "interval_overlap", "interval_included",
               "export", "extend", "hist", "nchar",
               "matches", "matches<-", "id", "id<-",
               "organism", "organism<-", "reads", "reads<-", "reduce", 
-              "sample", "score", "score<-", "seq_name", "show",
+              "sample", "score", "score<-", "seqnames", "show",
               "sort", "strand", "strand<-", "subset", "summary",
               "width", "which_nearest")
 

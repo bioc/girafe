@@ -310,7 +310,7 @@ setMethod("chromosome", signature("AlignedGenomeIntervals"),
           function(object, ...)
           callNextMethod(object, ...))
 
-setMethod("seq_name", signature("AlignedGenomeIntervals"),
+setMethod("seqnames", signature("AlignedGenomeIntervals"),
           function(x)
           callNextMethod(x))
 
@@ -440,7 +440,7 @@ setAs("AlignedGenomeIntervals", "RangedData",
                         matches = from@matches,
                         sequence = from@sequence,
                         score=score,
-                        space = as.character(seq_name(from)),
+                        space = as.character(seqnames(from)),
                         universe = org[1]) # must be of length 1
         if (!validObject(RD))
           stop("Conversion failed.")

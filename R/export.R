@@ -41,7 +41,7 @@ setMethod("export", signature("AlignedGenomeIntervals", "character", "character"
       attribs[names(further.args)[i]] <- eval(further.args[[i]])
   
   ## chromosome information and chromsome replacements
-  chroms <- as.character(seq_name(object))
+  chroms <- as.character(seqnames(object))
   chroms <- gsub("chrMT","chrM", chroms)
 
   ## any scores for the intervals?
@@ -218,7 +218,7 @@ setMethod("export", signature("Genome_intervals", "character", "ANY"),
                 attribs[names(further.args)[i]] <- eval(further.args[[i]])
  
             ## chromosome information and chromsome replacements
-            chroms <- as.character(seq_name(object))
+            chroms <- as.character(seqnames(object))
             chroms <- gsub("chrMT","chrM", chroms)
 
             ## BED has three required columns and up to nine optional

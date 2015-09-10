@@ -13,7 +13,7 @@ readAlignedGff3 <- function(file){
   A <- AlignedRead(sread=DNAStringSet(baseseq,
                      start=1, width=widths),
                    id=BStringSet(ids),
-                   chromosome=factor(seq_name(G)),
+                   chromosome=factor(seqnames(G)),
                    position=as.integer(G[,1]),
                    strand=factor(G$strand, levels=c("-","+")))
   warning("Added read sequences that only consist of Ns.")

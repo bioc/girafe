@@ -187,13 +187,13 @@ show(exAI)
 
 Which chromosomes are the intervals located on?
 <<tabChromosomes>>=
-table(seq_name(exAI))
+table(seqnames(exAI))
 @
 
 A subset of the intervals on a specific chromosome
 can be obtained using subsetting via \verb='['=.
 <<showSubset>>=
-detail(exAI[seq_name(exAI)=="chrMT"])
+detail(exAI[seqnames(exAI)=="chrMT"])
 @
 
 Finally, what is the number of
@@ -264,7 +264,7 @@ in contrast to the other intervals.
 
 Here is another example using the data introduced above.
 <<showReduceData>>=
-S <- exAI[seq_name(exAI)=="chrX" & matches(exAI)==1L & exAI[,1]>1e8]
+S <- exAI[seqnames(exAI)=="chrX" & matches(exAI)==1L & exAI[,1]>1e8]
 detail(S)
 @
 
@@ -288,7 +288,7 @@ that have exactly the same start and stop position (but may
 have reads of slightly different sequence aligned to them).
 Consider the following example:
 <<reduceExample3>>=
-S2 <- exAI[seq_name(exAI)=="chr11" & matches(exAI)==1L & exAI[,1]>8e7]
+S2 <- exAI[seqnames(exAI)=="chr11" & matches(exAI)==1L & exAI[,1]>8e7]
 detail(S2)
 detail(reduce(S2, method="exact"))
 @

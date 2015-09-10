@@ -60,9 +60,8 @@
 \alias{score<-,AlignedGenomeIntervals,numeric-method}
 \alias{score<-,AlignedGenomeIntervals-method}
 \alias{score<-}
-\alias{seq_name}
-\alias{seq_name,AlignedGenomeIntervals-method}
-\alias{seq_name,Genome_intervals-method}
+\alias{seqnames}
+\alias{seqnames,AlignedGenomeIntervals-method}
 \alias{show,AlignedGenomeIntervals-method}
 \alias{sort,AlignedGenomeIntervals-method}
 \alias{strand,AlignedGenomeIntervals-method}

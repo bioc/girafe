@@ -53,8 +53,8 @@
   load(file.path(exDir, "mgi_gi.RData"))
 
   ## subset for sake of speed:
-  A <- exAI[is.element(seq_name(exAI), c("chrX","chrY"))]
-  G <- mgi.gi[is.element(seq_name(mgi.gi), c("chrX","chrY"))]
+  A <- exAI[is.element(seqnames(exAI), c("chrX","chrY"))]
+  G <- mgi.gi[is.element(seqnames(mgi.gi), c("chrX","chrY"))]
 
   ## find nearest annotated feature for each AlignedGenomeInterval
   WN <- which_nearest(A, G)

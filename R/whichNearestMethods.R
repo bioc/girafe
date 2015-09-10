@@ -13,11 +13,11 @@ setMethod("which_nearest",
             fints <- genomeIntervals:::intervalsForDistance(from)
             tints <- genomeIntervals:::intervalsForDistance(to)
 
-            ## loop over seq_names and call next method
-            seqfrom <- as.character(seq_name(from))
-            seqto   <- as.character(seq_name(to))
+            ## loop over seqnames and call next method
+            seqfrom <- as.character(seqnames(from))
+            seqto   <- as.character(seqnames(to))
 
-            ## loop over seq_names and call next method
+            ## loop over seqnames and call next method
             for(s in unique(seqfrom)){
                 fi <- which(seqfrom == s)
                 ti <- which(seqto   == s)

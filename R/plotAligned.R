@@ -18,12 +18,12 @@ plotAligned <- function(x, y, chr, start, end,
   if (!missing(ylim))
     stopifnot(is.numeric(ylim), length(ylim)==2)
   thisCall <- match.call()
-  if (!is.element(chr, levels(seq_name(x))))
+  if (!is.element(chr, levels(seqnames(x))))
     warning(paste("'",deparse(substitute(chr)),
                   "' is not among the chromosome/sequences names in ",
                   "this object, which are:\n",
-                  paste(levels(seq_name(x)), collapse=","), sep=""))
-  x <-  x[as.character(seq_name(x))==chr & (x[,1]>=start) & (x[,2]<=end)]
+                  paste(levels(seqnames(x)), collapse=","), sep=""))
+  x <-  x[as.character(seqnames(x))==chr & (x[,1]>=start) & (x[,2]<=end)]
   if (nrow(x)==0)
     warning("No intervals with aligned reads in specified region.\n")
   x.plus <- x[annotation(x)$strand == "+"]
