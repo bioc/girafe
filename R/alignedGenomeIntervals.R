@@ -97,12 +97,13 @@ getReadPosDf <- function(from){
                    position(from), position(from)+width(from)-1,
                    readSeq, sep=".")
   tablePos <- table(readPos)
+  tableIdx <- match(readPos, names(tablePos))
   readDat <- data.frame(chr=chromosome(from),
                         strand=from@strand,
                         start=position(from),
                         end=position(from)+width(from)-1L,
                         seq=readSeq,
-                        posfreq=tablePos[match(readPos, names(tablePos))],
+						posfreq=as.vector(tablePos)[tableIdx],
                         stringsAsFactors=FALSE)
   ### condense multiply mentioned alignments; element 'posfreq' preserves
   #### the information about number of matching reads
