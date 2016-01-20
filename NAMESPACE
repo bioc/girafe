@@ -27,7 +27,7 @@ importClassesFrom("Biostrings", "DNAString","DNAStringSet")
 importMethodsFrom("Biostrings", "nchar", "detail")
 
 importClassesFrom("IRanges", "IRanges", "Ranges", "RangedData", "CompressedIRangesList", "RangesList", "SimpleRleList")
-importMethodsFrom("IRanges", "score", "score<-", "rdapply", "[", "endoapply", "coverage", "sort")
+importMethodsFrom("IRanges", "score", "score<-", "[", "endoapply", "coverage", "sort")
 importFrom("IRanges", "IRanges", "RangedData", "RleList")
 
 importClassesFrom("ShortRead", "AlignedRead")
