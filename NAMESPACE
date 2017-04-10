@@ -3,7 +3,7 @@ useDynLib(girafe, girafeCoverage=girafe_coverage)
 
 import("methods")
 
-importFrom("graphics", "barplot", "legend", "plot", "hist")
+importFrom("graphics", "abline", "axTicks", "barplot", "hist", "legend", "par", "points", "plot", "text")
 
 importFrom("grDevices", "rainbow")
 
@@ -14,7 +14,7 @@ importFrom("grid", "arrow", "convertWidth", "dataViewport", "gpar",
 
 importFrom("utils", "write.table")
 
-importFrom("stats", "p.adjust", "p.adjust.methods", "pnbinom", "rnbinom")
+importFrom("stats", "median", "p.adjust", "p.adjust.methods", "pnbinom", "rnbinom")
 
 import("BiocGenerics")
 import("S4Vectors")

@@ -4,6 +4,7 @@
 \alias{AlignedGenomeIntervals-class}
 \alias{AlignedGenomeIntervals}
 \alias{[,AlignedGenomeIntervals,ANY,ANY-method}
+\alias{[,AlignedGenomeIntervals,ANY,ANY,ANY-method}
 \alias{c.AlignedGenomeIntervals}
 \alias{c,AlignedGenomeIntervals-method}
 \alias{chrlengths}
