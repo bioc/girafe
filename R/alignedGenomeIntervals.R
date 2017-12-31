@@ -424,29 +424,29 @@ c.AlignedGenomeIntervals <- function( ... )
 
 
 ### coercion from 'AlignedGenomeIntervals' class to
-###  class 'RangedData' (package 'IRanges')
-setAs("AlignedGenomeIntervals", "RangedData",
-      function(from, to){
-        coords <- IRanges(start=from[,1], end=from[,2])
-        score  <- from@score
-        org <- from@organism
-        if (length(org)==0) org <- NULL
-        if (any(from$"inter_base"))
-          warning("Inter-base intervals contained in '",
-                  deparse(substitute(from)),
-                  "' cannot be properly converted.")
-        RD <- RangedData(coords,
-                        strand = as.character(strand(from)),
-                        reads = from@reads,
-                        matches = from@matches,
-                        sequence = from@sequence,
-                        score=score,
-                        space = as.character(seqnames(from)),
-                        universe = org[1]) # must be of length 1
-        if (!validObject(RD))
-          stop("Conversion failed.")
-        return(RD)
-})# setAs("AlignedGenomeIntervals", "RangedData",
+###  class 'RangedData' (package 'IRanges'), depracated
+#setAs("AlignedGenomeIntervals", "RangedData",
+#      function(from, to){
+#        coords <- IRanges(start=from[,1], end=from[,2])
+#        score  <- from@score
+#        org <- from@organism
+#        if (length(org)==0) org <- NULL
+#        if (any(from$"inter_base"))
+#          warning("Inter-base intervals contained in '",
+#                  deparse(substitute(from)),
+#                  "' cannot be properly converted.")
+#        RD <- RangedData(coords,
+#                        strand = as.character(strand(from)),
+#                        reads = from@reads,
+#                        matches = from@matches,
+#                        sequence = from@sequence,
+#                        score=score,
+#                        space = as.character(seqnames(from)),
+#                        universe = org[1]) # must be of length 1
+#        if (!validObject(RD))
+#          stop("Conversion failed.")
+#        return(RD)
+#})# setAs("AlignedGenomeIntervals", "RangedData",
 
 
 ### read extension, for example for ChIP-Seq data:

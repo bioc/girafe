@@ -20,7 +20,7 @@ filecolor=darkblue,urlcolor=darkblue,pagecolor=darkblue,%
 raiselinks,plainpages,pdftex]{hyperref}
 
 \usepackage{verbatim} % for multi-line comments
-\usepackage{amsmath,a4,t1enc, graphicx}
+\usepackage{amsmath, t1enc, graphicx}
 \usepackage{natbib}
 \bibpunct{(}{)}{;}{a}{,}{,}
 

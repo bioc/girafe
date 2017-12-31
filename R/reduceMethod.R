@@ -270,9 +270,10 @@ setMethod("reduce", signature("RangesList"),
 setMethod("reduce", signature("CompressedIRangesList"),
           function(x, ...){
             getMethod("reduce", signature("CompressedIRangesList"), where=match("package:IRanges",search())) (x, ...)  }  )
-# for class 'RangedData'
-setMethod("reduce", signature("RangedData"),
-          function(x, by, ...){
-            if (missing(by)) by <- seq(ncol(rd))
-            getMethod("reduce", signature("RangedData"), where=match("package:IRanges",search())) (x, by=by, ...)  }  )
+
+# for class 'RangedData', depracated
+#setMethod("reduce", signature("RangedData"),
+#          function(x, by, ...){
+#            if (missing(by)) by <- seq(ncol(rd))
+#            getMethod("reduce", signature("RangedData"), where=match("package:IRanges",search())) (x, by=by, ...)  }  )
 

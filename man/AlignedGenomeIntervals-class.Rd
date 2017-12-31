@@ -14,7 +14,6 @@
 \alias{clusters,AlignedGenomeIntervals-method}
 \alias{clusters,Genome_intervals-method}
 \alias{coerce,AlignedRead,AlignedGenomeIntervals-method}
-\alias{coerce,AlignedGenomeIntervals,RangedData-method}
 \alias{coverage,AlignedGenomeIntervals-method}
 \alias{detail,AlignedGenomeIntervals-method}
 \alias{export}
@@ -141,9 +140,6 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
     \item{coerce}{Coercion method from objects of class
       \code{AlignedRead}, which is defined in package \code{ShortRead},
       to objects of class \code{AlignedGenomeIntervals}}
-    \item{coerce}{Coercion method from objects of class
-      \code{AlignedGenomeIntervals} to objects of class
-      \code{RangedData}, which is defined in package \code{IRanges}}
     \item{coverage}{\code{signature("AlignedGenomeIntervals")}: computes
       the read coverage over all chromosomes. If the \code{organism} of
       the object is set correctly, the chromosome lengths are retrieved
@@ -158,11 +154,7 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
       \code{byStrand=FALSE} (default) only one result is returned per
       chromosome. If \code{byStrand=TRUE}, there result is
       two separate \code{Rle} objects per chromosome with the strand
-      appended to the chromosome name.\cr
-      By now, the \code{coverage} method for
-      \code{AlignedGenomeIntervals} makes use of the method for
-      \code{RangedData} objects from package \code{IRanges} (thanks to a
-      suggestion from P. Aboyoun).
+      appended to the chromosome name.     
     }
     \item{detail}{\code{signature("AlignedGenomeIntervals")}: a more
       detailed output of all the intervals than provided by \code{show};
@@ -248,9 +240,7 @@ Class \code{\link[intervals:Intervals-class]{Intervals_full}}, by class
 \seealso{
   \code{\link[genomeIntervals]{Genome_intervals-class}},
   \code{\link[ShortRead]{AlignedRead-class}},
-  \code{\link[IRanges]{RangedData-class}},
-  \code{\link[IRanges]{RangedData-class}},
-  \code{\link{plotAligned}}
+   \code{\link{plotAligned}}
 }
 \examples{
   ############# toy example:

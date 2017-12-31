@@ -58,44 +58,52 @@ setMethod("coverage", signature("AlignedGenomeIntervals"),
      
            # new part, using coverage for RangedData from IRanges
            #  (thanks to Patrick for the suggestion)
-           if (!mem.friendly){ # default
-             coords <- RangedData(IRanges(start=x[,1], end=x[,2]),
-                                  space=spacex, reads=reads(x))
-             byChr <- coverage(coords, weight="reads",
-                               width=as.list(chrlens[allChr]))
-           } else { # mem.friendly==TRUE
+           # edit Dec 2017: since RangedDate is deprecated, fall back to old version:
+           #if (!mem.friendly){ # default
+           #  coords <- RangedData(IRanges(start=x[,1], end=x[,2]),
+           #                       space=spacex, reads=reads(x))
+           #  byChr <- coverage(coords, weight="reads",
+           #                    width=as.list(chrlens[allChr]))
+           #} else { # mem.friendly==TRUE
              
-             ## which function to use for each iteration:
-             if ("package:parallel" %in% search())
-               lFun <- mclapply
-             else 
-               lFun <- lapply
-             byChr <-
-               lFun(structure(as.list(allChr), names=allChr),
-                    function(z){
-                      on.z <- which(spacex == z)
-                      coords <- RangedData(IRanges(start=x[on.z,1],
-                                                   end=x[on.z,2]),
-                                           space=z, reads=reads(x)[on.z])
-                      coverage(coords, width=as.list(chrlens[z]),
-                               weight="reads")[[1]]
-                    })
-           }# mem.friendly==TRUE
+           #  ## which function to use for each iteration:
+           #  if ("package:parallel" %in% search())
+           #    lFun <- mclapply
+           # else 
+           #    lFun <- lapply
+           #  byChr <-
+           #    lFun(structure(as.list(allChr), names=allChr),
+           #         function(z){
+           #           on.z <- which(spacex == z)
+           #           coords <- RangedData(IRanges(start=x[on.z,1],
+           #                                        end=x[on.z,2]),
+           #                                space=z, reads=reads(x)[on.z])
+           #           coverage(coords, width=as.list(chrlens[z]),
+           #                    weight="reads")[[1]]
+           #         })
+           #}# mem.friendly==TRUE
 
-           #o#  old implementation, slower and not up to date:
-           #byChr <- lFun(as.list(allChr),  function(z){
-           #  on.z <- chromosome(x) == z
-           #  if (!byStrand)
-           #    coverageOneStrand(x[on.z], chrmax=chrlens[z])
-           #  else 
-           #    list("minus"=coverageOneStrand(x[on.z & on.minus],
-           #           chrmax=chrlens[z]),
-           #         "plus"=coverageOneStrand(x[on.z & !on.minus],
-           #           chrmax=chrlens[z]))
-           #})
-           #names(byChr) <- allChr
-           ## convert to SimpleRleList
-           #byChr <- RleList(byChr)
+           ##  old implementation, slower
+           # which function to use for each iteration:
+           if ("package:parallel" %in% search())
+               lFun <- mclapply
+           else 
+               lFun <- lapply
+
+           byChr <- lFun(as.list(allChr),  function(z){
+             on.z <- chromosome(x) == z
+             if (!byStrand)
+               coverageOneStrand(x[on.z], chrmax=chrlens[z])
+             else 
+               list("minus"=coverageOneStrand(x[on.z & on.minus],
+                      chrmax=chrlens[z]),
+                    "plus"=coverageOneStrand(x[on.z & !on.minus],
+                      chrmax=chrlens[z]))
+           })
+           names(byChr) <- allChr
+           # convert to SimpleRleList
+           byChr <- RleList(byChr)
            
            return(byChr)
 } ) #setMethod("coverage", signature("AlignedGenomeIntervals")
+
