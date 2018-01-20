@@ -3,7 +3,7 @@
 \alias{reduce-methods}
 \alias{reduce,CompressedIRangesList-method}
 \alias{reduce,IRanges-method}
-\alias{reduce,Ranges-method}
+\alias{reduce,IntegerRanges-method}
 \alias{reduce,RangesList-method}
 \title{Auxiliary methods for Function reduce in Package 'girafe'}
 \description{
@@ -20,13 +20,13 @@
   package \sQuote{IRanges} }
 \item{\code{signature(x = "IRanges")}}{see help page in
   package \sQuote{IRanges} }
-\item{\code{signature(x = "Ranges")}}{see help page in
+\item{\code{signature(x = "IntegerRanges")}}{see help page in
   package \sQuote{IRanges} }
 \item{\code{signature(x = "RangesList")}}{see help page in
   package \sQuote{IRanges} }
 }}
 \seealso{ \code{\link[IRanges]{RangesList-class}},
-  \code{\link[IRanges]{Ranges-class}},
+  \code{\link[IRanges]{IntegerRanges-class}},
   \code{\link[IRanges]{IRanges-class}}
 }
 \keyword{methods}

@@ -258,10 +258,10 @@ setMethod("reduce", signature("Genome_intervals"),
 setMethod("reduce", signature("IRanges"),
           function(x, ...){
             getMethod("reduce", signature("IRanges"), where=match("package:IRanges",search())) (x, ...)  }  )
-# for class 'Ranges'
-setMethod("reduce", signature("Ranges"),
+# for class 'IntegerRanges'
+setMethod("reduce", signature("IntegerRanges"),
           function(x, ...){
-            getMethod("reduce", signature("Ranges"), where=match("package:IRanges",search())) (x, ...)  }  )
+            getMethod("reduce", signature("IntegerRanges"), where=match("package:IRanges",search())) (x, ...)  }  )
 # for class 'RangesList'
 setMethod("reduce", signature("RangesList"),
           function(x, ...){
