@@ -262,10 +262,10 @@ setMethod("reduce", signature("IRanges"),
 setMethod("reduce", signature("IntegerRanges"),
           function(x, ...){
             getMethod("reduce", signature("IntegerRanges"), where=match("package:IRanges",search())) (x, ...)  }  )
-# for class 'RangesList'
-setMethod("reduce", signature("RangesList"),
+# for class 'IntegerRangesList'
+setMethod("reduce", signature("IntegerRangesList"),
           function(x, ...){
-            getMethod("reduce", signature("RangesList"), where=match("package:IRanges",search())) (x, ...)  }  )
+            getMethod("reduce", signature("IntegerRangesList"), where=match("package:IRanges",search())) (x, ...)  }  )
 # for class 'CompressedIRangesList'
 setMethod("reduce", signature("CompressedIRangesList"),
           function(x, ...){

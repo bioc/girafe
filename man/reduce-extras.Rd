@@ -4,7 +4,7 @@
 \alias{reduce,CompressedIRangesList-method}
 \alias{reduce,IRanges-method}
 \alias{reduce,IntegerRanges-method}
-\alias{reduce,RangesList-method}
+\alias{reduce,IntegerRangesList-method}
 \title{Auxiliary methods for Function reduce in Package 'girafe'}
 \description{
   This methods were written to resurrect the functionality of the
@@ -22,10 +22,10 @@
   package \sQuote{IRanges} }
 \item{\code{signature(x = "IntegerRanges")}}{see help page in
   package \sQuote{IRanges} }
-\item{\code{signature(x = "RangesList")}}{see help page in
+\item{\code{signature(x = "IntegerRangesList")}}{see help page in
   package \sQuote{IRanges} }
 }}
-\seealso{ \code{\link[IRanges]{RangesList-class}},
+\seealso{ \code{\link[IRanges]{IntegerRangesList-class}},
   \code{\link[IRanges]{IntegerRanges-class}},
   \code{\link[IRanges]{IRanges-class}}
 }

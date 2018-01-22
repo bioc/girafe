@@ -52,7 +52,7 @@ agiFromBam <- function(bamfile, ...)
   #res <- vector("list", length(allChr))
   #for (thisChr in allChr){
   res <- lFun(as.list(allChr), function(thisChr){
-    thisRange <- RangesList(IRanges(1L, H[[1]]$targets[thisChr]))
+    thisRange <- IRangesList(IRanges(1L, H[[1]]$targets[thisChr]))
     names(thisRange) <- thisChr
     theseParams <- initialize(param, simpleCigar=TRUE,
                               flag=scanBamFlag(isUnmappedQuery=FALSE),

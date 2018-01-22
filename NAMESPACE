@@ -26,7 +26,7 @@ importFrom("Biostrings", "consensusString","pairwiseAlignment","pattern","qualit
 importClassesFrom("Biostrings", "DNAString","DNAStringSet")
 importMethodsFrom("Biostrings", "nchar", "detail")
 
-importClassesFrom("IRanges", "IntegerRanges", "IRanges", "RangedData", "CompressedIRangesList", "RangesList", "SimpleRleList")
+importClassesFrom("IRanges", "IntegerRanges", "IRanges", "RangedData", "CompressedIRangesList", "IntegerRangesList", "SimpleRleList")
 importMethodsFrom("IRanges", "score", "score<-", "[", "coverage", "sort")
 importFrom("IRanges", "IRanges", "RangedData", "RleList")
 
