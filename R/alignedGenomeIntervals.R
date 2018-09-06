@@ -275,8 +275,9 @@ setReplaceMethod("organism", signature("AlignedGenomeIntervals"),
                      "are 'Hs' for Human and 'Mm' for Mouse. ",
                      "The annotation  packages can usually be obtained from ",
                      "the Bioconductor repositories. You may want to try:\n",
-                     "> source('http://www.bioconductor.org/biocLite.R')\n",
-                     "> biocLite('",orgpackage,"')\n", sep=""))
+                     "> if (!requireNamespace("BiocManager", quietly=TRUE))\n",
+    > install.packages("BiocManager")\n",
+                     "> BiocManager::install('",orgpackage,"')\n", sep=""))
      }
      object@organism <- value
      object
