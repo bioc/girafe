@@ -35,7 +35,7 @@ trimAdapter(fq, adapter, match.score = 1, mismatch.score = -1,
   3' adapter contamination.
 }
 \author{J. Toedling}
-\seealso{\code{\link[Biostrings]{pairwiseAlignment}},
+\seealso{\code{\link[pwalign]{pairwiseAlignment}},
   \code{\link[IRanges]{narrow}},
   \code{\link[ShortRead]{readFastq}},
   \code{\link[ShortRead]{writeFastq}}

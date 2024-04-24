@@ -134,7 +134,7 @@ show(ra23.wa)
 To removing adapter sequences, we use
 the function \Rfunction{trimAdapter}, which relies
 on the \Rfunction{pairwiseAlignment} function
-from the \Rpackage{Biostrings} package.
+from the \Rpackage{pwalign} package.
 The adapter sequence was obtained from the GEO page
 of the data.
 %
@@ -554,10 +554,9 @@ exAI.R <- reduce(exAI, mem.friendly=TRUE)
 The \Rpackage{girafe} package is mostly built upon the
 interval notation and implementation provided by the
 packages \Rpackage{intervals} and \Rpackage{genomeIntervals}.
-Functions from the 
-\Rpackage{ShortRead} package~\citep{Morgan2009}
-are used for importing the data,
-and \Rpackage{Biostrings} provides help for working
+Functions from the \Rpackage{ShortRead} package~\citep{Morgan2009}
+are used for importing the data. \Rpackage{Biostrings}
+and \Rpackage{pwalign} provide help for working
 with the read nucleotide sequences.
 \Rpackage{girafe} also makes limited use of the
 \Rclass{Rle} and \Rclass{IRanges} classes

@@ -22,13 +22,15 @@ import("S4Vectors")
 importMethodsFrom("Biobase", "annotation")
 importFrom("Biobase", "addVigs2WinMenu", "listLen")
 
-importFrom("Biostrings", "consensusString","pairwiseAlignment","pattern","quality", "nucleotideSubstitutionMatrix")
+importFrom("Biostrings", "DNAString","alphabetFrequency","consensusString","pattern","quality")
 importClassesFrom("Biostrings", "DNAString","DNAStringSet")
 importMethodsFrom("Biostrings", "nchar", "detail")
 
+importFrom("pwalign", "pairwiseAlignment","nucleotideSubstitutionMatrix")
+
 importClassesFrom("IRanges", "IntegerRanges", "IRanges", "CompressedIRangesList", "IntegerRangesList", "SimpleRleList")
 importMethodsFrom("IRanges", "score", "score<-", "[", "coverage", "sort")
-importFrom("IRanges", "IRanges", "RleList")
+importFrom("IRanges", "IRanges", "IRangesList", "Views", "RleList", "narrow")
 
 importClassesFrom("ShortRead", "AlignedRead")
 importMethodsFrom("ShortRead", "chromosome", "position", "id")
